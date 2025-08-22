@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Aventure GR10 - Septembre 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="gr10-data-part1.js"></script>
+    <script src="gr10-data-part2.js"></script>
+<body>
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-mountain"></i>
+                    Grande Randonnée
+                </div>
+                <h1>GR10</h1>
+                <p>De l'Atlantique à la Méditerranée • 48 étapes • 8 septembre - 25 octobre 2025</p>
+            </div>
+            <div class="header-actions">
+                <button class="admin-toggle" id="admin-toggle">
+                    <i class="fas fa-cog"></i> Admin
+                </button>
+                <button class="theme-toggle" data-theme-toggle>
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Main Navigation Tabs -->
+        <div class="main-tabs">
+            <button class="tab-btn active" data-tab="stages" onclick="switchTab('stages')">
+                <i class="fas fa-route"></i>
+                Étapes
+            </button>
+            <button class="tab-btn" data-tab="analytics" onclick="switchTab('analytics')">
+                <i class="fas fa-chart-line"></i>
+                Analytics
+            </button>
+            <button class="tab-btn" data-tab="map" onclick="switchTab('map')">
+                <i class="fas fa-map"></i>
+                Carte
+            </button>
+        </div>
+
+        <!-- Progress Dashboard -->
+        <div class="progress-dashboard">
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-stats">
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="completed-stages">0</div>
+                    <div class="progress-stat-label">Étapes terminées</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="remaining-stages">48</div>
+                    <div class="progress-stat-label">Étapes restantes</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="total-distance">0</div>
+                    <div class="progress-stat-label">km parcourus</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="total-elevation-positive">0</div>
+                    <div class="progress-stat-label">m de dénivelé +</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="total-elevation-negative">0</div>
+                    <div class="progress-stat-label">m de dénivelé -</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="completion-percentage">0%</div>
+                    <div class="progress-stat-label">Progression</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Contents -->
+        <main>
+            <!-- Stages Tab -->
+            <div id="stages-tab" class="tab-content active">
+                <div id="stages-container" class="stages-container">
+                    <!-- Stage cards will be dynamically generated here -->
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analytics-tab" class="tab-content">
+                <div class="analytics-dashboard">
+                    <!-- Weather Widget -->
+                    <div class="weather-widget">
+                        <h3><i class="fas fa-cloud-sun"></i> Météo du jour</h3>
+                        <div class="weather-content">
+                            <div class="weather-location" id="weather-location">Pyrénées</div>
+                            <div class="weather-main">
+                                <div class="weather-temp" id="weather-temp">18°C</div>
+                                <div class="weather-icon" id="weather-icon">
+                                    <i class="fas fa-sun"></i>
+                                </div>
+                                <div class="weather-desc" id="weather-desc">Ensoleillé</div>
+                            </div>
+                            <div class="weather-details">
+                                <div class="weather-detail">
+                                    <i class="fas fa-wind"></i>
+                                    <span id="weather-wind">12 km/h</span>
+                                </div>
+                                <div class="weather-detail">
+                                    <i class="fas fa-tint"></i>
+                                    <span id="weather-humidity">65%</span>
+                                </div>
+                                <div class="weather-detail">
+                                    <i class="fas fa-eye"></i>
+                                    <span id="weather-visibility">10 km</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Cards -->
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <h4><i class="fas fa-calendar-alt"></i> Progression temporelle</h4>
+                            <div class="analytics-content">
+                                <div class="metric">
+                                    <span class="metric-label">Jours écoulés</span>
+                                    <span class="metric-value" id="days-elapsed">0</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Jours restants</span>
+                                    <span class="metric-value" id="days-remaining">48</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Rythme moyen</span>
+                                    <span class="metric-value" id="average-pace">1 étape/jour</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <h4><i class="fas fa-mountain"></i> Performance physique</h4>
+                            <div class="analytics-content">
+                                <div class="metric">
+                                    <span class="metric-label">Distance moyenne</span>
+                                    <span class="metric-value" id="avg-distance">0 km</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Dénivelé moyen</span>
+                                    <span class="metric-value" id="avg-elevation">0 m</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Difficulté moyenne</span>
+                                    <span class="metric-value" id="avg-difficulty">Moyenne</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <h4><i class="fas fa-star"></i> Évaluations</h4>
+                            <div class="analytics-content">
+                                <div class="metric">
+                                    <span class="metric-label">Note moyenne</span>
+                                    <span class="metric-value" id="avg-rating">0/5</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Étapes notées</span>
+                                    <span class="metric-value" id="rated-stages">0</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Photos uploadées</span>
+                                    <span class="metric-value" id="total-photos">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map Tab -->
+            <div id="map-tab" class="tab-content">
+                <div class="map-section">
+                    <iframe 
+                        src="https://macarte.ign.fr/carte/cc67b8c87f14aeb4792c8ee2fb4d7154/CARTE_IGN_GENERALE"
+                        width="100%" 
+                        height="600" 
+                        style="border: none; border-radius: 0.75rem;"
+                        title="Carte IGN du GR10">
+                    </iframe>
+                </div>
+                
+                <!-- Legend -->
+                <div class="legend-grid mt-lg">
+                    <div class="legend-column">
+                        <h4>Sentiers & Chemins</h4>
+                        <div class="flex items-center gap-sm mb-sm">
+                            <div style="width: 20px; height: 3px; background: #e74c3c;"></div>
+                            <span class="text-sm">GR (Grande Randonnée)</span>
+                        </div>
+                        <div class="flex items-center gap-sm mb-sm">
+                            <div style="width: 20px; height: 2px; background: #f39c12;"></div>
+                            <span class="text-sm">PR (Promenade et Randonnée)</span>
+                        </div>
+                        <div class="flex items-center gap-sm">
+                            <div style="width: 20px; height: 1px; background: #95a5a6;"></div>
+                            <span class="text-sm">Sentier local</span>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-column">
+                        <h4>Routes & Voies</h4>
+                        <div class="flex items-center gap-sm mb-sm">
+                            <div style="width: 20px; height: 3px; background: #2c3e50;"></div>
+                            <span class="text-sm">Route principale</span>
+                        </div>
+                        <div class="flex items-center gap-sm mb-sm">
+                            <div style="width: 20px; height: 2px; background: #7f8c8d;"></div>
+                            <span class="text-sm">Route secondaire</span>
+                        </div>
+                        <div class="flex items-center gap-sm">
+                            <div style="width: 20px; height: 1px; background: #bdc3c7;"></div>
+                            <span class="text-sm">Chemin carrossable</span>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-column">
+                        <h4>Topographie</h4>
+                        <div class="flex items-center gap-sm mb-sm">
+                            <i class="fas fa-mountain text-primary"></i>
+                            <span class="text-sm">Sommet</span>
+                        </div>
+                        <div class="flex items-center gap-sm mb-sm">
+                            <i class="fas fa-water text-info"></i>
+                            <span class="text-sm">Cours d'eau</span>
+                        </div>
+                        <div class="flex items-center gap-sm">
+                            <i class="fas fa-tree text-success"></i>
+                            <span class="text-sm">Forêt</span>
+                        </div>
+                    </div>
+                    
+                    <div class="legend-column">
+                        <h4>Points d'intérêt</h4>
+                        <div class="flex items-center gap-sm mb-sm">
+                            <i class="fas fa-home text-warning"></i>
+                            <span class="text-sm">Refuge</span>
+                        </div>
+                        <div class="flex items-center gap-sm mb-sm">
+                            <i class="fas fa-campground text-secondary"></i>
+                            <span class="text-sm">Camping</span>
+                        </div>
+                        <div class="flex items-center gap-sm">
+                            <i class="fas fa-shopping-cart text-danger"></i>
+                            <span class="text-sm">Ravitaillement</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Stage Detail Modal -->
+    <div id="stage-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title" class="modal-title">Détails de l'étape</h2>
+                <div class="flex items-center gap-md">
+                    <button id="modal-validate-btn" class="btn btn-success">
+                        <i class="fas fa-check"></i>
+                        Valider l'étape
+                    </button>
+                    <span class="close" onclick="closeModal()">&times;</span>
+                </div>
+            </div>
+            
+            <div class="modal-body">
+                <!-- Modal Tabs -->
+                <div class="modal-tabs">
+                    <button class="tab-btn active" data-modal-tab="details" onclick="dashboard.switchModalTab('details')">
+                        <i class="fas fa-info-circle"></i>
+                        Détails
+                    </button>
+                    <button class="tab-btn" data-modal-tab="notes" onclick="dashboard.switchModalTab('notes')">
+                        <i class="fas fa-sticky-note"></i>
+                        Notes
+                    </button>
+                    <button class="tab-btn" data-modal-tab="evaluation" onclick="dashboard.switchModalTab('evaluation')">
+                        <i class="fas fa-star"></i>
+                        Évaluation
+                    </button>
+                    <button class="tab-btn" data-modal-tab="photos" onclick="dashboard.switchModalTab('photos')">
+                        <i class="fas fa-camera"></i>
+                        Photos
+                    </button>
+                </div>
+
+                <!-- Details Tab -->
+                <div id="modal-details-tab" class="modal-tab-content active">
+                    <!-- Time Section -->
+                    <div class="time-section">
+                        <h3><i class="fas fa-clock"></i> Temps réalisé</h3>
+                        <div id="time-display" class="time-display" style="display: none;">
+                            <span id="time-display-text">Non renseigné</span>
+                            <button id="edit-time-btn" class="btn btn-sm btn-secondary ml-md">
+                                <i class="fas fa-edit"></i> Modifier
+                            </button>
+                        </div>
+                        <div id="time-input-section" class="time-input-group">
+                            <div class="time-input">
+                                <label>Heures</label>
+                                <input type="number" id="time-hours" min="0" max="23" value="0">
+                            </div>
+                            <div class="time-input">
+                                <label>Minutes</label>
+                                <input type="number" id="time-minutes" min="0" max="59" value="0">
+                            </div>
+                            <button id="save-time-btn" class="save-time-btn">
+                                <i class="fas fa-save"></i> Sauvegarder
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Stage Details Grid -->
+                    <div id="modal-details-grid" class="modal-details-grid">
+                        <!-- Details will be populated by JavaScript -->
+                    </div>
+
+                    <!-- Accommodation Section -->
+                    <div class="accommodation-section">
+                        <h3><i class="fas fa-bed"></i> Options d'hébergement</h3>
+                        <div id="accommodation-content" class="accommodation-row">
+                            <!-- Accommodation options will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notes Tab -->
+                <div id="modal-notes-tab" class="modal-tab-content">
+                    <div class="form-group">
+                        <div id="notes-placeholder" class="notes-placeholder">
+                            <i class="fas fa-edit"></i>
+                            <p>Cliquez ici pour ajouter vos notes sur cette étape...</p>
+                        </div>
+                        <div id="notes-editor" class="notes-editor" style="display: none;">
+                            <textarea id="notes-textarea" placeholder="Vos impressions, conseils, observations..."></textarea>
+                            <div class="notes-actions">
+                                <button id="save-notes" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Sauvegarder
+                                </button>
+                                <button id="cancel-notes" class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> Annuler
+                                </button>
+                            </div>
+                        </div>
+                        <div id="notes-display" class="notes-display" style="display: none;">
+                            <div id="notes-content"></div>
+                            <div class="notes-actions">
+                                <button id="edit-notes" class="btn btn-secondary">
+                                    <i class="fas fa-edit"></i> Modifier
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Evaluation Tab -->
+                <div id="modal-evaluation-tab" class="modal-tab-content">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-star"></i> 
+                            Évaluation globale de l'étape
+                        </label>
+                        <div class="star-rating" id="stage-rating">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Photos Tab -->
+                <div id="modal-photos-tab" class="modal-tab-content">
+                    <div class="photo-upload">
+                        <input type="file" id="photo-input" multiple accept="image/*" style="display: none;">
+                        <button id="upload-btn" class="btn btn-primary">
+                            <i class="fas fa-camera"></i> Ajouter des photos
+                        </button>
+                    </div>
+                    <div id="photo-gallery" class="photo-gallery">
+                        <!-- Photos will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Photo Lightbox -->
+    <div id="photo-lightbox" class="lightbox-overlay">
+        <div class="lightbox-content">
+            <span class="lightbox-close">&times;</span>
+            <img id="lightbox-image" src="" alt="">
+            <div class="lightbox-nav">
+                <button id="lightbox-prev" class="lightbox-btn">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button id="lightbox-next" class="lightbox-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="lightbox-counter">
+                <span id="lightbox-current">1</span> / <span id="lightbox-total">1</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Toggle (Ultra-discrete) -->
+    <button class="admin-toggle" id="admin-toggle" onclick="toggleAdminMode()">
+        Admin
+    </button>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>GR10 - Sentier des Pyrénées</h3>
+                    <p>De l'Atlantique à la Méditerranée, 48 étapes à travers les plus beaux paysages pyrénéens.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Liens utiles</h4>
+                    <ul>
+                        <li><a href="https://www.gr-infos.com" target="_blank">GR-Infos</a></li>
+                        <li><a href="https://www.ffrandonnee.fr" target="_blank">FFRandonnée</a></li>
+                        <li><a href="https://www.refuges.info" target="_blank">Refuges.info</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Pour toute question sur cette aventure, n'hésitez pas à me contacter.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 - Bonne randonnée ! 🥾</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- External Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Data Scripts -->
+    <script src="data-complete-clean.js"></script>
+    
+    <!-- Debug: Vérifier le chargement des données -->
+    <script>
+        console.log('Vérification des données après chargement du script:');
+        console.log('window.completeItineraryData:', window.completeItineraryData);
+        if (window.completeItineraryData) {
+            console.log('Nombre d\'étapes:', window.completeItineraryData.length);
+            console.log('Première étape:', window.completeItineraryData[0]);
+        }
+    </script>
+    
+    <script>
+        // Dashboard GR10 simplifié et fonctionnel
+        class GR10Dashboard {
+            constructor() {
+                this.itineraryData = window.completeItineraryData || [];
+                this.completedStages = new Set(JSON.parse(localStorage.getItem('gr10-completed-stages') || '[]'));
+                this.isAdminMode = localStorage.getItem('gr10-admin-mode') === 'true';
+                this.init();
+            }
+
+            init() {
+                console.log('Initialisation du dashboard avec', this.itineraryData.length, 'étapes');
+                console.log('Mode admin initial:', this.isAdminMode);
+                this.renderStages();
+                this.updateProgress();
+                this.setupEventListeners();
+            }
+
+            renderStages() {
+                const container = document.getElementById('stages-container');
+                if (!container) {
+                    console.error('Container stages-container non trouvé');
+                    return;
+                }
+
+                container.innerHTML = '';
+                
+                this.itineraryData.forEach(stage => {
+                    const isCompleted = this.completedStages.has(stage.day);
+                    
+                    const stageCard = document.createElement('div');
+                    stageCard.className = `stage-card ${isCompleted ? 'completed' : ''}`;
+                    
+                    stageCard.innerHTML = `
+                        <div class="stage-header">
+                            <h3>Étape ${stage.day} : ${stage.from} → ${stage.to}</h3>
+                            <span class="stage-date">${stage.date}</span>
+                        </div>
+                        
+                        <div class="stage-info">
+                            <div class="info-item">
+                                <i class="fas fa-route"></i>
+                                <span>${stage.distance}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-mountain"></i>
+                                <span>${stage.elevation}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-clock"></i>
+                                <span>${stage.duration}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stage-actions">
+                            <button class="btn btn-primary" onclick="openModal(${stage.day})">
+                                <i class="fas fa-eye"></i> Voir détails
+                            </button>
+                            ${this.isAdminMode ? `
+                                <button class="btn ${isCompleted ? 'btn-secondary' : 'btn-success'}" 
+                                        onclick="window.dashboard.${isCompleted ? 'unvalidateStage' : 'validateStage'}(${stage.day})">
+                                    <i class="fas ${isCompleted ? 'fa-undo' : 'fa-check'}"></i>
+                                    ${isCompleted ? 'Annuler' : 'Valider'}
+                                </button>
+                            ` : ''}
+                        </div>
+                    `;
+                    
+                    container.appendChild(stageCard);
+                });
+                
+                console.log('Rendu terminé:', container.children.length, 'cartes créées');
+            }
+
+            validateStage(stageId) {
+                if (!this.isAdminMode) {
+                    alert('Mode admin requis pour valider les étapes');
+                    return;
+                }
+                
+                this.completedStages.add(stageId);
+                localStorage.setItem('gr10-completed-stages', JSON.stringify([...this.completedStages]));
+                this.renderStages();
+                this.updateProgress();
+            }
+
+            unvalidateStage(stageId) {
+                if (!this.isAdminMode) {
+                    alert('Mode admin requis pour annuler la validation');
+                    return;
+                }
+                
+                this.completedStages.delete(stageId);
+                localStorage.setItem('gr10-completed-stages', JSON.stringify([...this.completedStages]));
+                this.renderStages();
+                this.updateProgress();
+            }
+
+            toggleAdminMode() {
+                if (this.isAdminMode) {
+                    // Si déjà en mode admin, désactiver
+                    this.isAdminMode = false;
+                    localStorage.setItem('gr10-admin-mode', 'false');
+                    this.updateAdminToggleDisplay();
+                    this.renderStages();
+                    alert('Mode admin désactivé');
+                } else {
+                    // Demander le mot de passe pour activer
+                    const password = prompt('Mot de passe admin :');
+                    if (password === 'gr10admin2025') {
+                        this.isAdminMode = true;
+                        localStorage.setItem('gr10-admin-mode', 'true');
+                        this.updateAdminToggleDisplay();
+                        this.renderStages();
+                        alert('Mode admin activé');
+                    } else if (password !== null) {
+                        alert('Mot de passe incorrect');
+                    }
+                }
+            }
+
+            updateAdminToggleDisplay() {
+                const adminToggle = document.getElementById('admin-toggle');
+                if (adminToggle) {
+                    adminToggle.innerHTML = this.isAdminMode ? '<i class="fas fa-cog"></i> Admin ON' : '<i class="fas fa-cog"></i> Admin';
+                    adminToggle.style.backgroundColor = this.isAdminMode ? '#e74c3c' : '';
+                    adminToggle.style.color = this.isAdminMode ? 'white' : '';
+                }
+            }
+
+            updateProgress() {
+                const completedCount = this.completedStages.size;
+                const totalCount = this.itineraryData.length;
+                const percentage = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+                
+                // Mettre à jour la barre de progression
+                const progressFill = document.getElementById('progress-fill');
+                if (progressFill) progressFill.style.width = percentage + '%';
+                
+                // Mettre à jour les statistiques
+                const completedStagesEl = document.getElementById('completed-stages');
+                const remainingStagesEl = document.getElementById('remaining-stages');
+                
+                if (completedStagesEl) completedStagesEl.textContent = completedCount;
+                if (remainingStagesEl) remainingStagesEl.textContent = totalCount - completedCount;
+            }
+
+            setupEventListeners() {
+                const adminToggle = document.getElementById('admin-toggle');
+                if (adminToggle) {
+                    adminToggle.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.toggleAdminMode();
+                    });
+                }
+                this.updateAdminToggleDisplay();
+            }
+            switchModalTab(tabName) {
+                // Désactiver tous les onglets de la modal
+                document.querySelectorAll('.modal-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.modal-tab-content').forEach(content => content.classList.remove('active'));
+                
+                // Activer l'onglet sélectionné
+                const activeBtn = document.querySelector(`[data-modal-tab="${tabName}"]`);
+                const activeContent = document.getElementById(`modal-${tabName}-tab`);
+                
+                if (activeBtn) activeBtn.classList.add('active');
+                if (activeContent) activeContent.classList.add('active');
+            }
+        }
+
+        // Fonctions globales pour compatibilité
+        function openModal(stageId) {
+            console.log('Ouverture modal pour étape', stageId);
+            const modal = document.getElementById('stage-modal');
+            const stage = window.dashboard.itineraryData.find(s => s.day === stageId);
+            
+            if (modal && stage) {
+                // Mettre à jour le titre
+                const modalTitle = document.getElementById('modal-title');
+                if (modalTitle) {
+                    modalTitle.textContent = `Étape ${stage.day} : ${stage.from} → ${stage.to}`;
+                }
+                
+                // Mettre à jour le contenu des détails
+                const detailsTab = document.getElementById('modal-details-tab');
+                if (detailsTab) {
+                    detailsTab.innerHTML = `
+                        <div class="stage-detail-info">
+                            <h3>Informations générales</h3>
+                            <div class="detail-grid">
+                                <div class="detail-item">
+                                    <strong>Date :</strong> ${stage.date}
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Distance :</strong> ${stage.distance}
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Dénivelé :</strong> ${stage.elevation}
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Durée :</strong> ${stage.duration}
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Difficulté :</strong> ${stage.difficulty}
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Terrain :</strong> ${stage.terrain}
+                                </div>
+                            </div>
+                            
+                            <h3>Hébergement et services</h3>
+                            <div class="detail-grid">
+                                <div class="detail-item">
+                                    <strong>Bivouac A :</strong> ${stage.bivouacA}
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Bivouac B :</strong> ${stage.bivouacB}
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Refuge :</strong> ${stage.refuge}
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Eau :</strong> ${stage.water}
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Ravitaillement :</strong> ${stage.supplies}
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Réseau :</strong> ${stage.network}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                modal.style.display = 'block';
+            }
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('stage-modal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function switchTab(tabName) {
+            // Désactiver tous les onglets
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Activer l'onglet sélectionné
+            const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
+            const activeContent = document.getElementById(`${tabName}-tab`);
+            
+            if (activeBtn) activeBtn.classList.add('active');
+            if (activeContent) activeContent.classList.add('active');
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded, données disponibles:', typeof window.completeItineraryData !== 'undefined');
+            console.log('Données:', window.completeItineraryData ? window.completeItineraryData.length + ' étapes' : 'non trouvées');
+            
+            if (window.completeItineraryData && window.completeItineraryData.length > 0) {
+                window.dashboard = new GR10Dashboard();
+                console.log('Dashboard créé avec succès');
+            } else {
+                console.error('Impossible de créer le dashboard - données manquantes');
+            }
+        });
+    </script>
+</body>
+</html>

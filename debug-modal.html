@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Modal Debug</title>
+    <style>
+        .stage-card {
+            width: 200px;
+            height: 100px;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            margin: 10px;
+            padding: 20px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .stage-card:hover {
+            background: #e0e0e0;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+        }
+        .close {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Modal Debug</h1>
+    
+    <div class="stage-card" id="test-card">
+        Cliquez ici pour tester la modal
+    </div>
+    
+    <div id="stage-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Modal Test</h2>
+            <p>La modal fonctionne !</p>
+        </div>
+    </div>
+
+    <script>
+        console.log('🚀 Script de test chargé');
+        
+        function openModal() {
+            console.log('openModal appelée');
+            const modal = document.getElementById('stage-modal');
+            console.log('Modal trouvée:', !!modal);
+            if (modal) {
+                modal.style.display = 'block';
+                console.log('Modal affichée');
+            }
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('stage-modal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM ready');
+            
+            const testCard = document.getElementById('test-card');
+            const closeBtn = document.querySelector('.close');
+            
+            if (testCard) {
+                testCard.onclick = function() {
+                    console.log('Card clicked via onclick');
+                    openModal();
+                };
+                
+                testCard.addEventListener('click', function(e) {
+                    console.log('Card clicked via addEventListener');
+                    openModal();
+                });
+                
+                console.log('Event listeners ajoutés');
+            }
+            
+            if (closeBtn) {
+                closeBtn.onclick = closeModal;
+            }
+            
+            // Test global
+            window.testModal = openModal;
+        });
+    </script>
+</body>
+</html>

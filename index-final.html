@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Aventure GR10 - Septembre 2025</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>GR10</h1>
+                <p>48 étapes • 8 septembre - 25 octobre 2025</p>
+            </div>
+            <button id="theme-toggle" class="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Dashboard de progression -->
+        <div class="progress-dashboard">
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-stats">
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="completed-stages">0</div>
+                    <div class="progress-stat-label">Étapes terminées</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="remaining-stages">48</div>
+                    <div class="progress-stat-label">Étapes restantes</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="total-distance">0</div>
+                    <div class="progress-stat-label">km parcourus</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="total-elevation-positive">0</div>
+                    <div class="progress-stat-label">m de dénivelé +</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="total-elevation-negative">0</div>
+                    <div class="progress-stat-label">m de dénivelé -</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="completion-percentage">0%</div>
+                    <div class="progress-stat-label">Progression</div>
+                </div>
+            </div>
+        </div>
+
+        <main>
+            <div id="stages-container" class="stages-container">
+                <!-- Les étapes seront ajoutées ici par JavaScript -->
+            </div>
+        </main>
+
+        <!-- Modal for stage details -->
+        <div id="stage-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-title"></h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-tabs">
+                        <button class="tab-btn active" data-tab="details">Détails</button>
+                        <button class="tab-btn" data-tab="notes">Notes</button>
+                        <button class="tab-btn" data-tab="photos">Photos</button>
+                    </div>
+                    <div class="tab-content">
+                        <div id="details-tab" class="tab-pane active">
+                            <div id="modal-details"></div>
+                            <div class="stage-completion-section">
+                                <label class="stage-completion-modal">
+                                    <input type="checkbox" id="modal-stage-checkbox">
+                                    <span>Marquer cette étape comme terminée</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div id="notes-tab" class="tab-pane">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-star"></i> 
+                                    Évaluation de l'étape
+                                </label>
+                                <div class="star-rating">
+                                    <span class="star" data-rating="1">★</span>
+                                    <span class="star" data-rating="2">★</span>
+                                    <span class="star" data-rating="3">★</span>
+                                    <span class="star" data-rating="4">★</span>
+                                    <span class="star" data-rating="5">★</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-sticky-note"></i> 
+                                    Notes personnelles
+                                </label>
+                                <div class="notes-container">
+                                    <div id="notes-display" class="notes-display">
+                                        <p class="notes-placeholder">Cliquez pour ajouter vos notes...</p>
+                                    </div>
+                                    <div id="notes-editor" class="notes-editor" style="display: none;">
+                                        <textarea id="inline-notes-editor" placeholder="Ajoutez vos notes ici..."></textarea>
+                                        <div class="notes-actions">
+                                            <button id="save-notes" class="btn btn-primary">
+                                                <i class="fas fa-save"></i> Sauvegarder
+                                            </button>
+                                            <button id="cancel-notes" class="btn btn-secondary">
+                                                <i class="fas fa-times"></i> Annuler
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="photos-tab" class="tab-pane">
+                            <div class="photo-upload">
+                                <input type="file" id="photo-input" accept="image/*" multiple style="display: none;">
+                                <button onclick="document.getElementById('photo-input').click()" class="upload-btn">
+                                    <i class="fas fa-camera"></i>
+                                    Ajouter des photos
+                                </button>
+                                <p>Formats acceptés: JPG, PNG, GIF</p>
+                            </div>
+                            <div id="photo-gallery" class="photo-gallery">
+                                <!-- Photos will be displayed here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('Script loaded');
+        
+        // Données d'itinéraire simplifiées pour test
+        const itineraryData = [
+            {
+                day: 1,
+                date: "8 septembre 2025",
+                from: "Hendaye",
+                to: "Col d'Ibardin",
+                distance: "16 km",
+                elevation: "+850m / -200m",
+                duration: "6h30",
+                difficulty: "Moyenne",
+                accommodation: "Refuge",
+                water: "Sources multiples",
+                terrain: "Sentier de montagne",
+                supply: "Hendaye",
+                network: "Bon",
+                bivouacA: "Col d'Ibardin",
+                bivouacB: "Ferme Elizondoa"
+            },
+            {
+                day: 2,
+                date: "9 septembre 2025",
+                from: "Col d'Ibardin",
+                to: "Col de Lizuniaga",
+                distance: "18 km",
+                elevation: "+750m / -650m",
+                duration: "7h00",
+                difficulty: "Moyenne",
+                accommodation: "Refuge",
+                water: "Sources rares",
+                terrain: "Crêtes rocheuses",
+                supply: "Sare",
+                network: "Moyen",
+                bivouacA: "Col de Lizuniaga",
+                bivouacB: "Cabane Achuri"
+            },
+            {
+                day: 3,
+                date: "10 septembre 2025",
+                from: "Col de Lizuniaga",
+                to: "Chalets d'Iraty",
+                distance: "20 km",
+                elevation: "+900m / -800m",
+                duration: "7h30",
+                difficulty: "Difficile",
+                accommodation: "Gîte",
+                water: "Ruisseaux",
+                terrain: "Forêt et prairies",
+                supply: "Saint-Jean-Pied-de-Port",
+                network: "Faible",
+                bivouacA: "Chalets d'Iraty",
+                bivouacB: "Plateau d'Iraty"
+            }
+        ];
+
+        // Variables globales
+        let currentStage = null;
+
+        // Fonction pour créer une carte d'étape
+        function createStageCard(day) {
+            const card = document.createElement('div');
+            card.className = 'stage-card';
+            card.dataset.stageDay = day.day;
+            
+            // Vérifier si l'étape est terminée
+            const completedStages = getCompletedStages();
+            const isCompleted = completedStages.includes(day.day);
+            
+            if (isCompleted) {
+                card.classList.add('completed');
+            }
+            
+            // Ajouter la classe de difficulté
+            const difficultyClass = getDifficultyClass(day.difficulty);
+            card.classList.add(difficultyClass);
+            
+            card.innerHTML = `
+                <div class="stage-card-header">
+                    <div class="stage-number">${day.day}</div>
+                    <div class="stage-title">
+                        <h3>${day.from} → ${day.to}</h3>
+                        <div class="stage-date">${day.date}</div>
+                    </div>
+                </div>
+                <div class="stage-card-body">
+                    <div class="stage-stats">
+                        <div class="stat">
+                            <i class="fas fa-route"></i>
+                            <span>${day.distance}</span>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-mountain"></i>
+                            <span>${day.elevation}</span>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-clock"></i>
+                            <span>${day.duration}</span>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-signal"></i>
+                            <span class="difficulty-badge">${day.difficulty}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Ajouter l'événement de clic pour ouvrir la modal
+            card.addEventListener('click', () => {
+                openStageModal(day);
+            });
+            
+            return card;
+        }
+
+        // Fonction pour obtenir la classe de difficulté
+        function getDifficultyClass(difficulty) {
+            switch(difficulty?.toLowerCase()) {
+                case 'simple': return 'difficulty-simple';
+                case 'moyenne': return 'difficulty-moyenne';
+                case 'difficile': return 'difficulty-difficile';
+                default: return 'difficulty-moyenne';
+            }
+        }
+
+        // Fonction pour obtenir les étapes terminées
+        function getCompletedStages() {
+            return JSON.parse(localStorage.getItem('gr10-completed-stages') || '[]');
+        }
+
+        // Fonction pour sauvegarder les étapes terminées
+        function saveCompletedStages(completedStages) {
+            localStorage.setItem('gr10-completed-stages', JSON.stringify(completedStages));
+        }
+
+        // Fonction pour basculer l'état d'une étape
+        function toggleStageCompletion(stageDay) {
+            const completedStages = getCompletedStages();
+            const index = completedStages.indexOf(stageDay);
+            
+            if (index === -1) {
+                completedStages.push(stageDay);
+            } else {
+                completedStages.splice(index, 1);
+            }
+            
+            saveCompletedStages(completedStages);
+            
+            // Mettre à jour l'affichage
+            const stageCard = document.querySelector(`[data-stage-day="${stageDay}"]`);
+            if (stageCard) {
+                stageCard.classList.toggle('completed', index === -1);
+            }
+            
+            updateProgressStats();
+        }
+
+        // Fonction pour ouvrir la modal
+        function openStageModal(day) {
+            currentStage = day.day;
+            const modal = document.getElementById('stage-modal');
+            const title = document.getElementById('modal-title');
+            const details = document.getElementById('modal-details');
+            
+            if (modal && title && details) {
+                title.textContent = `Jour ${day.day}: ${day.from} → ${day.to}`;
+                details.innerHTML = generateModalContent(day);
+                
+                // Mettre à jour le checkbox
+                const checkbox = document.getElementById('modal-stage-checkbox');
+                if (checkbox) {
+                    const completedStages = getCompletedStages();
+                    checkbox.checked = completedStages.includes(day.day);
+                }
+                
+                modal.classList.add('show');
+                loadSavedData(day.day);
+            }
+        }
+
+        // Fonction pour générer le contenu de la modal
+        function generateModalContent(day) {
+            return `
+                <div class="stage-info">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <i class="fas fa-route"></i>
+                            <span class="info-label">Distance</span>
+                            <span class="info-value">${day.distance}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-mountain"></i>
+                            <span class="info-label">Dénivelé</span>
+                            <span class="info-value">${day.elevation}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-clock"></i>
+                            <span class="info-label">Durée</span>
+                            <span class="info-value">${day.duration}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-signal"></i>
+                            <span class="info-label">Difficulté</span>
+                            <span class="info-value">${day.difficulty}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-bed"></i>
+                            <span class="info-label">Hébergement</span>
+                            <span class="info-value">${day.accommodation}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-tint"></i>
+                            <span class="info-label">Eau</span>
+                            <span class="info-value">${day.water}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-map"></i>
+                            <span class="info-label">Terrain</span>
+                            <span class="info-value">${day.terrain}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="info-label">Ravitaillement</span>
+                            <span class="info-value">${day.supply}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-wifi"></i>
+                            <span class="info-label">Réseau</span>
+                            <span class="info-value">${day.network}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="bivouac-options">
+                        <h4><i class="fas fa-campground"></i> Options de bivouac</h4>
+                        <div class="bivouac-list">
+                            <div class="bivouac-option">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span><strong>Option A:</strong> ${day.bivouacA}</span>
+                            </div>
+                            <div class="bivouac-option">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span><strong>Option B:</strong> ${day.bivouacB}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Fonction pour charger les données sauvegardées
+        function loadSavedData(stageDay) {
+            // Charger l'évaluation
+            const savedRating = localStorage.getItem(`stage_rating_${stageDay}`);
+            if (savedRating) {
+                updateStarRating(parseInt(savedRating));
+            }
+            
+            // Charger les notes
+            const savedNotes = localStorage.getItem(`stage_notes_${stageDay}`);
+            const notesDisplay = document.getElementById('notes-display');
+            if (savedNotes && notesDisplay) {
+                notesDisplay.innerHTML = `<p>${savedNotes}</p>`;
+            }
+            
+            // Charger les photos
+            const savedPhotos = JSON.parse(localStorage.getItem(`stage_photos_${stageDay}`)) || [];
+            displayPhotos(savedPhotos);
+        }
+
+        // Fonction pour mettre à jour l'évaluation par étoiles
+        function updateStarRating(rating) {
+            const stars = document.querySelectorAll('.star');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        // Fonction pour afficher les photos
+        function displayPhotos(photos) {
+            const gallery = document.getElementById('photo-gallery');
+            if (gallery) {
+                gallery.innerHTML = photos.map((photo, index) => 
+                    `<div class="photo-container">
+                        <img src="${photo}" alt="Photo d'étape" class="gallery-item" data-photo-index="${index}">
+                        <button class="delete-photo-btn" data-photo-index="${index}" title="Supprimer cette photo">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>`
+                ).join('');
+            }
+        }
+
+        // Fonction pour mettre à jour les statistiques de progression
+        function updateProgressStats() {
+            const totalStages = itineraryData.length;
+            const completedStages = getCompletedStages().length;
+            const percentage = Math.round((completedStages / totalStages) * 100);
+            
+            document.getElementById('completed-stages').textContent = completedStages;
+            document.getElementById('remaining-stages').textContent = totalStages - completedStages;
+            document.getElementById('completion-percentage').textContent = percentage + '%';
+            
+            // Mettre à jour la barre de progression
+            const progressFill = document.getElementById('progress-fill');
+            if (progressFill) {
+                progressFill.style.width = percentage + '%';
+            }
+        }
+
+        // Fonction pour basculer les onglets
+        function switchTab(targetTab) {
+            // Masquer tous les onglets
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.remove('active');
+            });
+            
+            // Désactiver tous les boutons d'onglet
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Activer l'onglet cible
+            const targetPane = document.getElementById(targetTab + '-tab');
+            const targetBtn = document.querySelector(`[data-tab="${targetTab}"]`);
+            
+            if (targetPane) targetPane.classList.add('active');
+            if (targetBtn) targetBtn.classList.add('active');
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded');
+            
+            // Rendre les étapes
+            const container = document.getElementById('stages-container');
+            if (container) {
+                itineraryData.forEach(day => {
+                    const card = createStageCard(day);
+                    container.appendChild(card);
+                });
+            }
+            
+            // Mettre à jour les statistiques
+            updateProgressStats();
+            
+            // Gestion de la modal
+            const modal = document.getElementById('stage-modal');
+            const closeBtn = document.querySelector('.close');
+            
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    modal.classList.remove('show');
+                });
+            }
+            
+            // Fermer la modal en cliquant à l'extérieur
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    modal.classList.remove('show');
+                }
+            });
+            
+            // Gestion des onglets
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetTab = btn.dataset.tab;
+                    switchTab(targetTab);
+                });
+            });
+            
+            // Gestion du checkbox de completion
+            document.addEventListener('change', (event) => {
+                if (event.target.id === 'modal-stage-checkbox') {
+                    const completed = event.target.checked;
+                    if (currentStage) {
+                        toggleStageCompletion(currentStage);
+                    }
+                }
+            });
+            
+            // Gestion des étoiles
+            document.addEventListener('click', (event) => {
+                if (event.target.classList.contains('star')) {
+                    const rating = parseInt(event.target.dataset.rating);
+                    updateStarRating(rating);
+                    if (currentStage) {
+                        localStorage.setItem(`stage_rating_${currentStage}`, rating);
+                    }
+                }
+            });
+            
+            // Gestion des notes
+            const notesDisplay = document.getElementById('notes-display');
+            const notesEditor = document.getElementById('notes-editor');
+            const notesTextarea = document.getElementById('inline-notes-editor');
+            const saveNotesBtn = document.getElementById('save-notes');
+            const cancelNotesBtn = document.getElementById('cancel-notes');
+            
+            if (notesDisplay) {
+                notesDisplay.addEventListener('click', () => {
+                    notesDisplay.style.display = 'none';
+                    notesEditor.style.display = 'block';
+                    notesTextarea.focus();
+                });
+            }
+            
+            if (saveNotesBtn) {
+                saveNotesBtn.addEventListener('click', () => {
+                    const notes = notesTextarea.value;
+                    if (currentStage) {
+                        localStorage.setItem(`stage_notes_${currentStage}`, notes);
+                        notesDisplay.innerHTML = notes ? `<p>${notes}</p>` : '<p class="notes-placeholder">Cliquez pour ajouter vos notes...</p>';
+                    }
+                    notesEditor.style.display = 'none';
+                    notesDisplay.style.display = 'block';
+                });
+            }
+            
+            if (cancelNotesBtn) {
+                cancelNotesBtn.addEventListener('click', () => {
+                    notesEditor.style.display = 'none';
+                    notesDisplay.style.display = 'block';
+                });
+            }
+            
+            // Gestion des photos
+            const photoInput = document.getElementById('photo-input');
+            if (photoInput) {
+                photoInput.addEventListener('change', (event) => {
+                    const files = Array.from(event.target.files);
+                    files.forEach(file => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            if (currentStage) {
+                                const existingPhotos = JSON.parse(localStorage.getItem(`stage_photos_${currentStage}`)) || [];
+                                existingPhotos.push(e.target.result);
+                                localStorage.setItem(`stage_photos_${currentStage}`, JSON.stringify(existingPhotos));
+                                displayPhotos(existingPhotos);
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                    event.target.value = '';
+                });
+            }
+            
+            // Gestion du thème
+            const themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    document.body.classList.toggle('dark-theme');
+                    const isDark = document.body.classList.contains('dark-theme');
+                    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                    
+                    const icon = themeToggle.querySelector('i');
+                    if (icon) {
+                        icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+                    }
+                });
+                
+                // Charger le thème sauvegardé
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'dark') {
+                    document.body.classList.add('dark-theme');
+                    const icon = themeToggle.querySelector('i');
+                    if (icon) {
+                        icon.className = 'fas fa-sun';
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

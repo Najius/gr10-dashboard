@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Aventure GR10 - Septembre 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #10b981;
+            --accent-color: #f59e0b;
+            --text-color: #1a202c;
+            --text-light: #4a5568;
+            --bg-color: #f7fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .hero-cta:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Progress Dashboard */
+        .progress-dashboard {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: -2rem auto 2rem;
+            box-shadow: 0 10px 25px var(--shadow-color);
+            position: relative;
+            z-index: 10;
+            max-width: 1000px;
+        }
+
+        .progress-bar {
+            background: var(--border-color);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease;
+            width: 0%;
+        }
+
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            text-align: center;
+        }
+
+        .progress-stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-stat-label {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* Stages Grid */
+        .stages-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stage-card {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .stage-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px var(--shadow-color);
+            border-color: var(--primary-light);
+        }
+
+        .stage-card.completed {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, var(--card-bg) 100%);
+            border-color: var(--secondary-color);
+        }
+
+        .stage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stage-number {
+            background: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .stage-card.completed .stage-number {
+            background: var(--secondary-color);
+        }
+
+        .stage-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stage-route {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .stage-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .stage-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .stage-stat i {
+            color: var(--primary-color);
+            width: 16px;
+        }
+
+        .validate-btn {
+            width: 100%;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .validate-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .validate-btn.completed {
+            background: var(--secondary-color);
+        }
+
+        .validate-btn.completed:hover {
+            background: #059669;
+        }
+
+        .validate-btn.disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .validate-btn.disabled:hover {
+            background: #9ca3af;
+            transform: none;
+        }
+
+        .stage-card.disabled {
+            opacity: 0.7;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 1rem 1rem 0 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-footer {
+            background: var(--bg-color);
+            padding: 1.5rem;
+            border-radius: 0 0 1rem 1rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+        }
+
+        .modal-validate-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .modal-validate-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .modal-validate-btn.completed {
+            background: var(--secondary-color);
+        }
+
+        .modal-validate-btn.completed:hover {
+            background: #059669;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .modal-validate-btn.disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .modal-validate-btn.disabled:hover {
+            background: #9ca3af;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .close {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+
+        .close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-light);
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .modal-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--bg-color);
+            border-radius: 0.5rem;
+        }
+
+        .modal-detail-item i {
+            color: var(--primary-color);
+            width: 20px;
+        }
+
+        .modal-detail-content {
+            flex: 1;
+        }
+
+        .modal-detail-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .modal-detail-value {
+            font-size: 0.875rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        /* Bivouac Styles */
+        .bivouac-section h3 {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bivouac-section h3 i {
+            color: var(--secondary-color);
+        }
+
+        .bivouac-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .bivouac-option {
+            background: var(--bg-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            .bivouac-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .bivouac-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .bivouac-header h4 {
+            color: var(--text-color);
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .bivouac-header i {
+            color: var(--secondary-color);
+        }
+
+        .bivouac-description {
+            color: var(--text-light);
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .bivouac-info {
+            margin-top: 1rem;
+        }
+
+        .bivouac-info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--bg-color);
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .bivouac-info-item i {
+            color: var(--primary-color);
+            width: 20px;
+        }
+
+        .bivouac-info-item span {
+            color: var(--text-color);
+            font-size: 0.875rem;
+        }
+
+        /* Difficulty Badge */
+        .difficulty-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .difficulty-simple {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .difficulty-moyenne {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .difficulty-difficile {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .difficulty-repos {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .difficulty-transport {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        /* Star Rating */
+        .star-rating {
+            display: flex;
+            gap: 0.25rem;
+            font-size: 1.5rem;
+        }
+
+        .star {
+            color: #d1d5db;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            user-select: none;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #fbbf24;
+        }
+
+        .star.active {
+            color: #f59e0b;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .progress-dashboard {
+                margin: -1rem 1rem 1rem;
+                padding: 1.5rem;
+            }
+            
+            .stages-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .modal-content {
+                margin: 2rem;
+                width: calc(100% - 4rem);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>GR10</h1>
+                <p>48 étapes • 8 septembre - 25 octobre 2025</p>
+                <a href="#stages" class="hero-cta">
+                    <i class="fas fa-route"></i>
+                    Découvrir l'itinéraire
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Dashboard de progression -->
+        <div id="stages" class="progress-dashboard">
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-stats">
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="completed-stages">0</div>
+                    <div class="progress-stat-label">Étapes terminées</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="remaining-stages">48</div>
+                    <div class="progress-stat-label">Étapes restantes</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="total-distance">0</div>
+                    <div class="progress-stat-label">km parcourus</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="total-elevation">0</div>
+                    <div class="progress-stat-label">m de dénivelé +</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grille des étapes -->
+        <div class="stages-container" id="stages-container">
+            <!-- Les étapes seront générées par JavaScript -->
+        </div>
+    </div>
+
+    <!-- Modal pour les détails d'une étape -->
+    <div id="stage-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-stage-title">Étape X</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="modal-tabs">
+                    <button class="tab-btn active" data-tab="details">Détails</button>
+                    <button class="tab-btn" data-tab="notes">Notes</button>
+                </div>
+                
+                <div id="details-tab" class="tab-content active">
+                    <div class="modal-details-grid" id="modal-details">
+                        <!-- Détails générés par JavaScript -->
+                    </div>
+                    <div class="bivouac-section">
+                        <h3><i class="fas fa-campground"></i> Options de bivouac</h3>
+                        <div id="bivouac-details">
+                            <!-- Informations de bivouac générées par JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <div id="notes-tab" class="tab-content">
+                    <div>
+                        <h3>Notes personnelles</h3>
+                        <textarea id="stage-notes" placeholder="Ajoutez vos notes sur cette étape..." style="width: 100%; min-height: 150px; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem; font-family: inherit; resize: vertical; margin-top: 1rem;"></textarea>
+                        
+                        <div class="rating-section" style="margin-top: 1.5rem;">
+                            <h4 style="margin-bottom: 0.75rem; color: var(--text-color);">Évaluation de l'étape</h4>
+                            <div class="star-rating" id="star-rating">
+                                <span class="star" data-rating="1">★</span>
+                                <span class="star" data-rating="2">★</span>
+                                <span class="star" data-rating="3">★</span>
+                                <span class="star" data-rating="4">★</span>
+                                <span class="star" data-rating="5">★</span>
+                            </div>
+                        </div>
+                        
+                        <button id="save-notes" style="margin-top: 1rem; background: var(--primary-color); color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer;">Sauvegarder</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-validate-btn" class="modal-validate-btn">
+                    <i class="fas fa-plus"></i>
+                    <span>Valider</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class GR10Dashboard {
+            constructor() {
+                this.itineraryData = this.loadGR10Data();
+                
+                this.completedStages = new Set();
+                this.stageNotes = {};
+                this.stageRatings = {};
+                this.currentStageId = null;
+                
+                this.loadProgress();
+                this.renderStages();
+                this.updateProgress();
+                this.setupEventListeners();
+            }
+
+            loadGR10Data() {
+                // Données simplifiées pour le test
+                const gr10Data = [
+                    { etape: 1, date: "2025-09-08", depart: "Hendaye", arrivee: "Ibardin", distance: 15, denivele_positif: 850, duree: "6h", difficulte: "Simple", terrain: "Colline boisée, vues sur l'océan", hebergement: "Gîte Ibardin", telephone: "05 59 54 60 09", bivouacA: "Col d'Ibardin – vue sur l'océan", bivouacB: "prairie avant le col", eau: "Fontaine du village", ravitaillement: "épicerie" },
+                    { etape: 2, date: "2025-09-09", depart: "Ibardin", arrivee: "Sare", distance: 16, denivele_positif: 700, duree: "6.5h", difficulte: "Moyenne", terrain: "Collines basques, sentiers forestiers", hebergement: "Gîte Sare", telephone: "05 59 54 20 92", bivouacA: "Village de Sare – architecture basque", bivouacB: "prairie en vallée", eau: "Fontaine centrale", ravitaillement: "boulangerie/épicerie" },
+                    { etape: 3, date: "2025-09-10", depart: "Sare", arrivee: "Col des Veaux", distance: 16, denivele_positif: 600, duree: "5.7h", difficulte: "Simple", terrain: "Crête herbeuse, panorama", hebergement: "Refuge Col des Veaux", telephone: "05 59 47 20 44", bivouacA: "Col des Veaux – panorama pyrénéen", bivouacB: "replat herbeux", eau: "Source au col", ravitaillement: "—" },
+                    { etape: 4, date: "2025-09-11", depart: "Col des Veaux", arrivee: "Bidarray", distance: 18, denivele_positif: 400, duree: "6.5h", difficulte: "Simple", terrain: "Vallée encaissée, chemins caillouteux", hebergement: "Gîte Bidarray", telephone: "05 59 37 74 86", bivouacA: "Village de Bidarray – bord de Nive", bivouacB: "prairie près du village", eau: "Rivière Nive", ravitaillement: "épicerie/restaurant" },
+                    { etape: 5, date: "2025-09-12", depart: "Bidarray", arrivee: "Saint-Étienne-de-Baïgorry", distance: 20, denivele_positif: 600, duree: "7h", difficulte: "Moyenne", terrain: "Crêtes, pâturages, passages rocheux", hebergement: "Gîte Saint-Étienne", telephone: "05 59 37 40 14", bivouacA: "Saint-Étienne – vignobles d'Irouléguy", bivouacB: "prairie en vallée", eau: "Fontaines du village", ravitaillement: "tous commerces" },
+                    { etape: 6, date: "2025-09-13", depart: "Saint-Étienne-de-Baïgorry", arrivee: "Refuge de Béhérobie", distance: 17, denivele_positif: 1200, duree: "7h", difficulte: "Moyenne", terrain: "Vallée douce, villages basques", hebergement: "Refuge de Béhérobie", telephone: "05 59 37 13 99", bivouacA: "Refuge de Béhérobie – haute montagne basque", bivouacB: "replat avant le refuge", eau: "Source au refuge", ravitaillement: "—" },
+                    { etape: 7, date: "2025-09-14", depart: "Refuge de Béhérobie", arrivee: "Chalet Pedro", distance: 15, denivele_positif: 800, duree: "6.5h", difficulte: "Moyenne", terrain: "Gorges, route et sentier", hebergement: "Chalet Pedro", telephone: "05 59 28 51 29", bivouacA: "Chalet Pedro – frontière espagnole", bivouacB: "replat rocheux", eau: "Source près du chalet", ravitaillement: "—" },
+                    { etape: 8, date: "2025-09-15", depart: "Chalet Pedro", arrivee: "Refuge de Belagua (Espagne)", distance: 16, denivele_positif: 600, duree: "6.5h", difficulte: "Moyenne", terrain: "Pâturages d'altitude", hebergement: "Refuge de Belagua", telephone: "+34 948 89 30 12", bivouacA: "Refuge de Belagua – vallée de Belagua", bivouacB: "prairie dans la vallée", eau: "Source au refuge", ravitaillement: "—" },
+                    { etape: 9, date: "2025-09-16", depart: "Refuge de Belagua", arrivee: "Refuge de Linza (Espagne)", distance: 18, denivele_positif: 700, duree: "7h", difficulte: "Difficile", terrain: "Forêt de hêtres, piste facile", hebergement: "Refuge de Linza", telephone: "+34 974 37 30 87", bivouacA: "Refuge de Linza – cirque de Linza", bivouacB: "replat dans le cirque", eau: "Source au refuge", ravitaillement: "—" },
+                    { etape: 10, date: "2025-09-17", depart: "Refuge de Linza", arrivee: "Lescun", distance: 19, denivele_positif: 500, duree: "7.5h", difficulte: "Moyenne", terrain: "Descente en vallée, forêt", hebergement: "Gîte Lescun", telephone: "05 59 34 51 54", bivouacA: "Village de Lescun – cirque spectaculaire", bivouacB: "prairie haute avant descente", eau: "Fontaine du village", ravitaillement: "épicerie/bar" },
+                    { etape: 11, date: "2025-09-18", depart: "Lescun", arrivee: "Borce", distance: 19, denivele_positif: 1100, duree: "8h", difficulte: "Difficile", terrain: "Montagnes et vallées", hebergement: "Gîte Borce", telephone: "05 59 34 88 99" },
+                    { etape: 12, date: "2025-09-19", depart: "Borce", arrivee: "Refuge d'Ayous", distance: 17, denivele_positif: 1350, duree: "7.5h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge d'Ayous", telephone: "05 59 05 37 00" },
+                    { etape: 13, date: "2025-09-20", depart: "Refuge d'Ayous", arrivee: "Gabas", distance: 14, denivele_positif: 200, duree: "6h", difficulte: "Simple", terrain: "Vallées et rivières", hebergement: "Gîte Gabas", telephone: "05 59 05 33 14" },
+                    { etape: 14, date: "2025-09-21", depart: "Gabas", arrivee: "Gourette", distance: 22, denivele_positif: 1600, duree: "9h", difficulte: "Difficile", terrain: "Montagnes et vallées", hebergement: "Hôtel Gourette", telephone: "05 59 05 12 17" },
+                    { etape: 15, date: "2025-09-22", depart: "Gourette", arrivee: "Arrens-Marsous", distance: 20, denivele_positif: 800, duree: "8h", difficulte: "Moyenne", terrain: "Vallées et montagnes", hebergement: "Gîte Arrens", telephone: "05 62 97 02 64" },
+                    { etape: 16, date: "2025-09-23", depart: "Arrens-Marsous", arrivee: "Refuge Wallon", distance: 16, denivele_positif: 1200, duree: "7h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge Wallon", telephone: "05 62 92 40 25" },
+                    { etape: 17, date: "2025-09-24", depart: "Refuge Wallon", arrivee: "Gavarnie", distance: 18, denivele_positif: 400, duree: "7.5h", difficulte: "Moyenne", terrain: "Vallées et montagnes", hebergement: "Hôtel Gavarnie", telephone: "05 62 92 48 02" },
+                    { etape: 18, date: "2025-09-25", depart: "Gavarnie", arrivee: "Refuge des Espuguettes", distance: 15, denivele_positif: 1100, duree: "6.5h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge des Espuguettes", telephone: "05 62 92 40 63" },
+                    { etape: 19, date: "2025-09-26", depart: "Refuge des Espuguettes", arrivee: "Luz-Saint-Sauveur", distance: 19, denivele_positif: 300, duree: "8h", difficulte: "Simple", terrain: "Vallées et rivières", hebergement: "Hôtel Luz", telephone: "05 62 92 81 58" },
+                    { etape: 20, date: "2025-09-27", depart: "Luz-Saint-Sauveur", arrivee: "Barèges", distance: 12, denivele_positif: 600, duree: "5h", difficulte: "Simple", terrain: "Vallées et rivières", hebergement: "Hôtel Barèges", telephone: "05 62 92 68 19" },
+                    { etape: 21, date: "2025-09-28", depart: "Barèges", arrivee: "Refuge de la Glère", distance: 14, denivele_positif: 1000, duree: "6h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge de la Glère", telephone: "05 62 92 40 46" },
+                    { etape: 22, date: "2025-09-29", depart: "Refuge de la Glère", arrivee: "Vielle-Aure", distance: 20, denivele_positif: 400, duree: "8.5h", difficulte: "Moyenne", terrain: "Vallées et montagnes", hebergement: "Gîte Vielle-Aure", telephone: "05 62 39 50 83" },
+                    { etape: 23, date: "2025-09-30", depart: "Vielle-Aure", arrivee: "Refuge du Portillon", distance: 18, denivele_positif: 1400, duree: "8h", difficulte: "Difficile", terrain: "Montagnes et vallées", hebergement: "Refuge du Portillon", telephone: "05 61 79 21 43" },
+                    { etape: 24, date: "2025-10-01", depart: "Refuge du Portillon", arrivee: "Luchon", distance: 16, denivele_positif: 200, duree: "7h", difficulte: "Simple", terrain: "Vallées et rivières", hebergement: "Hôtel Luchon", telephone: "05 61 79 01 42" },
+                    { etape: 25, date: "2025-10-02", depart: "Luchon", arrivee: "Refuge d'Espingo", distance: 19, denivele_positif: 1600, duree: "8.5h", difficulte: "Difficile", terrain: "Montagnes et vallées", hebergement: "Refuge d'Espingo", telephone: "05 61 79 20 68" },
+                    { etape: 26, date: "2025-10-03", depart: "Refuge d'Espingo", arrivee: "Fos", distance: 17, denivele_positif: 300, duree: "7.5h", difficulte: "Moyenne", terrain: "Vallées et montagnes", hebergement: "Gîte Fos", telephone: "05 61 79 11 24" },
+                    { etape: 27, date: "2025-10-04", depart: "Fos", arrivee: "Refuge de Rioumajou", distance: 21, denivele_positif: 1300, duree: "9h", difficulte: "Difficile", terrain: "Montagnes et vallées", hebergement: "Refuge de Rioumajou", telephone: "05 62 39 61 09" },
+                    { etape: 28, date: "2025-10-05", depart: "Refuge de Rioumajou", arrivee: "Saint-Lary-Soulan", distance: 18, denivele_positif: 400, duree: "7.5h", difficulte: "Simple", terrain: "Vallées et rivières", hebergement: "Hôtel Saint-Lary", telephone: "05 62 39 50 81" },
+                    { etape: 29, date: "2025-10-06", depart: "Saint-Lary-Soulan", arrivee: "Refuge de Bastan", distance: 16, denivele_positif: 1100, duree: "7h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge de Bastan", telephone: "05 62 39 68 20" },
+                    { etape: 30, date: "2025-10-07", depart: "Refuge de Bastan", arrivee: "Refuge de Campana de Cloutou", distance: 14, denivele_positif: 600, duree: "6.5h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge Campana de Cloutou", telephone: "05 62 39 61 24" },
+                    { etape: 31, date: "2025-10-08", depart: "Refuge de Campana de Cloutou", arrivee: "Chalet-Hôtel de Oô", distance: 15, denivele_positif: 200, duree: "6.5h", difficulte: "Simple", terrain: "Vallées et rivières", hebergement: "Chalet-Hôtel de Oô", telephone: "05 61 79 21 97" },
+                    { etape: 32, date: "2025-10-09", depart: "Chalet-Hôtel de Oô", arrivee: "Refuge d'Estom", distance: 13, denivele_positif: 800, duree: "6h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge d'Estom", telephone: "05 62 92 40 63" },
+                    { etape: 33, date: "2025-10-10", depart: "Refuge d'Estom", arrivee: "Cauterets", distance: 17, denivele_positif: 300, duree: "7.5h", difficulte: "Simple", terrain: "Vallées et rivières", hebergement: "Hôtel Cauterets", telephone: "05 62 92 52 53" },
+                    { etape: 34, date: "2025-10-11", depart: "Cauterets", arrivee: "Refuge des Oulettes", distance: 14, denivele_positif: 900, duree: "6h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge des Oulettes", telephone: "05 62 92 40 63" },
+                    { etape: 35, date: "2025-10-12", depart: "Refuge des Oulettes", arrivee: "Refuge Bayssellance", distance: 12, denivele_positif: 500, duree: "5.5h", difficulte: "Difficile", terrain: "Montagnes et vallées", hebergement: "Refuge Bayssellance", telephone: "05 62 92 40 25" },
+                    { etape: 36, date: "2025-10-13", depart: "Refuge Bayssellance", arrivee: "Refuge de Pineta (Espagne)", distance: 16, denivele_positif: 200, duree: "7h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge de Pineta", telephone: "+34 974 50 10 92" },
+                    { etape: 37, date: "2025-10-14", depart: "Refuge de Pineta", arrivee: "Refuge de Góriz (Espagne)", distance: 14, denivele_positif: 1200, duree: "6.5h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge de Góriz", telephone: "+34 974 34 12 01" },
+                    { etape: 38, date: "2025-10-15", depart: "Refuge de Góriz", arrivee: "Refuge de la Rencluse", distance: 18, denivele_positif: 400, duree: "7.5h", difficulte: "Difficile", terrain: "Montagnes et vallées", hebergement: "Refuge de la Rencluse", telephone: "05 61 79 21 43" },
+                    { etape: 39, date: "2025-10-16", depart: "Refuge de la Rencluse", arrivee: "Mérens-les-Vals", distance: 20, denivele_positif: 600, duree: "8h", difficulte: "Simple", terrain: "Vallées et montagnes", hebergement: "Gîte Mérens", telephone: "05 61 02 87 22" },
+                    { etape: 40, date: "2025-10-17", depart: "Mérens-les-Vals", arrivee: "Refuge des Besines", distance: 16, denivele_positif: 1300, duree: "7h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge des Besines", telephone: "05 61 64 24 24" },
+                    { etape: 41, date: "2025-10-18", depart: "Refuge des Besines", arrivee: "Refuge de Rulhe", distance: 15, denivele_positif: 500, duree: "6.5h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge de Rulhe", telephone: "04 68 04 21 97" },
+                    { etape: 42, date: "2025-10-19", depart: "Refuge de Rulhe", arrivee: "Refuge de Mariailles", distance: 17, denivele_positif: 400, duree: "7h", difficulte: "Simple", terrain: "Vallées et montagnes", hebergement: "Refuge de Mariailles", telephone: "04 68 05 12 99" },
+                    { etape: 43, date: "2025-10-20", depart: "Refuge de Mariailles", arrivee: "Refuge de Batère", distance: 16, denivele_positif: 600, duree: "6.5h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge de Batère", telephone: "04 68 39 70 83" },
+                    { etape: 44, date: "2025-10-21", depart: "Refuge de Batère", arrivee: "Las Illas", distance: 18, denivele_positif: 500, duree: "7.5h", difficulte: "Simple", terrain: "Vallées et rivières", hebergement: "Gîte Las Illas", telephone: "04 68 39 11 99" },
+                    { etape: 45, date: "2025-10-22", depart: "Las Illas", arrivee: "Ultrera / Sorède", distance: 19, denivele_positif: 800, duree: "7.5h", difficulte: "Moyenne", terrain: "Vallées et montagnes", hebergement: "Gîte Sorède", telephone: "04 68 89 23 85" },
+                    { etape: 46, date: "2025-10-23", depart: "Ultrera / Sorède", arrivee: "Banyuls-sur-Mer", distance: 17, denivele_positif: 300, duree: "6.1h", difficulte: "Moyenne", terrain: "Vallées et rivières", hebergement: "Fin du GR10", telephone: "—" },
+                    { etape: 47, date: "2025-10-24", depart: "Jour de repos", arrivee: "Banyuls-sur-Mer", distance: 0, denivele_positif: 0, duree: "0h", difficulte: "Repos", terrain: "Célébration", hebergement: "Hôtel Banyuls", telephone: "04 68 88 00 59" },
+                    { etape: 48, date: "2025-10-25", depart: "Retour", arrivee: "Départ de Banyuls", distance: 0, denivele_positif: 0, duree: "0h", difficulte: "Transport", terrain: "Voyage retour", hebergement: "Transport", telephone: "—" }
+                ];
+                return gr10Data;
+            }
+
+            loadProgress() {
+                const saved = localStorage.getItem('gr10-progress');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    this.completedStages = new Set(data.completed || []);
+                    this.stageNotes = data.notes || {};
+                    this.stageRatings = data.ratings || {};
+                }
+            }
+
+            saveProgress() {
+                const data = {
+                    completed: Array.from(this.completedStages),
+                    notes: this.stageNotes,
+                    ratings: this.stageRatings
+                };
+                localStorage.setItem('gr10-progress', JSON.stringify(data));
+            }
+
+            renderStages() {
+                const container = document.getElementById('stages-container');
+                container.innerHTML = '';
+
+                this.itineraryData.forEach(stage => {
+                    const isCompleted = this.completedStages.has(stage.etape);
+                    const canValidate = this.canValidateStage(stage.etape);
+                    const stageCard = document.createElement('div');
+                    stageCard.className = `stage-card ${isCompleted ? 'completed' : ''} ${!canValidate && !isCompleted ? 'disabled' : ''}`;
+                    stageCard.onclick = () => this.openModal(stage);
+
+                    stageCard.innerHTML = `
+                        <div class="stage-header">
+                            <div class="stage-number">${stage.etape}</div>
+                        </div>
+                        <div class="stage-title">${stage.depart} → ${stage.arrivee}</div>
+                        <div class="stage-route">${new Date(stage.date).toLocaleDateString('fr-FR')}</div>
+                        <div class="stage-stats">
+                            <div class="stage-stat">
+                                <i class="fas fa-route"></i>
+                                <span>${stage.distance} km</span>
+                            </div>
+                            <div class="stage-stat">
+                                <i class="fas fa-mountain"></i>
+                                <span>+${stage.denivele_positif}m</span>
+                            </div>
+                            <div class="stage-stat">
+                                <i class="fas fa-clock"></i>
+                                <span>${stage.duree}</span>
+                            </div>
+                            <div class="stage-stat">
+                                <i class="fas fa-signal"></i>
+                                <span class="difficulty-badge difficulty-${stage.difficulte.toLowerCase()}">${stage.difficulte}</span>
+                            </div>
+                        </div>
+                    `;
+
+                    container.appendChild(stageCard);
+                });
+            }
+
+            toggleStage(stageId) {
+                // Validation séquentielle : on ne peut valider que l'étape suivante
+                const nextStage = this.getNextStageToComplete();
+                
+                if (this.completedStages.has(stageId)) {
+                    // Dévalider une étape : on peut dévalider la dernière étape complétée
+                    const lastCompleted = Math.max(...Array.from(this.completedStages));
+                    if (stageId === lastCompleted) {
+                        this.completedStages.delete(stageId);
+                    } else {
+                        alert('Vous ne pouvez dévalider que la dernière étape complétée.');
+                        return;
+                    }
+                } else {
+                    // Valider une étape : on ne peut valider que la prochaine étape
+                    if (stageId === nextStage) {
+                        this.completedStages.add(stageId);
+                    } else {
+                        alert(`Vous devez d'abord compléter l'étape ${nextStage}.`);
+                        return;
+                    }
+                }
+                this.saveProgress();
+                this.renderStages();
+                this.updateProgress();
+            }
+
+            getNextStageToComplete() {
+                if (this.completedStages.size === 0) return 1;
+                const completed = Array.from(this.completedStages).sort((a, b) => a - b);
+                return completed[completed.length - 1] + 1;
+            }
+
+            canValidateStage(stageId) {
+                // L'étape 1 peut toujours être validée
+                if (stageId === 1) return true;
+                
+                // Pour les autres étapes, vérifier que l'étape précédente est complétée
+                return this.completedStages.has(stageId - 1);
+            }
+
+            updateProgress() {
+                const completedCount = this.completedStages.size;
+                const totalStages = this.itineraryData.length;
+                const progressPercentage = (completedCount / totalStages) * 100;
+
+                document.getElementById('progress-fill').style.width = `${progressPercentage}%`;
+                document.getElementById('completed-stages').textContent = completedCount;
+                document.getElementById('remaining-stages').textContent = totalStages - completedCount;
+
+                let totalDistance = 0;
+                let totalElevation = 0;
+
+                this.itineraryData.forEach(stage => {
+                    if (this.completedStages.has(stage.etape)) {
+                        totalDistance += stage.distance;
+                        totalElevation += stage.denivele_positif;
+                    }
+                });
+
+                document.getElementById('total-distance').textContent = Math.round(totalDistance);
+                document.getElementById('total-elevation').textContent = totalElevation;
+            }
+
+            openModal(stage) {
+                this.currentStageId = stage.etape;
+                const modal = document.getElementById('stage-modal');
+                
+                document.getElementById('modal-stage-title').textContent = `Étape ${stage.etape} : ${stage.depart} → ${stage.arrivee}`;
+                
+                const detailsContainer = document.getElementById('modal-details');
+                detailsContainer.innerHTML = `
+                    <div class="modal-detail-item">
+                        <i class="fas fa-calendar"></i>
+                        <div class="modal-detail-content">
+                            <div class="modal-detail-label">Date</div>
+                            <div class="modal-detail-value">${new Date(stage.date).toLocaleDateString('fr-FR')}</div>
+                        </div>
+                    </div>
+                    <div class="modal-detail-item">
+                        <i class="fas fa-route"></i>
+                        <div class="modal-detail-content">
+                            <div class="modal-detail-label">Distance</div>
+                            <div class="modal-detail-value">${stage.distance} km</div>
+                        </div>
+                    </div>
+                    <div class="modal-detail-item">
+                        <i class="fas fa-mountain"></i>
+                        <div class="modal-detail-content">
+                            <div class="modal-detail-label">Dénivelé +</div>
+                            <div class="modal-detail-value">${stage.denivele_positif} m</div>
+                        </div>
+                    </div>
+                    <div class="modal-detail-item">
+                        <i class="fas fa-clock"></i>
+                        <div class="modal-detail-content">
+                            <div class="modal-detail-label">Durée</div>
+                            <div class="modal-detail-value">${stage.duree}</div>
+                        </div>
+                    </div>
+                    <div class="modal-detail-item">
+                        <i class="fas fa-signal"></i>
+                        <div class="modal-detail-content">
+                            <div class="modal-detail-label">Difficulté</div>
+                            <div class="modal-detail-value"><span class="difficulty-badge difficulty-${stage.difficulte.toLowerCase()}">${stage.difficulte}</span></div>
+                        </div>
+                    </div>
+                    <div class="modal-detail-item">
+                        <i class="fas fa-mountain"></i>
+                        <div class="modal-detail-content">
+                            <div class="modal-detail-label">Type de terrain</div>
+                            <div class="modal-detail-value">${stage.terrain || 'Non spécifié'}</div>
+                        </div>
+                    </div>
+                    <div class="modal-detail-item">
+                        <i class="fas fa-home"></i>
+                        <div class="modal-detail-content">
+                            <div class="modal-detail-label">Hébergement</div>
+                            <div class="modal-detail-value">${stage.hebergement}<br>${stage.telephone || ''}</div>
+                        </div>
+                    </div>
+                `;
+
+                // Charger les informations de bivouac
+                const bivouacContainer = document.getElementById('bivouac-details');
+                bivouacContainer.innerHTML = `
+                    <div class="bivouac-options">
+                        ${stage.bivouacA ? `
+                            <div class="bivouac-option">
+                                <div class="bivouac-header">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <h4>Option A - Principal</h4>
+                                </div>
+                                <p class="bivouac-description">${stage.bivouacA}</p>
+                            </div>
+                        ` : ''}
+                        ${stage.bivouacB ? `
+                            <div class="bivouac-option">
+                                <div class="bivouac-header">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <h4>Option B - Alternative</h4>
+                                </div>
+                                <p class="bivouac-description">${stage.bivouacB}</p>
+                            </div>
+                        ` : ''}
+                        ${stage.eau ? `
+                            <div class="bivouac-info">
+                                <div class="bivouac-info-item">
+                                    <i class="fas fa-tint"></i>
+                                    <span><strong>Eau :</strong> ${stage.eau}</span>
+                                </div>
+                            </div>
+                        ` : ''}
+                        ${stage.ravitaillement ? `
+                            <div class="bivouac-info">
+                                <div class="bivouac-info-item">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <span><strong>Ravitaillement :</strong> ${stage.ravitaillement}</span>
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+
+                // Charger les notes et rating
+                document.getElementById('stage-notes').value = this.stageNotes[stage.etape] || '';
+                this.loadStageRating(stage.etape);
+
+                // Configurer le bouton de validation dans la modal
+                this.updateModalValidateButton(stage.etape);
+
+                modal.style.display = 'block';
+            }
+
+            setupEventListeners() {
+                // Modal event listeners
+                const modal = document.getElementById('stage-modal');
+                const closeBtn = modal.querySelector('.close');
+
+                closeBtn.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                });
+
+                window.addEventListener('click', (event) => {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+
+                // Tab switching
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const tabName = btn.dataset.tab;
+                        
+                        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                        
+                        btn.classList.add('active');
+                        document.getElementById(`${tabName}-tab`).classList.add('active');
+                    });
+                });
+
+                // Save notes
+                document.getElementById('save-notes').addEventListener('click', () => {
+                    const notes = document.getElementById('stage-notes').value;
+                    this.stageNotes[this.currentStageId] = notes;
+                    this.saveProgress();
+                    alert('Notes sauvegardées !');
+                });
+
+                // Star rating event listeners
+                document.querySelectorAll('.star').forEach(star => {
+                    star.addEventListener('click', (e) => {
+                        const rating = parseInt(e.target.dataset.rating);
+                        this.setStageRating(this.currentStageId, rating);
+                    });
+
+                    star.addEventListener('mouseover', (e) => {
+                        const rating = parseInt(e.target.dataset.rating);
+                        this.highlightStars(rating);
+                    });
+                });
+
+                document.getElementById('star-rating').addEventListener('mouseleave', () => {
+                    this.loadStageRating(this.currentStageId);
+                });
+
+                // Modal validate button event listener
+                document.getElementById('modal-validate-btn').addEventListener('click', () => {
+                    this.toggleStage(this.currentStageId);
+                    this.updateModalValidateButton(this.currentStageId);
+                });
+            }
+
+            setStageRating(stageId, rating) {
+                this.stageRatings[stageId] = rating;
+                this.saveProgress();
+                this.highlightStars(rating);
+            }
+
+            loadStageRating(stageId) {
+                const rating = this.stageRatings[stageId] || 0;
+                this.highlightStars(rating);
+            }
+
+            highlightStars(rating) {
+                document.querySelectorAll('.star').forEach((star, index) => {
+                    if (index < rating) {
+                        star.classList.add('active');
+                    } else {
+                        star.classList.remove('active');
+                    }
+                });
+            }
+
+            updateModalValidateButton(stageId) {
+                const btn = document.getElementById('modal-validate-btn');
+                const isCompleted = this.completedStages.has(stageId);
+                const canValidate = this.canValidateStage(stageId);
+                
+                // Reset classes
+                btn.className = 'modal-validate-btn';
+                
+                if (isCompleted) {
+                    btn.classList.add('completed');
+                    btn.innerHTML = '<i class="fas fa-check"></i><span>Complétée</span>';
+                } else if (canValidate) {
+                    btn.innerHTML = '<i class="fas fa-plus"></i><span>Valider</span>';
+                } else {
+                    btn.classList.add('disabled');
+                    btn.innerHTML = '<i class="fas fa-lock"></i><span>Verrouillée</span>';
+                    btn.disabled = true;
+                }
+                
+                if (canValidate || isCompleted) {
+                    btn.disabled = false;
+                }
+            }
+        }
+
+        // Initialiser l'application
+        document.addEventListener('DOMContentLoaded', () => {
+            window.dashboard = new GR10Dashboard();
+        });
+    </script>
+</body>
+</html>

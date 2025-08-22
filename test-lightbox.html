@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Lightbox</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        
+        .photo-item {
+            display: inline-block;
+            margin: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .photo-item img {
+            width: 150px;
+            height: 100px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .photo-item img:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Lightbox styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox.active {
+            display: flex !important;
+        }
+
+        .lightbox-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            background: white;
+            padding: 10px;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        .lightbox .close-lightbox {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 10001;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .test-info {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-info">
+        <h2>Test Lightbox - Diagnostic</h2>
+        <p>Cliquez sur une image pour tester la lightbox. Ouvrez la console pour voir les logs.</p>
+        <button onclick="testLightboxDirectly()">Test Direct Lightbox</button>
+    </div>
+
+    <div class="photo-item">
+        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjNDI4NWY0Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5JbWFnZSBUZXN0IDE8L3RleHQ+Cjwvc3ZnPgo=" 
+             alt="Test Image 1" 
+             onclick="openLightbox(this.src)">
+    </div>
+
+    <div class="photo-item">
+        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzRkMzk5Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5JbWFnZSBUZXN0IDI8L3RleHQ+Cjwvc3ZnPgo=" 
+             alt="Test Image 2" 
+             onclick="openLightbox(this.src)">
+    </div>
+
+    <!-- Lightbox HTML -->
+    <div id="lightbox" class="lightbox">
+        <span class="close-lightbox">&times;</span>
+        <div class="lightbox-content">
+            <img id="lightbox-img" src="" alt="">
+        </div>
+    </div>
+
+    <script>
+        console.log('🔧 Test Lightbox - Script chargé');
+        
+        function openLightbox(imageSrc) {
+            console.log('🖼️ === OUVERTURE LIGHTBOX TEST ===');
+            console.log('🖼️ Image source:', imageSrc);
+            
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const closeLightbox = document.querySelector('.close-lightbox');
+            
+            console.log('🖼️ Éléments trouvés:', {
+                lightbox: !!lightbox,
+                lightboxImg: !!lightboxImg,
+                closeLightbox: !!closeLightbox
+            });
+            
+            if (lightboxImg) {
+                console.log('🖼️ Configuration de l\'image...');
+                lightboxImg.src = imageSrc;
+                lightboxImg.style.display = 'block';
+                lightboxImg.style.visibility = 'visible';
+                lightboxImg.style.opacity = '1';
+                
+                lightboxImg.onload = () => {
+                    console.log('🖼️ ✅ Image chargée avec succès');
+                    console.log('🖼️ Dimensions naturelles:', lightboxImg.naturalWidth, 'x', lightboxImg.naturalHeight);
+                    console.log('🖼️ Dimensions affichées:', lightboxImg.offsetWidth, 'x', lightboxImg.offsetHeight);
+                };
+                
+                lightboxImg.onerror = () => {
+                    console.error('🖼️ ❌ Erreur de chargement de l\'image');
+                };
+            }
+            
+            if (lightbox) {
+                console.log('🖼️ Activation de la lightbox...');
+                lightbox.classList.add('active');
+                console.log('🖼️ Classes lightbox:', lightbox.className);
+                console.log('🖼️ Style display:', window.getComputedStyle(lightbox).display);
+            }
+        }
+        
+        function testLightboxDirectly() {
+            console.log('🔧 Test direct de la lightbox');
+            const lightbox = document.getElementById('lightbox');
+            lightbox.style.display = 'flex';
+            lightbox.style.visibility = 'visible';
+            lightbox.style.opacity = '1';
+            
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmY2MzQ3Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5URVNUIERJUKVDVCA8L3RleHQ+Cjwvc3ZnPgo=";
+            lightboxImg.style.display = 'block';
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔧 DOM chargé, initialisation des event listeners');
+            
+            const lightbox = document.getElementById('lightbox');
+            const closeLightbox = document.querySelector('.close-lightbox');
+            
+            if (closeLightbox) {
+                closeLightbox.addEventListener('click', function(e) {
+                    console.log('🖼️ Fermeture lightbox via croix');
+                    e.preventDefault();
+                    e.stopPropagation();
+                    lightbox.classList.remove('active');
+                    lightbox.style.display = 'none';
+                });
+            }
+            
+            if (lightbox) {
+                lightbox.addEventListener('click', function(e) {
+                    if (e.target === lightbox) {
+                        console.log('🖼️ Fermeture lightbox via clic extérieur');
+                        lightbox.classList.remove('active');
+                        lightbox.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

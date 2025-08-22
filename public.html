@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aventure GR10 - Suivi Public</title>
+    <link rel="stylesheet" href="minimal-clean.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="hero">
+        <div class="hero-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-mountain"></i>
+                    Aventure Pyrénéenne 2025
+                </div>
+                <h1>GR10</h1>
+                <p class="hero-subtitle">48 étapes • 8 septembre - 25 octobre 2025</p>
+                <p class="hero-description">Traversée complète des Pyrénées françaises d'Hendaye à Banyuls-sur-Mer. Une aventure épique à travers les plus beaux paysages montagnards.</p>
+                <a href="#stages" class="hero-cta">
+                    <i class="fas fa-route"></i>
+                    Découvrir l'itinéraire
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container public-view">
+        <!-- Dashboard de progression (lecture seule) -->
+        <div id="stages" class="progress-dashboard">
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-stats">
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="completed-stages">0</div>
+                    <div class="progress-stat-label">Étapes terminées</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="remaining-stages">48</div>
+                    <div class="progress-stat-label">Étapes restantes</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="total-distance">0</div>
+                    <div class="progress-stat-label">km parcourus</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="total-elevation-positive">0</div>
+                    <div class="progress-stat-label">m de dénivelé +</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="total-elevation-negative">0</div>
+                    <div class="progress-stat-label">m de dénivelé -</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="completion-percentage">0%</div>
+                    <div class="progress-stat-label">Progression</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation des sections -->
+        <nav class="section-nav">
+            <button class="nav-btn active" data-section="stages">
+                <i class="fas fa-route"></i>
+                Étapes
+            </button>
+            <button class="nav-btn" data-section="comments">
+                <i class="fas fa-comments"></i>
+                Commentaires
+            </button>
+            <button class="nav-btn" data-section="analytics">
+                <i class="fas fa-chart-line"></i>
+                Analytics
+            </button>
+        </nav>
+
+        <!-- Section Itinéraire -->
+        <section id="stages-section" class="content-section active">
+            <main id="stages-container" class="stages-grid">
+                <!-- Les étapes seront générées ici par JavaScript -->
+            </main>
+        </section>
+
+        <!-- Section Commentaires -->
+        <section id="comments-section" class="content-section">
+            <div class="comments-overview">
+                <h2><i class="fas fa-comments"></i> Tous les commentaires</h2>
+                <p class="comments-subtitle">Retrouvez tous les commentaires laissés par les visiteurs pour chaque étape</p>
+                <div id="all-comments-container">
+                    <!-- Les commentaires seront générés ici par JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Analytics -->
+        <section id="analytics-section" class="content-section">
+            <div class="analytics-overview">
+                <h2><i class="fas fa-chart-line"></i> Analytics & Performance</h2>
+                <p class="analytics-subtitle">Analyse détaillée de votre progression sur le GR10</p>
+                
+                <div class="analytics-grid">
+                    <!-- Graphique de progression -->
+                    <div class="analytics-card">
+                        <h3><i class="fas fa-trending-up"></i> Progression par semaine</h3>
+                        <canvas id="progress-chart" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <!-- Statistiques de performance -->
+                    <div class="analytics-card">
+                        <h3><i class="fas fa-stopwatch"></i> Performance</h3>
+                        <div class="performance-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">Rythme moyen</span>
+                                <span class="stat-value" id="average-pace">-</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Temps estimé restant</span>
+                                <span class="stat-value" id="estimated-remaining">-</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Étapes difficiles à venir</span>
+                                <span class="stat-value" id="difficult-stages">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Comparaison avec estimations -->
+                    <div class="analytics-card">
+                        <h3><i class="fas fa-balance-scale"></i> Vs Estimations</h3>
+                        <canvas id="comparison-chart" width="400" height="200"></canvas>
+                    </div>
+                    
+                    <!-- Conditions météo -->
+                    <div class="analytics-card">
+                        <h3><i class="fas fa-cloud-sun"></i> Conditions rencontrées</h3>
+                        <div class="weather-summary">
+                            <div class="weather-stat">
+                                <i class="fas fa-sun"></i>
+                                <span>Beau temps: <strong id="sunny-days">0</strong> jours</span>
+                            </div>
+                            <div class="weather-stat">
+                                <i class="fas fa-cloud-rain"></i>
+                                <span>Pluie: <strong id="rainy-days">0</strong> jours</span>
+                            </div>
+                            <div class="weather-stat">
+                                <i class="fas fa-wind"></i>
+                                <span>Vent fort: <strong id="windy-days">0</strong> jours</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal for stage details (public version) -->
+    <div id="stage-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title"></h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="modal-tabs">
+                    <button class="tab-btn active" data-tab="details">Détails</button>
+                    <button class="tab-btn" data-tab="notes">Notes</button>
+                    <button class="tab-btn" data-tab="photos">Photos</button>
+                    <button class="tab-btn" data-tab="comments">Commentaires</button>
+                </div>
+                    <div class="tab-content">
+                        <div id="details-tab" class="tab-pane active">
+                            <div id="modal-details"></div>
+                        </div>
+                        <div id="notes-tab" class="tab-pane">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-star"></i> 
+                                    Évaluation de l'étape
+                                </label>
+                                <div class="star-rating">
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-edit"></i> 
+                                    Notes du randonneur
+                                </label>
+                                <div class="notes-input-container">
+                                    <div id="public-notes-content" class="notes-display" style="display: block;">
+                                        <div class="notes-content">
+                                            <p class="no-notes">Aucune note disponible pour cette étape.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="photos-tab" class="tab-pane">
+                            <div class="upload-area" style="display: none;">
+                                <i class="fas fa-camera upload-area-icon"></i>
+                                <p class="upload-area-text">Photos uploadées par le randonneur</p>
+                                <small>Consultation uniquement</small>
+                            </div>
+                            <div id="photo-gallery" class="gallery"></div>
+                        </div>
+                        <div id="comments-tab" class="tab-pane">
+                            <div class="comments-section">
+                                <div class="comment-form">
+                                    <h4><i class="fas fa-comments"></i> Laisser un commentaire</h4>
+                                    <div class="form-group">
+                                        <input type="text" id="commenter-name" class="form-input" placeholder="Votre nom" maxlength="50">
+                                    </div>
+                                    <div class="form-group">
+                                        <textarea id="comment-text" class="form-input form-textarea" placeholder="Votre commentaire..." rows="4" maxlength="500"></textarea>
+                                        <small class="form-hint">Maximum 500 caractères</small>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button id="submit-comment" class="btn btn-primary">
+                                            <i class="fas fa-paper-plane"></i>
+                                            Publier
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="comments-list" id="comments-list">
+                                    <!-- Les commentaires seront ajoutés ici -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Photo Lightbox Modal -->
+    <div id="photo-lightbox" class="lightbox-overlay" style="display: none;">
+        <div class="lightbox-content">
+            <button class="lightbox-close">&times;</button>
+            <img id="lightbox-image" src="" alt="Photo en grand">
+            <div class="lightbox-nav">
+                <button id="lightbox-prev" class="lightbox-nav-btn">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button id="lightbox-next" class="lightbox-nav-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="lightbox-counter">
+                <span id="lightbox-current">1</span> / <span id="lightbox-total">1</span>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-mountain"></i> Aventure GR10</h3>
+                    <p>Suivez cette traversée complète des Pyrénées françaises</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Dates</h4>
+                    <p><i class="fas fa-play"></i> Départ: 8 septembre 2025</p>
+                    <p><i class="fas fa-flag-checkered"></i> Arrivée: 25 octobre 2025</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact d'urgence</h4>
+                    <p><i class="fas fa-phone"></i> 112 (Secours)</p>
+                    <p><i class="fas fa-map-marker-alt"></i> PGHM Pyrénées</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 - Bonne randonnée ! 🥾 | <a href="index.html">Version Admin</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts modulaires -->
+    <script src="js/data.js"></script>
+    <script src="js/progress.js"></script>
+    <script src="js/public-modal.js"></script>
+    <script src="js/comments.js"></script>
+    <script src="js/comments-overview.js"></script>
+    <script src="js/analytics.js"></script>
+    <script src="js/public-app.js"></script>
+    
+    <script>
+        // S'assurer que le modal manager est initialisé
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!window.publicModalManager) {
+                window.publicModalManager = new PublicModalManager();
+            }
+            
+            // Debug: vérifier que les éléments existent
+            console.log('Modal element:', document.getElementById('stage-modal'));
+            console.log('Details container:', document.getElementById('modal-details'));
+            console.log('Tab content:', document.querySelector('.tab-content'));
+            console.log('Details tab:', document.getElementById('details-tab'));
+            
+            // Test d'ouverture de modal
+            setTimeout(() => {
+                if (window.itineraryData && window.itineraryData.length > 0) {
+                    console.log('Testing modal with first stage:', window.itineraryData[0]);
+                    window.openPublicStageModal(1);
+                }
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

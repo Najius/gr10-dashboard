@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Simple Modal</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-card {
+            width: 200px;
+            height: 100px;
+            background: #007bff;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal-content {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+        }
+        .close { float: right; font-size: 24px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Test Simple - Production vs Local</h1>
+    <p>Environnement: <span id="env"></span></p>
+    <p>User Agent: <span id="ua"></span></p>
+    
+    <div class="test-card" data-test-id="1">
+        Cliquez ici - Test 1
+    </div>
+    
+    <div class="test-card" data-test-id="2">
+        Cliquez ici - Test 2
+    </div>
+    
+    <div id="test-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Modal Test</h2>
+            <p id="modal-content">Contenu de test</p>
+        </div>
+    </div>
+    
+    <div id="log" style="margin-top: 20px; padding: 10px; background: #f8f9fa; border-radius: 4px;">
+        <h3>Logs:</h3>
+        <div id="log-content"></div>
+    </div>
+
+    <script>
+        // Fonction de log
+        function log(message) {
+            console.log(message);
+            const logDiv = document.getElementById('log-content');
+            logDiv.innerHTML += '<div>' + new Date().toLocaleTimeString() + ': ' + message + '</div>';
+        }
+        
+        // Info environnement
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        document.getElementById('env').textContent = isLocal ? 'LOCAL' : 'PRODUCTION';
+        document.getElementById('ua').textContent = navigator.userAgent.substring(0, 50) + '...';
+        
+        log('🚀 Script chargé - Environnement: ' + (isLocal ? 'LOCAL' : 'PRODUCTION'));
+        
+        // Fonction d'ouverture modal
+        function openModal(testId) {
+            log('🎯 openModal appelée pour test: ' + testId);
+            const modal = document.getElementById('test-modal');
+            const content = document.getElementById('modal-content');
+            
+            if (modal && content) {
+                content.textContent = 'Test ID: ' + testId + ' - Environnement: ' + (isLocal ? 'LOCAL' : 'PRODUCTION');
+                modal.style.display = 'block';
+                log('✅ Modal affichée');
+            } else {
+                log('❌ Modal ou contenu non trouvé');
+            }
+        }
+        
+        // Fermeture modal
+        function closeModal() {
+            const modal = document.getElementById('test-modal');
+            if (modal) {
+                modal.style.display = 'none';
+                log('✅ Modal fermée');
+            }
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            log('📋 DOM ready');
+            
+            // Délégation d'événements
+            document.addEventListener('click', function(e) {
+                log('🔥 Clic détecté sur: ' + e.target.tagName + ' - Classes: ' + e.target.className);
+                
+                const testCard = e.target.closest('.test-card');
+                if (testCard) {
+                    const testId = testCard.getAttribute('data-test-id');
+                    log('🎯 Test card détectée - ID: ' + testId);
+                    e.preventDefault();
+                    openModal(testId);
+                }
+                
+                if (e.target.classList.contains('close')) {
+                    closeModal();
+                }
+            });
+            
+            log('✅ Event listeners configurés');
+        });
+        
+        // Test global
+        window.testOpenModal = openModal;
+        log('🌍 Fonction globale testOpenModal disponible');
+    </script>
+</body>
+</html>
