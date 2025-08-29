@@ -676,38 +676,14 @@
 
         .stage-card-image {
             width: 100%;
-            height: 150px;
+            height: 120px;
             object-fit: cover;
-            border-radius: 8px 8px 0 0;
+            border-radius: 12px 12px 0 0;
             display: block;
         }
 
-        .stage-card-comments {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .stage-card-comments:hover {
-            background: rgba(0, 0, 0, 0.9);
-        }
-
-        .stage-card-comments i {
-            font-size: 0.7rem;
-        }
-
         .stage-card-content {
-            padding: 16px;
+            padding: 20px;
         }
 
         .stage-card.no-image .stage-card-content {
@@ -1698,174 +1674,53 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: 0.75rem;
+            margin-top: 1rem;
         }
 
         .photo-item {
             position: relative;
-            border-radius: 8px;
+            aspect-ratio: 1;
+            border-radius: 0.5rem;
             overflow: hidden;
-            background: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background: #f5f5f5;
+            cursor: pointer;
             transition: transform 0.2s ease;
         }
 
         .photo-item:hover {
-            transform: scale(1.02);
-        }
-
-        .photo-item.featured {
-            border: 3px solid #f59e0b;
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+            transform: scale(1.05);
         }
 
         .photo-item img {
             width: 100%;
-            height: 150px;
+            height: 100%;
             object-fit: cover;
-            cursor: pointer;
         }
 
-        .photo-controls {
+        .photo-item .delete-photo {
             position: absolute;
-            top: 8px;
-            right: 8px;
-            display: flex;
-            gap: 4px;
-        }
-
-        .set-featured-photo {
-            background: rgba(245, 158, 11, 0.9);
-            color: white;
+            top: 0.25rem;
+            right: 0.25rem;
+            background: rgba(255, 255, 255, 0.9);
             border: none;
             border-radius: 50%;
-            width: 32px;
-            height: 32px;
+            width: 24px;
+            height: 24px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
-            transition: all 0.2s ease;
-        }
-
-        .set-featured-photo:hover {
-            background: rgba(245, 158, 11, 1);
-            transform: scale(1.1);
-        }
-
-        .set-featured-photo.active {
-            background: #f59e0b;
-            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
-        }
-
-        .delete-photo {
-            background: rgba(239, 68, 68, 0.9);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            transition: all 0.2s ease;
-        }
-
-        .delete-photo:hover {
-            background: rgba(239, 68, 68, 1);
-            transform: scale(1.1);
-        }
-
-        /* Styles pour les commentaires */
-        .comments-section {
-            padding: 1rem 0;
-        }
-
-        .add-comment {
-            background: #f8fafc;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .add-comment h4 {
-            color: var(--text-color);
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-        }
-
-        .comment-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .comment-form input,
-        .comment-form textarea {
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 0.75rem;
-            font-size: 0.9rem;
-            transition: border-color 0.2s ease;
-        }
-
-        .comment-form input:focus,
-        .comment-form textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .comment-form textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .comments-list h4 {
-            color: var(--text-color);
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-        }
-
-        .comment-item {
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .comment-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .comment-author {
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        .comment-date {
             font-size: 0.8rem;
-            color: var(--text-light);
+            color: #e74c3c;
+            opacity: 0;
+            transition: opacity 0.2s ease;
         }
 
-        .comment-text {
-            color: var(--text-color);
-            line-height: 1.5;
+        .photo-item:hover .delete-photo {
+            opacity: 1;
         }
 
-        .no-comments {
-            text-align: center;
-            color: var(--text-light);
-            font-style: italic;
-            padding: 2rem;
-        }
-
+        /* Nouvelle lightbox robuste */
         .photo-lightbox {
             position: fixed;
             top: 0;
@@ -2599,7 +2454,6 @@
                     <button class="tab-btn" data-tab="notes">Notes</button>
                     <button class="admin-only tab-btn" data-tab="rating">Évaluation</button>
                     <button class="tab-btn" data-tab="photos">Photos</button>
-                    <button class="tab-btn" data-tab="comments">Commentaires</button>
                 </div>
                 
                 <div id="details-tab" class="tab-content active">
@@ -2711,27 +2565,6 @@ Suggestions :
                     </div>
                 </div>
 
-                <div id="comments-tab" class="tab-content">
-                    <div class="comments-section">
-                        <div class="add-comment">
-                            <h4><i class="fas fa-comments"></i> Ajouter un commentaire</h4>
-                            <div class="comment-form">
-                                <input type="text" id="comment-author" placeholder="Votre nom" maxlength="50">
-                                <textarea id="comment-text" placeholder="Votre commentaire sur cette étape..." maxlength="500" rows="3"></textarea>
-                                <button id="add-comment-btn" class="btn-primary">
-                                    <i class="fas fa-paper-plane"></i> Publier
-                                </button>
-                            </div>
-                        </div>
-                        <div class="comments-list">
-                            <h4><i class="fas fa-comment-dots"></i> Commentaires</h4>
-                            <div id="comments-container">
-                                <!-- Comments will be displayed here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
 
             </div>
         </div>
@@ -2765,8 +2598,6 @@ Suggestions :
                 this.stageNotes = {};
                 this.stageRatings = {};
                 this.stagePhotos = {};
-                this.stageFeaturedPhotos = {}; // Photo principale sélectionnée pour chaque étape
-                this.stageComments = {}; // Commentaires des visiteurs pour chaque étape
                 this.currentStageId = 1;
                 this.map = null;
                 this.currentWeatherData = null;
@@ -3154,9 +2985,7 @@ Suggestions :
                     this.completedStages = new Set(data.completedStages || []);
                     this.stageNotes = data.stageNotes || {};
                     this.stageRatings = data.stageRatings || {};
-                    if (data.stagePhotos) this.stagePhotos = data.stagePhotos;
-                    if (data.stageFeaturedPhotos) this.stageFeaturedPhotos = data.stageFeaturedPhotos;
-                if (data.stageComments) this.stageComments = data.stageComments;
+                    this.stagePhotos = data.stagePhotos || {};
                     this.detailedRatings = data.detailedRatings || {};
                     this.stageTimes = data.stageTimes || {};
                 }
@@ -3168,8 +2997,6 @@ Suggestions :
                     stageNotes: this.stageNotes,
                     stageRatings: this.stageRatings,
                     stagePhotos: this.stagePhotos,
-                    stageFeaturedPhotos: this.stageFeaturedPhotos,
-                    stageComments: this.stageComments,
                     detailedRatings: this.detailedRatings,
                     stageTimes: this.stageTimes
                 };
@@ -3204,59 +3031,20 @@ Suggestions :
                     // Ajouter une classe pour identifier les cards cliquables
                     stageCard.classList.add('clickable-card');
 
-                    // Récupérer la photo principale sélectionnée ou la première photo
+                    // Récupérer la première photo de l'étape (avec vérification)
                     const stagePhotos = this.stagePhotos[stage.etape] || [];
-                    const featuredPhotoId = this.stageFeaturedPhotos[stage.etape];
-                    let featuredPhoto = null;
-                    
-                    console.log(`Étape ${stage.etape}: ${stagePhotos.length} photos, featuredId: ${featuredPhotoId}`);
-                    
-                    if (featuredPhotoId) {
-                        featuredPhoto = stagePhotos.find(photo => photo.id == featuredPhotoId);
-                        console.log(`Photo principale trouvée pour étape ${stage.etape}:`, !!featuredPhoto);
-                        if (!featuredPhoto) {
-                            console.log('IDs disponibles:', stagePhotos.map(p => p.id));
-                            console.log('ID recherché:', featuredPhotoId, 'type:', typeof featuredPhotoId);
-                        }
-                    }
-                    
-                    const displayPhoto = featuredPhoto || (stagePhotos.length > 0 ? stagePhotos[0] : null);
-                    console.log(`Photo à afficher pour étape ${stage.etape}:`, !!displayPhoto);
+                    const firstPhoto = stagePhotos.length > 0 ? stagePhotos[0] : null;
                     let imageHtml = '';
                     
-                    // Compter les commentaires pour cette étape
-                    const commentsCount = (this.stageComments[stage.etape] || []).length;
-                    let commentsHtml = '';
-                    if (commentsCount > 0) {
-                        commentsHtml = `
-                            <div class="stage-card-comments" onclick="event.stopPropagation(); window.dashboard.openModalToComments(${stage.etape});">
-                                <i class="fas fa-comment"></i>
-                                <span>${commentsCount}</span>
-                            </div>
-                        `;
-                    }
-
                     try {
-                        if (displayPhoto && displayPhoto.data) {
-                            imageHtml = `
-                                <div style="position: relative;">
-                                    <img src="${displayPhoto.data}" alt="Photo étape ${stage.etape}" class="stage-card-image">
-                                    ${commentsHtml}
-                                </div>
-                            `;
-                        } else if (commentsCount > 0) {
-                            imageHtml = `
-                                <div style="position: relative; height: 150px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; border-radius: 8px 8px 0 0;">
-                                    <i class="fas fa-image" style="font-size: 2rem; color: #94a3b8;"></i>
-                                    ${commentsHtml}
-                                </div>
-                            `;
+                        if (firstPhoto && firstPhoto.data) {
+                            imageHtml = `<img src="${firstPhoto.data}" alt="Photo étape ${stage.etape}" class="stage-card-image">`;
                         }
                     } catch (error) {
                         console.error('Erreur lors du chargement de la photo pour l\'étape', stage.etape, ':', error);
                     }
                     
-                    if (!displayPhoto) {
+                    if (!firstPhoto) {
                         stageCard.classList.add('no-image');
                     } else {
                         stageCard.classList.remove('no-image');
@@ -3768,7 +3556,6 @@ Suggestions :
                 this.loadDetailedRatings(stage.etape);
                 this.loadStagePhotos(stage.etape);
                 this.loadStageTime(stage.etape);
-                this.loadStageComments(stage.etape);
 
                 // Configurer le bouton de validation dans la modal
                 this.updateModalValidateButton(stage.etape);
@@ -3798,9 +3585,6 @@ Suggestions :
                 modal.style.display = 'block';
                 document.body.classList.add('modal-open');
                 console.log('Modal should now be visible');
-                
-                // Force un reflow pour s'assurer que le style est appliqué
-                modal.offsetHeight;
                 
                 // S'assurer que l'onglet "Détails" est actif par défaut
                 document.querySelectorAll('.modal-tabs .tab-btn').forEach(b => b.classList.remove('active'));
@@ -4220,33 +4004,6 @@ Suggestions :
                         this.renderStages(); // Mettre à jour l'affichage des cartes
                     });
                 }
-
-                // Event listener pour ajouter un commentaire - à configurer après ouverture modal
-                setTimeout(() => {
-                    const addCommentBtn = document.getElementById('add-comment-btn');
-                    if (addCommentBtn) {
-                        // Supprimer les anciens listeners
-                        addCommentBtn.replaceWith(addCommentBtn.cloneNode(true));
-                        const newBtn = document.getElementById('add-comment-btn');
-                        
-                        newBtn.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            console.log('🔥 Bouton commentaire cliqué');
-                            this.addComment(this.currentStageId);
-                        });
-                    }
-
-                    // Event listener pour Enter dans le textarea
-                    const commentText = document.getElementById('comment-text');
-                    if (commentText) {
-                        commentText.addEventListener('keydown', (e) => {
-                            if (e.key === 'Enter' && e.ctrlKey) {
-                                e.preventDefault();
-                                this.addComment(this.currentStageId);
-                            }
-                        });
-                    }
-                }, 300);
             }
 
             setStageRating(stageId, rating) {
@@ -4350,61 +4107,21 @@ Suggestions :
                 if (!gallery) return;
                 
                 const photos = this.stagePhotos[stageId] || [];
-                const featuredPhotoId = this.stageFeaturedPhotos[stageId];
                 
-                gallery.innerHTML = photos.map(photo => {
-                    const isFeatured = photo.id == featuredPhotoId;
-                    return `
-                        <div class="photo-item ${isFeatured ? 'featured' : ''}">
-                            <img src="${photo.data}" alt="Photo étape ${stageId}" onclick="window.dashboard.openLightbox('${photo.data}')">
-                            <div class="photo-controls">
-                                <button class="set-featured-photo admin-only ${isFeatured ? 'active' : ''}" 
-                                        onclick="window.dashboard.setFeaturedPhoto(${stageId}, '${photo.id}')" 
-                                        title="${isFeatured ? 'Photo principale' : 'Définir comme photo principale'}">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <button class="delete-photo admin-only" onclick="window.dashboard.deletePhoto(${stageId}, '${photo.id}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }
-
-            setFeaturedPhoto(stageId, photoId) {
-                if (!this.isAdminMode) {
-                    alert('Vous devez être connecté en tant qu\'admin pour définir une photo principale.');
-                    return;
-                }
-                
-                console.log('setFeaturedPhoto appelé:', { stageId, photoId, currentFeatured: this.stageFeaturedPhotos[stageId] });
-                
-                // Toujours définir la nouvelle photo comme principale (pas de toggle)
-                this.stageFeaturedPhotos[stageId] = photoId;
-                
-                console.log('Nouvelle photo principale définie:', this.stageFeaturedPhotos[stageId]);
-                
-                this.saveProgress();
-                this.loadStagePhotos(stageId);
-                
-                // Mettre à jour l'affichage des cartes avec un délai pour s'assurer que les données sont sauvegardées
-                setTimeout(() => {
-                    console.log('Mise à jour des cartes...');
-                    this.renderStages();
-                }, 100);
+                gallery.innerHTML = photos.map(photo => `
+                    <div class="photo-item">
+                        <img src="${photo.data}" alt="Photo étape ${stageId}" onclick="window.dashboard.openLightbox('${photo.data}')">
+                        <button class="delete-photo admin-only" onclick="window.dashboard.deletePhoto(${stageId}, '${photo.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `).join('');
             }
 
             deletePhoto(stageId, photoId) {
                 if (confirm('Êtes-vous sûr de vouloir supprimer cette photo ?')) {
                     if (this.stagePhotos[stageId]) {
                         this.stagePhotos[stageId] = this.stagePhotos[stageId].filter(photo => photo.id != photoId);
-                        
-                        // Si c'était la photo principale, la retirer
-                        if (this.stageFeaturedPhotos[stageId] == photoId) {
-                            delete this.stageFeaturedPhotos[stageId];
-                        }
-                        
                         this.saveProgress();
                         this.loadStagePhotos(stageId);
                         // Mettre à jour l'affichage des cartes après suppression
@@ -5434,48 +5151,53 @@ Suggestions :
                 }
             }, 2000);
             
-            // Délégation d'événements au niveau document pour les cards ET les boutons
+            // Délégation d'événements au niveau document pour les cards
             document.addEventListener('click', function(e) {
-                console.log('🔥 CLIC DÉTECTÉ:', e.target);
-                
-                // Vérifier si c'est un clic sur le bouton de commentaire
-                if (e.target.id === 'add-comment-btn' || e.target.closest('#add-comment-btn')) {
-                    console.log('🔥 Clic sur bouton commentaire détecté');
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (window.dashboard && window.dashboard.currentStageId) {
-                        window.dashboard.addComment(window.dashboard.currentStageId);
-                    }
-                    return;
-                }
+                console.log('🔥 CLIC DÉTECTÉ sur:', e.target);
+                console.log('🔥 Classes de l\'élément:', e.target.className);
                 
                 const card = e.target.closest('.stage-card');
                 if (card) {
-                    console.log('🎯 Card trouvée:', card);
-                    const stageId = card.getAttribute('data-stage-id');
-                    console.log('🎯 Stage ID:', stageId);
-                    console.log('🎯 Dashboard existe:', !!window.dashboard);
-                    console.log('🎯 openModal existe:', typeof window.dashboard?.openModal);
+                    console.log('🎯 Document click delegation - Card détectée');
+                    console.log('🎯 Card element:', card);
+                    console.log('🎯 Card classes:', card.className);
                     
-                    if (stageId && window.dashboard && window.dashboard.itineraryData) {
+                    const stageId = card.getAttribute('data-stage-id');
+                    console.log('🎯 Stage ID brut:', stageId);
+                    
+                    if (stageId) {
+                        console.log('🎯 Stage ID trouvé:', stageId);
                         e.preventDefault();
                         e.stopPropagation();
                         
-                        const stage = window.dashboard.itineraryData.find(s => s.etape == stageId);
-                        console.log('🎯 Stage trouvé:', stage);
-                        if (stage && typeof window.dashboard.openModal === 'function') {
-                            console.log('🎯 Appel openModal...');
-                            window.dashboard.openModal(stage);
+                        console.log('🎯 Dashboard disponible:', !!window.dashboard);
+                        console.log('🎯 itineraryData disponible:', !!window.dashboard?.itineraryData);
+                        console.log('🎯 Nombre d\'étapes:', window.dashboard?.itineraryData?.length);
+                        
+                        if (window.dashboard && window.dashboard.itineraryData) {
+                            const stage = window.dashboard.itineraryData.find(s => s.etape == stageId);
+                            console.log('🎯 Stage trouvé:', !!stage);
+                            if (stage) {
+                                console.log('🎯 Stage data:', stage);
+                                console.log('🎯 openModal disponible:', typeof window.dashboard.openModal);
+                                
+                                if (typeof window.dashboard.openModal === 'function') {
+                                    console.log('🎯 Appel openModal...');
+                                    window.dashboard.openModal(stage);
+                                } else {
+                                    console.error('❌ openModal n\'est pas une fonction');
+                                }
+                            } else {
+                                console.error('❌ Stage non trouvé pour ID:', stageId);
+                            }
                         } else {
-                            console.error('❌ Stage ou openModal manquant');
+                            console.error('❌ Dashboard ou itineraryData non disponible');
                         }
                     } else {
-                        console.error('❌ Conditions non remplies:', {
-                            stageId,
-                            dashboard: !!window.dashboard,
-                            itineraryData: !!window.dashboard?.itineraryData
-                        });
+                        console.error('❌ Pas de stage-id sur la card');
                     }
+                } else {
+                    console.log('🔍 Clic hors card');
                 }
             });
             
@@ -5484,27 +5206,36 @@ Suggestions :
                 console.log('🔍 Test de la modal après initialisation...');
                 const modal = document.getElementById('stage-modal');
                 console.log('Modal trouvée:', !!modal);
-                console.log('Dashboard global:', !!window.dashboard);
-                console.log('Dashboard openModal:', typeof window.dashboard?.openModal);
-                
-                // Test direct d'ouverture de modal - DÉSACTIVÉ
-                // if (window.dashboard && window.dashboard.itineraryData && window.dashboard.itineraryData.length > 0) {
-                //     console.log('🧪 Test direct openModal avec première étape...');
-                //     const firstStage = window.dashboard.itineraryData[0];
-                //     console.log('🧪 Première étape:', firstStage);
-                //     
-                //     // Test direct
-                //     try {
-                //         window.dashboard.openModal(firstStage);
-                //         console.log('✅ Test openModal réussi');
-                //     } catch (error) {
-                //         console.error('❌ Erreur test openModal:', error);
-                //     }
-                // }
                 
                 // Test des cards
                 const cards = document.querySelectorAll('.stage-card');
                 console.log('Nombre de cards trouvées:', cards.length);
+                
+                if (cards.length > 0) {
+                    console.log('Première card:', cards[0]);
+                    console.log('onclick de la première card:', typeof cards[0].onclick);
+                    
+                    // Ajouter event listeners globaux comme fallback
+                    cards.forEach((card, index) => {
+                        const stageId = card.getAttribute('data-stage-id');
+                        if (stageId && !card.hasAttribute('data-global-listener')) {
+                            card.addEventListener('click', function(e) {
+                                console.log('🚨 Global fallback listener triggered for stage:', stageId);
+                                e.preventDefault();
+                                e.stopPropagation();
+                                
+                                const stage = dashboard.itineraryData.find(s => s.etape == stageId);
+                                if (stage && dashboard.openModal) {
+                                    dashboard.openModal(stage);
+                                } else {
+                                    console.error('Stage ou openModal non trouvé');
+                                }
+                            });
+                            card.setAttribute('data-global-listener', 'true');
+                            console.log('✅ Global listener ajouté pour card', stageId);
+                        }
+                    });
+                }
             }, 1500);
             
             // Event listener pour l'onglet Analytics - SUPPRIMÉ pour éviter double appel
@@ -5593,131 +5324,6 @@ Suggestions :
                 }
             });
         }
-
-        // Méthode pour ouvrir la modal directement sur l'onglet commentaires
-        GR10Dashboard.prototype.openModalToComments = function(stageId) {
-            const stage = this.itineraryData.find(s => s.etape == stageId);
-            if (stage) {
-                this.openModal(stage);
-                // Attendre que la modal soit ouverte puis basculer vers l'onglet commentaires
-                setTimeout(() => {
-                    this.switchModalTab('comments');
-                }, 200);
-            }
-        };
-
-        // Ajouter les méthodes de commentaires à la classe GR10Dashboard
-        GR10Dashboard.prototype.addComment = function(stageId) {
-            console.log('🔥 addComment appelé pour étape:', stageId);
-            
-            const authorInput = document.getElementById('comment-author');
-            const textInput = document.getElementById('comment-text');
-            
-            console.log('🔥 Éléments trouvés:', {
-                authorInput: !!authorInput,
-                textInput: !!textInput
-            });
-            
-            if (!authorInput || !textInput) {
-                console.error('❌ Éléments de formulaire non trouvés');
-                return;
-            }
-            
-            const author = authorInput.value.trim();
-            const text = textInput.value.trim();
-            
-            console.log('🔥 Valeurs:', { author, text });
-            
-            if (!author || !text) {
-                alert('Veuillez remplir votre nom et votre commentaire.');
-                return;
-            }
-            
-            if (!this.stageComments[stageId]) {
-                this.stageComments[stageId] = [];
-            }
-            
-            const comment = {
-                id: Date.now(),
-                author: author,
-                text: text,
-                date: new Date().toISOString()
-            };
-            
-            console.log('🔥 Nouveau commentaire:', comment);
-            
-            this.stageComments[stageId].push(comment);
-            this.saveProgress();
-            
-            console.log('🔥 Commentaires sauvegardés:', this.stageComments[stageId]);
-            
-            // Vider les champs
-            authorInput.value = '';
-            textInput.value = '';
-            
-            // Recharger les commentaires avec un délai pour s'assurer que l'onglet est visible
-            setTimeout(() => {
-                this.loadStageComments(stageId);
-                // Mettre à jour l'affichage des cards pour refléter le nouveau compteur
-                this.renderStages();
-            }, 100);
-            
-            console.log('✅ Commentaire ajouté avec succès');
-        };
-
-        GR10Dashboard.prototype.loadStageComments = function(stageId) {
-            console.log('🔥 loadStageComments appelé pour étape:', stageId);
-            
-            const container = document.getElementById('comments-container');
-            console.log('🔥 Container trouvé:', !!container);
-            
-            if (!container) {
-                console.error('❌ Container comments-container non trouvé');
-                return;
-            }
-            
-            const comments = this.stageComments[stageId] || [];
-            console.log('🔥 Commentaires à afficher:', comments);
-            
-            if (comments.length === 0) {
-                console.log('🔥 Aucun commentaire - affichage message par défaut');
-                container.innerHTML = '<div class="no-comments">Aucun commentaire pour cette étape. Soyez le premier à partager votre expérience !</div>';
-                return;
-            }
-            
-            console.log('🔥 Génération HTML pour', comments.length, 'commentaires');
-            
-            const html = comments.map(comment => {
-                const date = new Date(comment.date);
-                const formattedDate = date.toLocaleDateString('fr-FR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                
-                return `
-                    <div class="comment-item">
-                        <div class="comment-header">
-                            <span class="comment-author">${this.escapeHtml(comment.author)}</span>
-                            <span class="comment-date">${formattedDate}</span>
-                        </div>
-                        <div class="comment-text">${this.escapeHtml(comment.text)}</div>
-                    </div>
-                `;
-            }).join('');
-            
-            console.log('🔥 HTML généré:', html);
-            container.innerHTML = html;
-            console.log('✅ Commentaires affichés dans le container');
-        };
-
-        GR10Dashboard.prototype.escapeHtml = function(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        };
     </script>
 </body>
 </html>
