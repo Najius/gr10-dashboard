@@ -1,0 +1,828 @@
+/* Hiking Dashboard Design - Inspired by Nature */
+
+:root {
+    /* Nature-Inspired Color Palette */
+    --color-forest-dark: #1a3b2e;
+    --color-forest: #2d5a47;
+    --color-forest-light: #4a7c59;
+    --color-sage: #87a96b;
+    --color-mint: #a8d5ba;
+    --color-cream: #f5f3f0;
+    --color-sand: #e8e2d5;
+    --color-stone: #d4c5b9;
+    --color-earth: #8b7355;
+    --color-sky: #7fb3d3;
+    --color-sunset: #d4a574;
+    --color-sunrise: #f4a261;
+    
+    /* Semantic Colors */
+    --color-success: var(--color-sage);
+    --color-warning: var(--color-sunset);
+    --color-danger: #c1666b;
+    --color-info: var(--color-sky);
+    
+    /* Text Colors */
+    --color-text-primary: var(--color-forest-dark);
+    --color-text-secondary: var(--color-forest);
+    --color-text-muted: var(--color-earth);
+    --color-text-light: var(--color-cream);
+    
+    /* Background Colors */
+    --color-background: var(--color-cream);
+    --color-surface: #ffffff;
+    --color-surface-elevated: var(--color-sand);
+    
+    /* Border Colors */
+    --color-border: var(--color-stone);
+    --color-border-light: rgba(212, 197, 185, 0.3);
+    
+    /* Shadows with warm tones */
+    --shadow-warm-sm: 0 2px 4px rgba(139, 115, 85, 0.1);
+    --shadow-warm-md: 0 4px 12px rgba(139, 115, 85, 0.15);
+    --shadow-warm-lg: 0 8px 24px rgba(139, 115, 85, 0.2);
+    --shadow-warm-xl: 0 12px 40px rgba(139, 115, 85, 0.25);
+    
+    /* Border Radius - Organic shapes */
+    --radius-sm: 0.5rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
+    --radius-2xl: 2rem;
+    --radius-organic: 1.25rem;
+    
+    /* Spacing */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --space-20: 5rem;
+    
+    /* Typography */
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 1.875rem;
+    --font-size-4xl: 2.25rem;
+    --font-size-5xl: 3rem;
+}
+
+/* Global Styles */
+body {
+    background: var(--color-background);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--color-text-primary);
+    line-height: 1.6;
+    font-size: var(--font-size-sm);
+}
+
+/* Remove particles */
+.hero-particles {
+    display: none;
+}
+
+/* Nature-Inspired Hero */
+.hero {
+    background: linear-gradient(135deg, var(--color-forest-dark) 0%, var(--color-forest) 50%, var(--color-forest-light) 100%);
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0,50 Q25,30 50,50 T100,50 L100,100 L0,100 Z" fill="rgba(135,169,107,0.1)"/></svg>') no-repeat bottom center;
+    background-size: cover;
+}
+
+.hero-content {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: var(--space-8);
+    position: relative;
+    z-index: 2;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: rgba(168, 213, 186, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(168, 213, 186, 0.3);
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--radius-organic);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-mint);
+    margin-bottom: var(--space-8);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.hero h1 {
+    font-size: var(--font-size-5xl);
+    font-weight: 800;
+    color: var(--color-text-light);
+    margin-bottom: var(--space-4);
+    letter-spacing: -0.025em;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+}
+
+.hero-subtitle {
+    font-size: var(--font-size-xl);
+    color: var(--color-mint);
+    margin-bottom: var(--space-3);
+    font-weight: 500;
+}
+
+.hero-description {
+    font-size: var(--font-size-lg);
+    color: rgba(245, 243, 240, 0.9);
+    margin-bottom: var(--space-10);
+    line-height: 1.7;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    background: var(--color-sage);
+    color: var(--color-text-light);
+    padding: var(--space-4) var(--space-8);
+    border-radius: var(--radius-organic);
+    font-weight: 600;
+    font-size: var(--font-size-base);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-warm-md);
+    border: 2px solid transparent;
+}
+
+.hero-cta:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-warm-lg);
+    background: var(--color-forest-light);
+    border-color: var(--color-mint);
+}
+
+/* Organic Progress Dashboard */
+.progress-dashboard {
+    background: var(--color-surface);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-10);
+    margin: -var(--space-16) auto var(--space-16);
+    max-width: 1200px;
+    box-shadow: var(--shadow-warm-xl);
+    border: 1px solid var(--color-border-light);
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-dashboard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-sage) 0%, var(--color-mint) 50%, var(--color-sky) 100%);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.progress-bar {
+    height: 12px;
+    background: var(--color-sand);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-bottom: var(--space-10);
+    box-shadow: inset 0 2px 4px rgba(139, 115, 85, 0.1);
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-sage) 0%, var(--color-mint) 100%);
+    border-radius: var(--radius-md);
+    transition: width 2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+    animation: progressShimmer 2s ease-in-out infinite;
+}
+
+@keyframes progressShimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+}
+
+.progress-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-6);
+}
+
+.progress-stat {
+    text-align: center;
+    padding: var(--space-5);
+    border-radius: var(--radius-xl);
+    background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-elevated) 100%);
+    border: 1px solid var(--color-border-light);
+    box-shadow: var(--shadow-warm-sm);
+    transition: transform 0.2s ease;
+}
+
+.progress-stat:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-warm-md);
+}
+
+.progress-stat-number {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    color: var(--color-forest);
+    margin-bottom: var(--space-2);
+    background: linear-gradient(135deg, var(--color-forest) 0%, var(--color-sage) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.progress-stat-label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* Nature-Inspired Cards Grid */
+.stages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: var(--space-8);
+    margin-bottom: var(--space-16);
+    padding: 0 var(--space-4);
+}
+
+/* Hiking-Style Stage Cards */
+.stage-card {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border-light);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-warm-md);
+}
+
+.stage-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--color-stone) 0%, var(--color-sage) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.stage-card:hover::before {
+    opacity: 1;
+}
+
+.stage-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: var(--shadow-warm-xl);
+    border-color: var(--color-sage);
+}
+
+.stage-card.completed {
+    border-color: var(--color-success);
+    background: linear-gradient(135deg, rgba(135, 169, 107, 0.05) 0%, var(--color-surface) 100%);
+}
+
+.stage-card.completed::before {
+    background: linear-gradient(90deg, var(--color-success) 0%, var(--color-mint) 100%);
+    opacity: 1;
+}
+
+.stage-card.current {
+    border-color: var(--color-sky);
+    background: linear-gradient(135deg, rgba(127, 179, 211, 0.05) 0%, var(--color-surface) 100%);
+    box-shadow: 0 0 0 4px rgba(127, 179, 211, 0.1), var(--shadow-warm-lg);
+}
+
+.stage-card.current::before {
+    background: linear-gradient(90deg, var(--color-sky) 0%, var(--color-mint) 100%);
+    opacity: 1;
+}
+
+/* Card Header with Mountain Feel */
+.stage-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-5);
+}
+
+.stage-day {
+    background: linear-gradient(135deg, var(--color-stone) 0%, var(--color-sand) 100%);
+    color: var(--color-forest);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-organic);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    box-shadow: var(--shadow-warm-sm);
+}
+
+.stage-card.completed .stage-day {
+    background: linear-gradient(135deg, var(--color-success) 0%, var(--color-mint) 100%);
+    color: var(--color-text-light);
+}
+
+.stage-card.current .stage-day {
+    background: linear-gradient(135deg, var(--color-sky) 0%, var(--color-mint) 100%);
+    color: var(--color-text-light);
+}
+
+.difficulty-badge {
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: var(--shadow-warm-sm);
+}
+
+.difficulty-facile {
+    background: linear-gradient(135deg, var(--color-sage) 0%, var(--color-mint) 100%);
+    color: var(--color-text-light);
+}
+
+.difficulty-moyen {
+    background: linear-gradient(135deg, var(--color-sunset) 0%, var(--color-sunrise) 100%);
+    color: var(--color-text-light);
+}
+
+.difficulty-difficile {
+    background: linear-gradient(135deg, #c1666b 0%, #d4a574 100%);
+    color: var(--color-text-light);
+}
+
+/* Card Content with Trail Feel */
+.stage-route {
+    margin-bottom: var(--space-6);
+    padding: var(--space-4);
+    background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-elevated) 100%);
+    border-radius: var(--radius-lg);
+    border-left: 4px solid var(--color-sage);
+}
+
+.stage-route h3 {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--color-forest);
+    margin-bottom: var(--space-2);
+    line-height: 1.3;
+}
+
+.stage-route p {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* Trail Stats */
+.stage-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+}
+
+.stage-stat {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    background: var(--color-surface-elevated);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border-light);
+    transition: all 0.2s ease;
+}
+
+.stage-stat:hover {
+    background: var(--color-sand);
+    transform: scale(1.02);
+}
+
+.stage-stat i {
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-sage) 0%, var(--color-mint) 100%);
+    color: var(--color-text-light);
+    border-radius: 50%;
+    font-size: var(--font-size-xs);
+    box-shadow: var(--shadow-warm-sm);
+}
+
+.stage-stat span {
+    font-size: var(--font-size-sm);
+    color: var(--color-forest);
+    font-weight: 600;
+}
+
+/* Trail Actions */
+.stage-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--space-5);
+    border-top: 2px solid var(--color-border-light);
+}
+
+.validate-btn {
+    background: linear-gradient(135deg, var(--color-sage) 0%, var(--color-forest-light) 100%);
+    color: var(--color-text-light);
+    border: none;
+    padding: var(--space-3) var(--space-6);
+    border-radius: var(--radius-organic);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: var(--shadow-warm-md);
+}
+
+.validate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-warm-lg);
+    background: linear-gradient(135deg, var(--color-forest-light) 0%, var(--color-sage) 100%);
+}
+
+.validate-btn.completed {
+    background: linear-gradient(135deg, var(--color-success) 0%, var(--color-mint) 100%);
+}
+
+.validate-btn.completed:hover {
+    background: linear-gradient(135deg, var(--color-mint) 0%, var(--color-success) 100%);
+}
+
+.stage-date {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Nature-Inspired Modal */
+.modal {
+    background: rgba(26, 59, 46, 0.8);
+    backdrop-filter: blur(12px);
+}
+
+.modal-content {
+    background: var(--color-surface);
+    border-radius: var(--radius-2xl);
+    max-width: 800px;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: var(--shadow-warm-xl);
+    border: 2px solid var(--color-border-light);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, var(--color-forest-dark) 0%, var(--color-forest) 50%, var(--color-forest-light) 100%);
+    padding: var(--space-8);
+    color: var(--color-text-light);
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0,70 Q25,50 50,70 T100,70 L100,100 L0,100 Z" fill="rgba(135,169,107,0.1)"/></svg>') no-repeat bottom center;
+    background-size: cover;
+}
+
+.modal-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 800;
+    margin-bottom: var(--space-2);
+    position: relative;
+    z-index: 2;
+}
+
+.modal-subtitle {
+    font-size: var(--font-size-lg);
+    opacity: 0.9;
+    margin-bottom: var(--space-5);
+    font-weight: 500;
+    position: relative;
+    z-index: 2;
+}
+
+.modal-completion {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    position: relative;
+    z-index: 2;
+}
+
+.modal-completion input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--color-mint);
+}
+
+.modal-completion label {
+    font-weight: 600;
+    cursor: pointer;
+    font-size: var(--font-size-base);
+}
+
+.close {
+    position: absolute;
+    top: var(--space-6);
+    right: var(--space-6);
+    background: rgba(168, 213, 186, 0.2);
+    border: 1px solid rgba(168, 213, 186, 0.3);
+    color: var(--color-text-light);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-lg);
+    transition: all 0.3s ease;
+    z-index: 3;
+}
+
+.close:hover {
+    background: rgba(168, 213, 186, 0.3);
+    transform: scale(1.1);
+}
+
+/* Modal Tabs with Trail Theme */
+.modal-tabs {
+    display: flex;
+    border-bottom: 2px solid var(--color-border);
+    background: var(--color-surface-elevated);
+}
+
+.tab-btn {
+    flex: 1;
+    padding: var(--space-5) var(--space-6);
+    border: none;
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    font-size: var(--font-size-base);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.tab-btn.active {
+    color: var(--color-forest);
+    background: var(--color-surface);
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-sage) 0%, var(--color-mint) 100%);
+}
+
+.tab-btn:hover:not(.active) {
+    color: var(--color-forest);
+    background: rgba(135, 169, 107, 0.1);
+}
+
+/* Modal Content */
+.modal-body {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.tab-pane {
+    padding: var(--space-8);
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+/* Trail Details Grid */
+.modal-details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-5);
+    margin-bottom: var(--space-8);
+}
+
+.modal-detail-item {
+    background: var(--color-surface-elevated);
+    padding: var(--space-5);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border-light);
+    box-shadow: var(--shadow-warm-sm);
+    transition: transform 0.2s ease;
+}
+
+.modal-detail-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-warm-md);
+}
+
+.modal-detail-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    font-weight: 700;
+    margin-bottom: var(--space-2);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.modal-detail-label i {
+    color: var(--color-sage);
+}
+
+.modal-detail-value {
+    font-size: var(--font-size-lg);
+    color: var(--color-forest);
+    font-weight: 700;
+}
+
+.modal-description {
+    background: linear-gradient(135deg, var(--color-surface-elevated) 0%, var(--color-sand) 100%);
+    padding: var(--space-6);
+    border-radius: var(--radius-xl);
+    border-left: 6px solid var(--color-sage);
+    margin-bottom: var(--space-8);
+    box-shadow: var(--shadow-warm-sm);
+}
+
+.modal-description h4 {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--color-forest);
+    margin-bottom: var(--space-4);
+}
+
+.modal-description p {
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--space-3);
+    font-size: var(--font-size-base);
+}
+
+.modal-description p:last-child {
+    margin-bottom: 0;
+}
+
+/* Nature Theme Toggle */
+.theme-toggle {
+    position: fixed;
+    top: var(--space-8);
+    right: var(--space-8);
+    width: 50px;
+    height: 50px;
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: 50%;
+    color: var(--color-forest);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: var(--shadow-warm-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle:hover {
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: var(--shadow-warm-lg);
+    color: var(--color-sage);
+    border-color: var(--color-sage);
+    background: var(--color-surface-elevated);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero {
+        min-height: 50vh;
+    }
+    
+    .hero h1 {
+        font-size: var(--font-size-4xl);
+    }
+    
+    .progress-dashboard {
+        margin: -var(--space-12) var(--space-4) var(--space-12);
+        padding: var(--space-8);
+    }
+    
+    .stages-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-6);
+    }
+    
+    .stage-stats {
+        grid-template-columns: 1fr;
+        gap: var(--space-3);
+    }
+    
+    .modal-content {
+        margin: var(--space-4);
+        max-height: calc(100vh - 2rem);
+    }
+    
+    .modal-details-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+    }
+    
+    .theme-toggle {
+        top: var(--space-5);
+        right: var(--space-5);
+        width: 44px;
+        height: 44px;
+    }
+}
+
+/* Smooth transitions only */
+.stage-card,
+.validate-btn,
+.hero-cta,
+.theme-toggle,
+.tab-btn,
+.close,
+.modal-detail-item,
+.stage-stat,
+.progress-stat {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-bar-fill {
+    transition: width 2s cubic-bezier(0.4, 0, 0.2, 1);
+}
