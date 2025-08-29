@@ -1854,6 +1854,25 @@
             color: var(--text-light);
         }
 
+        .delete-comment-btn {
+            background: none;
+            border: none;
+            color: #dc2626;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+            opacity: 0.7;
+            transition: all 0.2s ease;
+        }
+
+        .delete-comment-btn:hover {
+            opacity: 1;
+            background: rgba(220, 38, 38, 0.1);
+            transform: scale(1.1);
+        }
+
         .comment-text {
             color: var(--text-color);
             line-height: 1.5;
@@ -5687,7 +5706,7 @@ Suggestions :
             
             console.log('🔥 Génération HTML pour', comments.length, 'commentaires');
             
-            const html = comments.map(comment => {
+            const html = comments.map((comment, index) => {
                 const date = new Date(comment.date);
                 const formattedDate = date.toLocaleDateString('fr-FR', {
                     day: '2-digit',
@@ -5697,11 +5716,20 @@ Suggestions :
                     minute: '2-digit'
                 });
                 
+                // Bouton de suppression visible uniquement en mode admin
+                const deleteButton = window.dashboard && window.dashboard.isAdminMode ? 
+                    `<button class="delete-comment-btn admin-only" onclick="window.dashboard.deleteComment(${stageId}, ${index})" title="Supprimer ce commentaire">
+                        <i class="fas fa-trash"></i>
+                    </button>` : '';
+                
+                console.log('🔥 Mode admin:', window.dashboard?.isAdminMode, 'Bouton suppression:', !!deleteButton);
+                
                 return `
                     <div class="comment-item">
                         <div class="comment-header">
                             <span class="comment-author">${this.escapeHtml(comment.author)}</span>
                             <span class="comment-date">${formattedDate}</span>
+                            ${deleteButton}
                         </div>
                         <div class="comment-text">${this.escapeHtml(comment.text)}</div>
                     </div>
@@ -5717,6 +5745,43 @@ Suggestions :
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        };
+
+        // Fonction pour supprimer un commentaire (admin uniquement)
+        GR10Dashboard.prototype.deleteComment = function(stageId, commentIndex) {
+            console.log('🗑️ Suppression commentaire - Étape:', stageId, 'Index:', commentIndex);
+            
+            if (!this.isAdminMode) {
+                console.error('❌ Suppression refusée - Mode admin requis');
+                alert('Accès refusé. Mode administrateur requis.');
+                return;
+            }
+            
+            if (!this.stageComments[stageId] || !this.stageComments[stageId][commentIndex]) {
+                console.error('❌ Commentaire non trouvé');
+                alert('Commentaire non trouvé.');
+                return;
+            }
+            
+            const comment = this.stageComments[stageId][commentIndex];
+            const confirmDelete = confirm(`Êtes-vous sûr de vouloir supprimer ce commentaire de ${comment.author} ?\n\n"${comment.text}"`);
+            
+            if (confirmDelete) {
+                // Supprimer le commentaire du tableau
+                this.stageComments[stageId].splice(commentIndex, 1);
+                
+                // Sauvegarder dans localStorage
+                localStorage.setItem('gr10_stage_comments', JSON.stringify(this.stageComments));
+                
+                // Recharger l'affichage des commentaires
+                this.loadStageComments(stageId);
+                
+                // Mettre à jour le compteur sur la carte d'étape
+                this.renderStages();
+                
+                console.log('✅ Commentaire supprimé avec succès');
+                alert('Commentaire supprimé avec succès.');
+            }
         };
     </script>
 </body>
