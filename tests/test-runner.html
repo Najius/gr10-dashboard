@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GR10 Dashboard - Tests Unitaires</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .test-header {
+            background: #2563eb;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .test-results {
+            padding: 20px;
+        }
+        .test-suite {
+            margin-bottom: 30px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .test-suite-header {
+            background: #f8fafc;
+            padding: 15px;
+            font-weight: 600;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .test-case {
+            padding: 10px 15px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .test-case:last-child {
+            border-bottom: none;
+        }
+        .test-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .test-pass {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .test-fail {
+            background: #fecaca;
+            color: #991b1b;
+        }
+        .test-skip {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .test-summary {
+            background: #f8fafc;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 6px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        .summary-item {
+            text-align: center;
+        }
+        .summary-number {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .summary-label {
+            font-size: 14px;
+            color: #64748b;
+        }
+        .run-tests-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .run-tests-btn:hover {
+            background: #1d4ed8;
+        }
+        .error-details {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #991b1b;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>🧪 Tests Unitaires GR10 Dashboard</h1>
+            <p>Suite de tests pour valider les composants critiques</p>
+        </div>
+        
+        <div class="test-results">
+            <button class="run-tests-btn" onclick="runAllTests()">▶️ Lancer tous les tests</button>
+            
+            <div id="test-output">
+                <p>Cliquez sur "Lancer tous les tests" pour commencer...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chargement des modules à tester -->
+    <script src="../src/utils/error-handler.js"></script>
+    <script src="../src/utils/storage-manager.js"></script>
+    <script src="../src/core/data-manager.js"></script>
+    <script src="../src/components/theme-manager.js"></script>
+    
+    <!-- Framework de test simple -->
+    <script src="test-framework.js"></script>
+    
+    <!-- Tests -->
+    <script src="storage-manager.test.js"></script>
+    <script src="error-handler.test.js"></script>
+    <script src="data-manager.test.js"></script>
+    <script src="theme-manager.test.js"></script>
+    
+    <script>
+        function runAllTests() {
+            const output = document.getElementById('test-output');
+            output.innerHTML = '<p>🔄 Exécution des tests en cours...</p>';
+            
+            setTimeout(() => {
+                TestRunner.runAll();
+            }, 100);
+        }
+    </script>
+</body>
+</html>

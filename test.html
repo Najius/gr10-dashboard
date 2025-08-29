@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Modal</title>
+    <style>
+        .stage-card {
+            background: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .stage-card:hover {
+            background: #f0f0f0;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Modal GR10</h1>
+    
+    <div class="stages-container">
+        <!-- Cards will be added here -->
+    </div>
+
+    <!-- Modal -->
+    <div id="stage-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-title">Titre</h2>
+            <div id="modal-details">Détails</div>
+        </div>
+    </div>
+
+    <script>
+        console.log('Script loaded');
+        
+        // Test data
+        const testData = [
+            { day: 1, from: 'Hendaye', to: 'Col d\'Ibardin', distance: '16 km' },
+            { day: 2, from: 'Col d\'Ibardin', to: 'Col de Lizuniaga', distance: '18 km' }
+        ];
+        
+        function createCard(day) {
+            console.log('Creating card for day:', day.day);
+            const card = document.createElement('div');
+            card.className = 'stage-card';
+            card.innerHTML = `<h3>Jour ${day.day}</h3><p>${day.from} → ${day.to}</p><p>${day.distance}</p>`;
+            
+            card.addEventListener('click', function() {
+                console.log('Card clicked for day:', day.day);
+                openModal(day);
+            });
+            
+            return card;
+        }
+        
+        function openModal(day) {
+            console.log('Opening modal for day:', day.day);
+            const modal = document.getElementById('stage-modal');
+            const title = document.getElementById('modal-title');
+            const details = document.getElementById('modal-details');
+            
+            console.log('Modal elements:', { modal: !!modal, title: !!title, details: !!details });
+            
+            if (modal && title && details) {
+                title.textContent = `Jour ${day.day}: ${day.from} → ${day.to}`;
+                details.innerHTML = `<p>Distance: ${day.distance}</p>`;
+                modal.style.display = 'block';
+                console.log('Modal should be visible now');
+            } else {
+                console.error('Modal elements not found!');
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded');
+            const container = document.querySelector('.stages-container');
+            console.log('Container found:', !!container);
+            
+            if (container) {
+                testData.forEach(day => {
+                    const card = createCard(day);
+                    container.appendChild(card);
+                    console.log('Added card for day:', day.day);
+                });
+            }
+            
+            // Close modal
+            const closeBtn = document.querySelector('.close');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    console.log('Close button clicked');
+                    document.getElementById('stage-modal').style.display = 'none';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

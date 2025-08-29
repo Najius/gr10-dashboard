@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Modal Direct</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .test-btn {
+            background: #dc2626;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        
+        /* Modal avec styles inline forcés */
+        #stage-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        
+        #stage-modal.show {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+        
+        .modal-body {
+            padding: 2rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .debug-info {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚨 Test Modal Direct - Diagnostic Final</h1>
+    
+    <div class="debug-info">
+        <h3>Test avec styles inline forcés</h3>
+        <p>Cette modal utilise des styles CSS simples et directs pour éliminer tout conflit.</p>
+    </div>
+    
+    <button class="test-btn" onclick="openModalDirect()">🔴 OUVRIR MODAL DIRECT</button>
+    <button class="test-btn" onclick="closeModalDirect()">❌ FERMER MODAL</button>
+    <button class="test-btn" onclick="testInlineStyles()">⚡ TEST STYLES INLINE</button>
+    
+    <!-- Modal simplifiée -->
+    <div id="stage-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🏔️ Test Modal Fonctionnelle</h2>
+                <span class="close" onclick="closeModalDirect()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <h3>✅ Cette modal DOIT être visible !</h3>
+                <p>Si vous voyez ce contenu, la modal fonctionne parfaitement.</p>
+                <p><strong>Styles appliqués :</strong></p>
+                <ul>
+                    <li>Position fixed avec z-index 99999</li>
+                    <li>Display flex avec centrage</li>
+                    <li>Background rgba(0,0,0,0.9)</li>
+                    <li>Pas de CSS externe complexe</li>
+                </ul>
+                <div class="debug-info">
+                    <strong>Si cette modal s'affiche :</strong> Le problème vient du CSS principal du dashboard.
+                    <br><strong>Si elle ne s'affiche pas :</strong> Problème plus profond (navigateur, JavaScript, etc.)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('🚨 Script de test modal direct chargé');
+        
+        function openModalDirect() {
+            console.log('🔴 Ouverture modal directe');
+            const modal = document.getElementById('stage-modal');
+            
+            if (modal) {
+                // Méthode 1: Classe CSS
+                modal.classList.add('show');
+                console.log('✅ Classe .show ajoutée');
+                
+                // Log de vérification
+                console.log('Modal element:', modal);
+                console.log('Modal display:', window.getComputedStyle(modal).display);
+                console.log('Modal z-index:', window.getComputedStyle(modal).zIndex);
+            } else {
+                console.error('❌ Modal non trouvée');
+            }
+        }
+        
+        function closeModalDirect() {
+            console.log('❌ Fermeture modal');
+            const modal = document.getElementById('stage-modal');
+            if (modal) {
+                modal.classList.remove('show');
+                modal.style.display = 'none';
+            }
+        }
+        
+        function testInlineStyles() {
+            console.log('⚡ Test avec styles inline forcés');
+            const modal = document.getElementById('stage-modal');
+            
+            if (modal) {
+                // Forcer tous les styles en inline
+                modal.style.display = 'flex';
+                modal.style.position = 'fixed';
+                modal.style.top = '0';
+                modal.style.left = '0';
+                modal.style.width = '100%';
+                modal.style.height = '100%';
+                modal.style.zIndex = '99999';
+                modal.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+                modal.style.alignItems = 'center';
+                modal.style.justifyContent = 'center';
+                
+                console.log('✅ Styles inline appliqués de force');
+            }
+        }
+        
+        // Test automatique
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ DOM ready - Modal test prêt');
+            
+            // Test automatique après 2 secondes
+            setTimeout(() => {
+                console.log('🔄 Test automatique...');
+                openModalDirect();
+            }, 2000);
+        });
+        
+        // Fermer avec Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModalDirect();
+            }
+        });
+    </script>
+</body>
+</html>

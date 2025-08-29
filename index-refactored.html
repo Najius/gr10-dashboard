@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Aventure GR10 - Septembre 2025</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="components.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-mountain"></i>
+                    Grande Randonnée
+                </div>
+                <h1>GR10</h1>
+                <p>48 étapes • 8 septembre - 25 octobre 2025</p>
+            </div>
+            <button data-theme-toggle class="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Dashboard de progression -->
+        <div class="progress-dashboard">
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-stats">
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="completed-stages">0</div>
+                    <div class="progress-stat-label">Étapes terminées</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="remaining-stages">48</div>
+                    <div class="progress-stat-label">Étapes restantes</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="total-distance">0</div>
+                    <div class="progress-stat-label">km parcourus</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="total-elevation-positive">0</div>
+                    <div class="progress-stat-label">m de dénivelé +</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="total-elevation-negative">0</div>
+                    <div class="progress-stat-label">m de dénivelé -</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="progress-stat-number" id="completion-percentage">0%</div>
+                    <div class="progress-stat-label">Progression</div>
+                </div>
+            </div>
+        </div>
+
+        <main>
+            <div id="stages-container" class="stages-container">
+                <!-- Les étapes seront ajoutées ici par JavaScript -->
+            </div>
+        </main>
+
+        <!-- Modal for stage details -->
+        <div id="stage-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-title"></h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-tabs">
+                        <button class="tab-btn active" data-tab="details">Détails</button>
+                        <button class="tab-btn" data-tab="notes">Notes</button>
+                        <button class="tab-btn" data-tab="photos">Photos</button>
+                    </div>
+                    <div class="tab-content">
+                        <div id="details-tab" class="tab-pane active">
+                            <div id="modal-details"></div>
+                        </div>
+                        <div id="notes-tab" class="tab-pane">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-star"></i> 
+                                    Évaluation de l'étape
+                                </label>
+                                <div class="star-rating">
+                                    <span class="star" data-rating="1">★</span>
+                                    <span class="star" data-rating="2">★</span>
+                                    <span class="star" data-rating="3">★</span>
+                                    <span class="star" data-rating="4">★</span>
+                                    <span class="star" data-rating="5">★</span>
+                                </div>
+                            </div>
+                            <div id="notes-placeholder" class="notes-placeholder">
+                                <i class="fas fa-edit"></i>
+                                <p>Cliquez ici pour ajouter vos notes sur cette étape...</p>
+                            </div>
+                            <div id="notes-editor" class="notes-editor" style="display: none;">
+                                <textarea id="notes-textarea" placeholder="Vos impressions, conseils, observations..."></textarea>
+                                <div class="notes-actions">
+                                    <button id="save-notes" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Sauvegarder
+                                    </button>
+                                    <button id="cancel-notes" class="btn btn-secondary">
+                                        <i class="fas fa-times"></i> Annuler
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="notes-display" class="notes-display" style="display: none;">
+                                <div id="notes-content"></div>
+                                <div class="notes-actions">
+                                    <button id="edit-notes" class="btn btn-secondary">
+                                        <i class="fas fa-edit"></i> Modifier
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="photos-tab" class="tab-pane">
+                            <div class="photo-upload">
+                                <input type="file" id="photo-input" multiple accept="image/*" style="display: none;">
+                                <button id="upload-btn" class="btn btn-primary">
+                                    <i class="fas fa-camera"></i> Ajouter des photos
+                                </button>
+                            </div>
+                            <div id="photo-gallery" class="photo-gallery">
+                                <!-- Photos will be displayed here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Photo Lightbox -->
+        <div id="photo-lightbox" class="lightbox-overlay">
+            <div class="lightbox-content">
+                <span class="lightbox-close">&times;</span>
+                <img id="lightbox-image" src="" alt="">
+                <div class="lightbox-nav">
+                    <button id="lightbox-prev" class="lightbox-btn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button id="lightbox-next" class="lightbox-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                <div class="lightbox-counter">
+                    <span id="lightbox-current">1</span> / <span id="lightbox-total">1</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>GR10 - Sentier des Pyrénées</h3>
+                    <p>De l'Atlantique à la Méditerranée, 48 étapes à travers les plus beaux paysages pyrénéens.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Liens utiles</h4>
+                    <ul>
+                        <li><a href="https://www.gr-infos.com" target="_blank">GR-Infos</a></li>
+                        <li><a href="https://www.ffrandonnee.fr" target="_blank">FFRandonnée</a></li>
+                        <li><a href="https://www.refuges.info" target="_blank">Refuges.info</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Pour toute question sur cette aventure, n'hésitez pas à me contacter.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 - Bonne randonnée ! 🥾 | <a href="public-refactored.html">Version Publique</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts refactorisés -->
+    <script src="js/data.js"></script>
+    <script src="src/core/storage.js"></script>
+    <script src="src/core/data-manager.js"></script>
+    <script src="src/components/theme-manager.js"></script>
+    <script src="src/components/stage-card.js"></script>
+    <script src="js/modal.js"></script>
+    <script src="js/comments.js"></script>
+    <script src="src/core/app.js"></script>
+</body>
+</html>
