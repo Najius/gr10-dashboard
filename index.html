@@ -299,7 +299,7 @@
             border-radius: 1rem;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            max-width: 400px;
+            max-width: 550px;
             margin: 0 auto;
         }
 
@@ -307,21 +307,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
+            gap: 0.4rem;
+            padding: 0.75rem 1rem;
             background: transparent;
             color: rgba(255, 255, 255, 0.7);
             border: none;
             border-radius: 0.75rem;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             transition: all 0.3s ease;
             flex: 1;
             text-align: center;
             position: relative;
             overflow: hidden;
             white-space: nowrap;
+            min-width: 0;
         }
 
         .main-tabs .tab-btn::before {
@@ -358,7 +359,24 @@
         }
 
         .main-tabs .tab-btn i {
-            font-size: 1.1rem;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-tabs .container {
+                max-width: 100%;
+                margin: 0 1rem;
+            }
+            
+            .main-tabs .tab-btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+                gap: 0.3rem;
+            }
+            
+            .main-tabs .tab-btn i {
+                font-size: 0.8rem;
+            }
         }
 
         .tab-content {
@@ -676,7 +694,7 @@
 
         .stage-card-image {
             width: 100%;
-            height: 150px;
+            height: 200px;
             object-fit: cover;
             border-radius: 8px 8px 0 0;
             display: block;
@@ -1778,82 +1796,6 @@
             transform: scale(1.1);
         }
 
-        /* Styles pour les commentaires */
-        .comments-section {
-            padding: 1rem;
-        }
-
-        .add-comment {
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: #f8fafc;
-            border-radius: 0.75rem;
-            border: 1px solid #e2e8f0;
-        }
-
-        .add-comment h4 {
-            margin: 0 0 1rem 0;
-            color: #1e293b;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .comment-form {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .comment-form input,
-        .comment-form textarea {
-            padding: 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.5rem;
-            font-size: 0.9rem;
-            resize: vertical;
-        }
-
-        .comment-form input:focus,
-        .comment-form textarea:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        .comments-list h4 {
-            margin: 0 0 1rem 0;
-            color: #1e293b;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .comment-item {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 0.5rem;
-            padding: 1rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .comment-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-            font-size: 0.85rem;
-        }
-
-        .comment-author {
-            font-weight: 600;
-            color: #1e293b;
-        }
-
-        .comment-date {
-            color: #6b7280;
-        }
-
         .delete-comment-btn {
             background: #ef4444;
             color: white;
@@ -1862,24 +1804,107 @@
             padding: 0.25rem 0.5rem;
             font-size: 0.75rem;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             gap: 0.25rem;
+            font-weight: 500;
         }
 
         .delete-comment-btn:hover {
             background: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+        }
+
+        .delete-comment-btn i {
+            font-size: 0.7rem;
+        }
+
+        /* Styles pour les commentaires */
+        .comments-section {
+            padding: 1rem 0;
+        }
+
+        .add-comment {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .add-comment h4 {
+            color: var(--text-color);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .comment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .comment-form input,
+        .comment-form textarea {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.75rem;
+            font-size: 0.9rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .comment-form input:focus,
+        .comment-form textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .comment-form textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .comments-list h4 {
+            color: var(--text-color);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .comment-item {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .comment-date {
+            font-size: 0.8rem;
+            color: var(--text-light);
         }
 
         .comment-text {
-            color: #374151;
+            color: var(--text-color);
             line-height: 1.5;
         }
 
         .no-comments {
             text-align: center;
-            color: #6b7280;
+            color: var(--text-light);
             font-style: italic;
             padding: 2rem;
         }
@@ -2347,6 +2372,10 @@
                 <i class="fas fa-map"></i>
                 Map
             </button>
+            <button class="tab-btn" data-tab="bivouacs">
+                <i class="fas fa-campground"></i>
+                Bivouacs
+            </button>
         </div>
     </div>
 
@@ -2431,6 +2460,106 @@
         </div>
     </div>
 
+    <!-- Contenu Bivouacs -->
+    <div id="bivouacs-content" class="tab-content">
+        <div class="container">
+            <div style="background: white; border-radius: 1rem; padding: 2rem; margin-bottom: 2rem;">
+                <h2 style="margin: 0 0 1rem 0; color: var(--primary-color); display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-campground"></i>
+                    Bivouacs et Campings du GR10
+                </h2>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem;">
+                    Plus de 130 bivouacs, campings et cabanes répartis sur l'ensemble du GR10. 
+                    Trouvez l'hébergement idéal pour votre étape.
+                </p>
+                
+                <!-- Carte interactive des bivouacs -->
+                <div style="border-radius: 0.75rem; overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 2rem;">
+                    <iframe 
+                        src="https://macarte.ign.fr/carte/bcd30790c959c1f17308ab5b797ae318/carte-des-bivouacs-du-GR10" 
+                        border="0" 
+                        width="100%" 
+                        height="600"
+                        style="border: none;">
+                    </iframe>
+                </div>
+                
+                <!-- Accès rapide par secteurs -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                    <div style="background: var(--bg-color); padding: 1.5rem; border-radius: 0.75rem; border: 1px solid var(--border-color);">
+                        <h3 style="margin: 0 0 1rem 0; color: var(--primary-color); font-size: 1.1rem;">
+                            <i class="fas fa-mountain"></i> Pyrénées Occidentales
+                        </h3>
+                        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 1rem;">
+                            Hendaye à Lescun - Pays Basque et Béarn
+                        </p>
+                        <a href="https://gr10.org/index.php/bivouacs-et-campings-du-gr10-en-pyrenees-occidentales/" 
+                           target="_blank" 
+                           style="color: var(--primary-color); text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-external-link-alt"></i> Voir les bivouacs
+                        </a>
+                    </div>
+                    
+                    <div style="background: var(--bg-color); padding: 1.5rem; border-radius: 0.75rem; border: 1px solid var(--border-color);">
+                        <h3 style="margin: 0 0 1rem 0; color: var(--primary-color); font-size: 1.1rem;">
+                            <i class="fas fa-mountain"></i> Pyrénées Centrales
+                        </h3>
+                        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 1rem;">
+                            Lescun à Luchon - Hautes-Pyrénées
+                        </p>
+                        <a href="https://gr10.org/index.php/bivouacs-et-campings-du-gr10-en-pyrenees-centrales/" 
+                           target="_blank" 
+                           style="color: var(--primary-color); text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-external-link-alt"></i> Voir les bivouacs
+                        </a>
+                    </div>
+                    
+                    <div style="background: var(--bg-color); padding: 1.5rem; border-radius: 0.75rem; border: 1px solid var(--border-color);">
+                        <h3 style="margin: 0 0 1rem 0; color: var(--primary-color); font-size: 1.1rem;">
+                            <i class="fas fa-mountain"></i> Pyrénées Ariégeoises
+                        </h3>
+                        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 1rem;">
+                            Luchon à Mérens - Ariège
+                        </p>
+                        <a href="https://gr10.org/index.php/bivouacs-et-campings-du-gr10-en-pyrenees-ariegeoises/" 
+                           target="_blank" 
+                           style="color: var(--primary-color); text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-external-link-alt"></i> Voir les bivouacs
+                        </a>
+                    </div>
+                    
+                    <div style="background: var(--bg-color); padding: 1.5rem; border-radius: 0.75rem; border: 1px solid var(--border-color);">
+                        <h3 style="margin: 0 0 1rem 0; color: var(--primary-color); font-size: 1.1rem;">
+                            <i class="fas fa-mountain"></i> Pyrénées Orientales
+                        </h3>
+                        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 1rem;">
+                            Mérens à Banyuls - Pyrénées-Orientales
+                        </p>
+                        <a href="https://gr10.org/index.php/bivouacs-et-campings-du-gr10-en-pyrenees-orientales/" 
+                           target="_blank" 
+                           style="color: var(--primary-color); text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-external-link-alt"></i> Voir les bivouacs
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Informations utiles -->
+                <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 0.75rem; padding: 1.5rem; margin-top: 2rem;">
+                    <h3 style="margin: 0 0 1rem 0; color: var(--secondary-color); display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-info-circle"></i> Informations importantes
+                    </h3>
+                    <ul style="color: var(--text-color); line-height: 1.6; margin: 0; padding-left: 1.5rem;">
+                        <li>Le bivouac est réglementé : autorisé de 19h à 8h uniquement</li>
+                        <li>Respectez la réglementation du Parc National des Pyrénées</li>
+                        <li>Laissez les lieux propres et préservez la nature</li>
+                        <li>Vérifiez la disponibilité des refuges et gîtes avant votre départ</li>
+                        <li>Contact pour questions : <a href="mailto:assogr10@gmail.com" style="color: var(--primary-color);">assogr10@gmail.com</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Contenu Analytics -->
     <div id="analytics-content" class="tab-content">
         <div class="container">
@@ -2468,7 +2597,7 @@
                 <div class="weather-widgets-grid">
                     <!-- Météo étape actuelle -->
                     <div id="current-weather" class="weather-widget">
-                        <h3><i class="fas fa-map-marker-alt"></i> Météo - Étape actuelle</h3>
+                        <h3><i class="fas fa-play"></i> Météo - Départ</h3>
                         <div class="weather-content">
                             <div class="weather-location" id="current-weather-location">Chargement...</div>
                             <div class="weather-main">
@@ -2497,7 +2626,7 @@
 
                     <!-- Météo étape suivante -->
                     <div id="next-weather" class="weather-widget weather-widget-next">
-                        <h3><i class="fas fa-route"></i> Météo - Étape suivante</h3>
+                        <h3><i class="fas fa-flag-checkered"></i> Météo - Arrivée</h3>
                         <div class="weather-content">
                             <div class="weather-location" id="next-weather-location">Chargement...</div>
                             <div class="weather-main">
@@ -4686,30 +4815,30 @@ Suggestions :
                 const nextWidget = document.getElementById('next-weather');
                 console.log('🌤️ Widgets DOM trouvés - current:', !!currentWidget, 'next:', !!nextWidget);
                 
-                // Météo pour l'étape actuelle - utiliser toujours la première étape pour simplifier
-                const currentStage = this.itineraryData && this.itineraryData[0];
-                console.log('🌤️ Étape actuelle sélectionnée:', currentStage);
-                
-                const currentWeather = this.generateWeatherData();
-                console.log('🌤️ Données météo générées:', currentWeather);
-                
-                if (currentStage && currentWidget) {
-                    console.log('🌤️ Mise à jour widget météo actuel pour:', currentStage.arrivee || currentStage.depart);
-                    this.updateWeatherWidget('current', currentStage.arrivee || currentStage.depart || 'Étape 1', currentWeather);
-                } else {
-                    console.error('🌤️ Impossible de mettre à jour la météo actuelle - stage:', !!currentStage, 'widget:', !!currentWidget);
+                // Trouver l'étape en cours (première étape non terminée)
+                let currentStageIndex = 0;
+                for (let i = 0; i < this.itineraryData.length; i++) {
+                    if (!this.completedStages.has(i + 1)) {
+                        currentStageIndex = i;
+                        break;
+                    }
                 }
-
-                // Météo pour l'étape suivante - utiliser toujours la deuxième étape pour simplifier
-                const nextStage = this.itineraryData && this.itineraryData[1];
-                console.log('🌤️ Étape suivante sélectionnée:', nextStage);
                 
-                if (nextStage && nextWidget) {
-                    const nextWeather = this.generateWeatherData();
-                    console.log('🌤️ Mise à jour widget météo suivant pour:', nextStage.arrivee || nextStage.depart);
-                    this.updateWeatherWidget('next', nextStage.arrivee || nextStage.depart || 'Étape 2', nextWeather);
+                const currentStage = this.itineraryData && this.itineraryData[currentStageIndex];
+                console.log('🌤️ Étape en cours sélectionnée (index ' + currentStageIndex + '):', currentStage);
+                
+                if (currentStage && currentWidget && nextWidget) {
+                    // Météo du départ de l'étape en cours
+                    const departWeather = this.generateWeatherData();
+                    console.log('🌤️ Mise à jour widget météo départ pour:', currentStage.depart);
+                    this.updateWeatherWidget('current', currentStage.depart || 'Départ', departWeather);
+                    
+                    // Météo de l'arrivée de l'étape en cours
+                    const arriveeWeather = this.generateWeatherData();
+                    console.log('🌤️ Mise à jour widget météo arrivée pour:', currentStage.arrivee);
+                    this.updateWeatherWidget('next', currentStage.arrivee || 'Arrivée', arriveeWeather);
                 } else {
-                    console.error('🌤️ Impossible de mettre à jour la météo suivante - stage:', !!nextStage, 'widget:', !!nextWidget);
+                    console.error('🌤️ Impossible de mettre à jour la météo - stage:', !!currentStage, 'widgets:', !!currentWidget, !!nextWidget);
                     if (nextWidget) nextWidget.style.display = 'none';
                 }
                 
@@ -5656,9 +5785,9 @@ Suggestions :
             }
             
             const comment = {
-                id: Date.now(), // ID unique basé sur timestamp
-                author: author.trim(),
-                text: text.trim(),
+                id: Date.now(),
+                author: author,
+                text: text,
                 date: new Date().toISOString()
             };
             
@@ -5681,50 +5810,6 @@ Suggestions :
             }, 100);
             
             console.log('✅ Commentaire ajouté avec succès');
-        };
-
-        // Méthode pour supprimer un commentaire (admin uniquement)
-        GR10Dashboard.prototype.deleteComment = function(stageId, commentId) {
-            console.log('🗑️ deleteComment appelé pour étape:', stageId, 'commentaire:', commentId);
-            
-            if (!this.isAdminMode) {
-                alert('Vous devez être connecté en tant qu\'admin pour supprimer des commentaires.');
-                return;
-            }
-            
-            if (!this.stageComments[stageId]) {
-                console.error('❌ Aucun commentaire trouvé pour cette étape');
-                return;
-            }
-            
-            // Confirmer la suppression
-            if (!confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?')) {
-                return;
-            }
-            
-            // Trouver et supprimer le commentaire
-            const commentIndex = this.stageComments[stageId].findIndex(comment => comment.id === commentId);
-            
-            if (commentIndex === -1) {
-                console.error('❌ Commentaire non trouvé');
-                alert('Commentaire non trouvé.');
-                return;
-            }
-            
-            // Supprimer le commentaire
-            this.stageComments[stageId].splice(commentIndex, 1);
-            
-            // Sauvegarder les modifications
-            this.saveProgress();
-            
-            // Recharger l'affichage des commentaires
-            this.loadStageComments(stageId);
-            
-            // Mettre à jour le compteur sur la carte d'étape
-            this.renderStages();
-            
-            console.log('✅ Commentaire supprimé avec succès');
-            alert('Commentaire supprimé avec succès.');
         };
 
         GR10Dashboard.prototype.loadStageComments = function(stageId) {
@@ -5763,10 +5848,12 @@ Suggestions :
                     <div class="comment-item">
                         <div class="comment-header">
                             <span class="comment-author">${this.escapeHtml(comment.author)}</span>
-                            <span class="comment-date">${formattedDate}</span>
-                            ${this.isAdminMode ? `<button class="admin-only delete-comment-btn" onclick="dashboard.deleteComment(${stageId}, ${comment.id})" title="Supprimer ce commentaire">
-                                <i class="fas fa-trash"></i>
-                            </button>` : ''}
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span class="comment-date">${formattedDate}</span>
+                                <button class="admin-only delete-comment-btn" onclick="dashboard.deleteComment(${stageId}, ${comment.id})">
+                                    <i class="fas fa-trash"></i> Supprimer
+                                </button>
+                            </div>
                         </div>
                         <div class="comment-text">${this.escapeHtml(comment.text)}</div>
                     </div>
@@ -5782,6 +5869,31 @@ Suggestions :
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        };
+
+        GR10Dashboard.prototype.deleteComment = function(stageId, commentId) {
+            console.log('🗑️ Suppression commentaire - étape:', stageId, 'commentaire:', commentId);
+            
+            if (!confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?')) {
+                return;
+            }
+            
+            // Supprimer le commentaire du tableau
+            if (this.stageComments[stageId]) {
+                this.stageComments[stageId] = this.stageComments[stageId].filter(comment => comment.id !== commentId);
+                console.log('🗑️ Commentaire supprimé, reste:', this.stageComments[stageId].length, 'commentaires');
+                
+                // Sauvegarder les modifications
+                this.saveProgress();
+                
+                // Recharger l'affichage des commentaires
+                this.loadStageComments(stageId);
+                
+                // Mettre à jour l'affichage des cards pour refléter le nouveau compteur
+                this.renderStages();
+                
+                console.log('✅ Commentaire supprimé avec succès');
+            }
         };
     </script>
 </body>
