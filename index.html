@@ -9,8 +9,9 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="gr10-data-part1.js"></script>
-    <script src="gr10-data-part2.js"></script>
+    <script src="gr10-data-unified.js"></script>
+    <script type="module" src="firebase-config.js"></script>
+    <script src="firebase-integration.js"></script>
     <style>
         :root {
             --primary-color: #2563eb;
@@ -3274,69 +3275,13 @@ Suggestions :
             }
 
             loadGR10Data() {
-                // Forcer l'utilisation des données de fallback avec bivouacA
-                // if (typeof gr10DataPart1 !== 'undefined' && typeof gr10DataPart2 !== 'undefined') {
-                //     return [...gr10DataPart1, ...gr10DataPart2];
-                // }
+                // Utiliser la base de données unifiée
+                if (typeof gr10Data !== 'undefined') {
+                    return gr10Data;
+                }
                 
-                // Données de fallback
-                const gr10Data = [
-                    { etape: 1, date: "2025-09-08", depart: "Hendaye", arrivee: "Ibardin", distance: 15, denivele_positif: 850, denivele_negatif: 450, duree: "6h", difficulte: "Moyenne", terrain: "forêt/colline, sentier parfois caillouteux", hebergement: "Gîte Ibardin", bivouacA: "Col d'Ibardin – vue sur l'océan", bivouacB: "replat boisé 1–2 km avant le col", eau: "Fontaine/commerce Ibardin", ravitaillement: "—", altitude: 317, exposition: "variable (vallée/forêt)", reseau: "variable" },
-                    { etape: 2, date: "2025-09-09", depart: "Ibardin", arrivee: "Sare", distance: 16.5, denivele_positif: 700, denivele_negatif: 1000, duree: "6.5h", difficulte: "Difficile", terrain: "forêt ombragée, pistes et sentier", hebergement: "Hébergement Sare", bivouacA: "Crête vers Atxuria – panorama Pays Basque", bivouacB: "clairière avant Sare", eau: "Fontaine du bourg de Sare", ravitaillement: "épicerie/boulangerie", altitude: 700, exposition: "variable (vallée/forêt)", reseau: "souvent bon (vallée/ville)" },
-                    { etape: 3, date: "2025-09-10", depart: "Sare", arrivee: "Col des Veaux", distance: 16, denivele_positif: 600, denivele_negatif: 200, duree: "5.7h", difficulte: "Simple", terrain: "crête herbeuse, quelques passages rocheux", hebergement: "Auberge Col des Veaux", bivouacA: "Col des Veaux – vue sur la Rhune", bivouacB: "replat côté ouest sous la crête", eau: "Source de crête (à confirmer)", ravitaillement: "—", altitude: 493, exposition: "vent/soleil (crête)", reseau: "variable" },
-                    { etape: 4, date: "2025-09-11", depart: "Col des Veaux", arrivee: "Bidarray", distance: 12.5, denivele_positif: 450, denivele_negatif: 850, duree: "4.9h", difficulte: "Simple", terrain: "chemins caillouteux, fortes descentes", hebergement: "Gîte Bidarray", bivouacA: "Col de Mehatze – vues vallées", bivouacB: "prairies en lisière avant la descente", eau: "Fontaine du bourg de Bidarray", ravitaillement: "épicerie", altitude: 716, exposition: "variable (vallée/forêt)", reseau: "souvent bon (vallée/ville)" },
-                    { etape: 5, date: "2025-09-12", depart: "Bidarray", arrivee: "St‑Étienne‑de‑Baïgorry", distance: 18.5, denivele_positif: 1250, denivele_negatif: 1250, duree: "8.2h", difficulte: "Difficile", terrain: "crêtes basques, pente soutenue", hebergement: "Gîte Baïgorry", bivouacA: "Crête d'Occabé – panorama", bivouacB: "replat hors crête si vent", eau: "Fontaines Baïgorry", ravitaillement: "superette/boulangerie", altitude: 1456, exposition: "variable (vallée/forêt)", reseau: "variable" },
-                    { etape: 6, date: "2025-09-13", depart: "St‑Étienne‑de‑Baïgorry", arrivee: "St‑Jean‑Pied‑de‑Port", distance: 19, denivele_positif: 950, denivele_negatif: 950, duree: "7.6h", difficulte: "Difficile", terrain: "vallons doux, chemins", hebergement: "Multiples gîtes SJPP", bivouacA: "Col d'Handiaga – vue montagne", bivouacB: "aire en amont de la ville", eau: "Fontaines SJPP", ravitaillement: "pleins commerces", altitude: 430, exposition: "variable (vallée/forêt)", reseau: "souvent bon (vallée/ville)" },
-                    { etape: 7, date: "2025-09-14", depart: "St‑Jean‑Pied‑de‑Port", arrivee: "Estérençuby", distance: 12, denivele_positif: 500, denivele_negatif: 450, duree: "4.5h", difficulte: "Simple", terrain: "gorges + route/sentier", hebergement: "Auberge Estérençuby", bivouacA: "Col d'Irau – panorama sur vallée", bivouacB: "replat de rive en amont", eau: "Fontaine Estérençuby", ravitaillement: "épicerie/resto (selon saison)", altitude: 1008, exposition: "variable (vallée/forêt)", reseau: "variable" },
-                    { etape: 8, date: "2025-09-15", depart: "Estérençuby", arrivee: "Phagalcette", distance: 8.5, denivele_positif: 400, denivele_negatif: 150, duree: "3.2h", difficulte: "Simple", terrain: "pâturages d'altitude", hebergement: "Retour Estérençuby", bivouacA: "Plateau pastoral – vue sur montagnes basques", bivouacB: "clairière abritée avant plateau", eau: "Source locale (permanente)", ravitaillement: "—", altitude: 1200, exposition: "variable (vallée/forêt)", reseau: "variable" },
-                    { etape: 9, date: "2025-09-16", depart: "Phagalcette", arrivee: "Iraty (chalets)", distance: 14.5, denivele_positif: 1000, denivele_negatif: 550, duree: "6.2h", difficulte: "Simple", terrain: "forêt de hêtres, pistes", hebergement: "Chalets Iraty", bivouacA: "Crête d'Iraty – vue sur forêts et crêtes", bivouacB: "clairières sous crête", eau: "Fontaines Iraty", ravitaillement: "petite supérette saisonnière", altitude: 1300, exposition: "variable (vallée/forêt)", reseau: "variable" },
-                    { etape: 10, date: "2025-09-17", depart: "Iraty (chalets)", arrivee: "Logibar", distance: 16, denivele_positif: 450, denivele_negatif: 1400, duree: "6.2h", difficulte: "Moyenne", terrain: "descente forestière", hebergement: "Auberge Logibar", bivouacA: "Hauteurs de Logibar – vue vallée", bivouacB: "replat forestier avant village", eau: "Ruisseau Olhadoko erreka", ravitaillement: "bar/auberge", altitude: 500, exposition: "variable (vallée/forêt)", reseau: "variable" },
-                    { etape: 11, date: "2025-09-18", depart: "Logibar", arrivee: "Ste‑Engrâce", distance: 18, denivele_positif: 950, denivele_negatif: 750, duree: "7.2h", difficulte: "Moyenne", terrain: "gorges (Kakuetta), sentier", hebergement: "Auberge Ste‑Engrâce", bivouacA: "Crête vers la Pierre-St-Martin – panorama Pyrénées", bivouacB: "clairières rive droite", eau: "Uhaitza (débit pérenne)", ravitaillement: "petite épicerie/auberge (saisonnier)", altitude: 1600, exposition: "variable (vallée/forêt)", reseau: "variable" },
-                    { etape: 12, date: "2025-09-19", depart: "Ste‑Engrâce", arrivee: "La Pierre‑St‑Martin", distance: 11, denivele_positif: 550, denivele_negatif: 350, duree: "4.3h", difficulte: "Simple", terrain: "karst pierreux, lapiaz par endroits", hebergement: "Station PSM", bivouacA: "Col de la Pierre-St-Martin – vue vers Béarn et Navarre", bivouacB: "zone abritée en contrebas", eau: "Point d'eau capté station (selon saison)", ravitaillement: "supérette station (saisonnier)", altitude: 1760, exposition: "variable (vallée/forêt)", reseau: "irrégulier (altitude/crêtes)" },
-                    { etape: 13, date: "2025-09-20", depart: "La Pierre‑St‑Martin", arrivee: "Lescun", distance: 15.5, denivele_positif: 500, denivele_negatif: 1200, duree: "6h", difficulte: "Moyenne", terrain: "vallée glaciaire, sentier pierreux", hebergement: "Gîtes Lescun", bivouacA: "Plateau de Sanchèse – vue sur aiguilles d'Ansabère", bivouacB: "vallon de Sanchèse (abrité)", eau: "Fontaine Lescun", ravitaillement: "épicerie/gîte-épicerie", altitude: 1200, exposition: "variable (vallée/forêt)", reseau: "variable" },
-                    { etape: 14, date: "2025-09-21", depart: "Lescun", arrivee: "Etsaut", distance: 16, denivele_positif: 850, denivele_negatif: 1150, duree: "6.7h", difficulte: "Difficile", terrain: "balcon/chemin de la Mâture (exposé)", hebergement: "Auberge Etsaut", bivouacA: "Col de Borce – panorama", bivouacB: "replat avant Lucharry", eau: "Fontaine Etsaut", ravitaillement: "petite épicerie", altitude: 900, exposition: "variable (vallée/forêt)", reseau: "variable" },
-                    { etape: 15, date: "2025-09-22", depart: "Etsaut", arrivee: "Gourette", distance: 18, denivele_positif: 1400, denivele_negatif: 500, duree: "7.8h", difficulte: "Difficile", terrain: "haute montagne, pierriers", hebergement: "Station Gourette", bivouacA: "Lac d'Anglas – vue haute montagne", bivouacB: "vallon abrité avant station", eau: "Fontaine Gourette", ravitaillement: "stations/commerces (saisonnier)", altitude: 2070, exposition: "orages possibles en altitude", reseau: "irrégulier (altitude/crêtes)" },
-                    { etape: 21, date: "2025-09-28", depart: "Lac de l'Oule", arrivee: "St‑Lary‑Soulan", distance: 14, denivele_positif: 300, denivele_negatif: 1200, duree: "5.2h", difficulte: "Simple", terrain: "vallée encaissée", hebergement: "Multiples hébergements", bivouacA: "Hauteurs du Pla d'Adet – panorama", bivouacB: "clairière avant bourg", eau: "Fontaines St‑Lary", ravitaillement: "pleins commerces", altitude: 2100, exposition: "variable (vallée/forêt)", reseau: "souvent bon (vallée/ville)" },
-                    { etape: 16, date: "2025-09-23", depart: "Arrens‑Marsous", arrivee: "Cauterets (Pont d'Espagne)", distance: 18, denivele_positif: 900, denivele_negatif: 950, duree: "7.2h", difficulte: "Difficile", terrain: "sentier aménagé, dalles", hebergement: "Refuge Wallon (hors GR10)", bivouacA: "Lac de Gaube – vue Vignemale", bivouacB: "zone boisée avant passerelle", eau: "Eau captée PN (à vérifier)", ravitaillement: "resto/snack (saisonnier)", altitude: 1725, exposition: "orages possibles en altitude", reseau: "variable" },
-                    { etape: 17, date: "2025-09-24", depart: "Cauterets", arrivee: "Luz‑St‑Sauveur", distance: 19, denivele_positif: 700, denivele_negatif: 1100, duree: "7.3h", difficulte: "Difficile", terrain: "vallée, pistes", hebergement: "Multiples hébergements", bivouacA: "Col de Riou – panorama vallée", bivouacB: "clairières avant ville", eau: "Fontaine Luz", ravitaillement: "pleins commerces", altitude: 1949, exposition: "variable (vallée/forêt)", reseau: "souvent bon (vallée/ville)" },
-                    { etape: 18, date: "2025-09-25", depart: "Luz‑St‑Sauveur", arrivee: "Barèges", distance: 12, denivele_positif: 600, denivele_negatif: 500, duree: "4.7h", difficulte: "Simple", terrain: "montagne pastorale", hebergement: "Hôtels/gîtes Barèges", bivouacA: "Plateau du Lienz – vue Néouvielle", bivouacB: "lisière sous le Lienz", eau: "Fontaine Barèges", ravitaillement: "épicerie/boulangerie", altitude: 1600, exposition: "variable (vallée/forêt)", reseau: "souvent bon (vallée/ville)" },
-                    { etape: 19, date: "2025-09-26", depart: "Barèges", arrivee: "Lac de l'Oule (Refuge)", distance: 18, denivele_positif: 1000, denivele_negatif: 700, duree: "7.2h", difficulte: "Moyenne", terrain: "rives lac/barrage, sentier", hebergement: "Refuge de l'Oule", bivouacA: "Bords du lac – vue sur massifs", bivouacB: "zone abritée rive est", eau: "Eau refuge / captage", ravitaillement: "—", altitude: 1820, exposition: "variable (vallée/forêt)", reseau: "variable" },
-                    { etape: 15, date: "2025-09-22", depart: "Gourette", arrivee: "Arrens-Marsous", distance: 20, denivele_positif: 800, duree: "8h", difficulte: "Moyenne", terrain: "Vallées et montagnes", hebergement: "Gîte Arrens", telephone: "05 62 97 02 64" },
-                    { etape: 16, date: "2025-09-23", depart: "Arrens-Marsous", arrivee: "Refuge Wallon", distance: 16, denivele_positif: 1200, duree: "7h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge Wallon", telephone: "05 62 92 40 25" },
-                    { etape: 17, date: "2025-09-24", depart: "Refuge Wallon", arrivee: "Gavarnie", distance: 18, denivele_positif: 400, duree: "7.5h", difficulte: "Moyenne", terrain: "Vallées et montagnes", hebergement: "Hôtel Gavarnie", telephone: "05 62 92 48 02" },
-                    { etape: 18, date: "2025-09-25", depart: "Gavarnie", arrivee: "Refuge des Espuguettes", distance: 15, denivele_positif: 1100, duree: "6.5h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge des Espuguettes", telephone: "05 62 92 40 63" },
-                    { etape: 19, date: "2025-09-26", depart: "Refuge des Espuguettes", arrivee: "Luz-Saint-Sauveur", distance: 19, denivele_positif: 300, duree: "8h", difficulte: "Simple", terrain: "Vallées et rivières", hebergement: "Hôtel Luz", telephone: "05 62 92 81 58" },
-                    { etape: 20, date: "2025-09-27", depart: "Luz-Saint-Sauveur", arrivee: "Barèges", distance: 12, denivele_positif: 600, duree: "5h", difficulte: "Simple", terrain: "Vallées et rivières", hebergement: "Hôtel Barèges", telephone: "05 62 92 68 19" },
-                    { etape: 21, date: "2025-09-28", depart: "Barèges", arrivee: "Refuge de la Glère", distance: 14, denivele_positif: 1000, duree: "6h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge de la Glère", telephone: "05 62 92 40 46" },
-                    { etape: 22, date: "2025-09-29", depart: "Refuge de la Glère", arrivee: "Vielle-Aure", distance: 20, denivele_positif: 400, duree: "8.5h", difficulte: "Moyenne", terrain: "Vallées et montagnes", hebergement: "Gîte Vielle-Aure", telephone: "05 62 39 50 83" },
-                    { etape: 23, date: "2025-09-30", depart: "Vielle-Aure", arrivee: "Refuge du Portillon", distance: 18, denivele_positif: 1400, duree: "8h", difficulte: "Difficile", terrain: "Montagnes et vallées", hebergement: "Refuge du Portillon", telephone: "05 61 79 21 43" },
-                    { etape: 24, date: "2025-10-01", depart: "Refuge du Portillon", arrivee: "Luchon", distance: 16, denivele_positif: 200, duree: "7h", difficulte: "Simple", terrain: "Vallées et rivières", hebergement: "Hôtel Luchon", telephone: "05 61 79 01 42" },
-                    { etape: 25, date: "2025-10-02", depart: "Luchon", arrivee: "Refuge d'Espingo", distance: 19, denivele_positif: 1600, duree: "8.5h", difficulte: "Difficile", terrain: "Montagnes et vallées", hebergement: "Refuge d'Espingo", telephone: "05 61 79 20 68" },
-                    { etape: 26, date: "2025-10-03", depart: "Refuge d'Espingo", arrivee: "Fos", distance: 17, denivele_positif: 300, duree: "7.5h", difficulte: "Moyenne", terrain: "Vallées et montagnes", hebergement: "Gîte Fos", telephone: "05 61 79 11 24" },
-                    { etape: 27, date: "2025-10-04", depart: "Fos", arrivee: "Refuge de Rioumajou", distance: 21, denivele_positif: 1300, duree: "9h", difficulte: "Difficile", terrain: "Montagnes et vallées", hebergement: "Refuge de Rioumajou", telephone: "05 62 39 61 09" },
-                    { etape: 28, date: "2025-10-05", depart: "Refuge de Rioumajou", arrivee: "Saint-Lary-Soulan", distance: 18, denivele_positif: 400, duree: "7.5h", difficulte: "Simple", terrain: "Vallées et rivières", hebergement: "Hôtel Saint-Lary", telephone: "05 62 39 50 81" },
-                    { etape: 29, date: "2025-10-06", depart: "Saint-Lary-Soulan", arrivee: "Refuge de Bastan", distance: 16, denivele_positif: 1100, duree: "7h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge de Bastan", telephone: "05 62 39 68 20" },
-                    { etape: 30, date: "2025-10-07", depart: "Refuge de Bastan", arrivee: "Refuge de Campana de Cloutou", distance: 14, denivele_positif: 600, duree: "6.5h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge Campana de Cloutou", telephone: "05 62 39 61 24" },
-                    { etape: 31, date: "2025-10-08", depart: "Refuge de Campana de Cloutou", arrivee: "Chalet-Hôtel de Oô", distance: 15, denivele_positif: 200, duree: "6.5h", difficulte: "Simple", terrain: "Vallées et rivières", hebergement: "Chalet-Hôtel de Oô", telephone: "05 61 79 21 97" },
-                    { etape: 32, date: "2025-10-09", depart: "Chalet-Hôtel de Oô", arrivee: "Refuge d'Estom", distance: 13, denivele_positif: 800, duree: "6h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge d'Estom", telephone: "05 62 92 40 63" },
-                    { etape: 33, date: "2025-10-10", depart: "Refuge d'Estom", arrivee: "Cauterets", distance: 17, denivele_positif: 300, duree: "7.5h", difficulte: "Simple", terrain: "Vallées et rivières", hebergement: "Hôtel Cauterets", telephone: "05 62 92 52 53" },
-                    { etape: 34, date: "2025-10-11", depart: "Cauterets", arrivee: "Refuge des Oulettes", distance: 14, denivele_positif: 900, duree: "6h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge des Oulettes", telephone: "05 62 92 40 63" },
-                    { etape: 35, date: "2025-10-12", depart: "Refuge des Oulettes", arrivee: "Refuge Bayssellance", distance: 12, denivele_positif: 500, duree: "5.5h", difficulte: "Difficile", terrain: "Montagnes et vallées", hebergement: "Refuge Bayssellance", telephone: "05 62 92 40 25" },
-                    { etape: 36, date: "2025-10-13", depart: "Refuge Bayssellance", arrivee: "Refuge de Pineta (Espagne)", distance: 16, denivele_positif: 200, duree: "7h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge de Pineta", telephone: "+34 974 50 10 92" },
-                    { etape: 37, date: "2025-10-14", depart: "Refuge de Pineta", arrivee: "Refuge de Góriz (Espagne)", distance: 14, denivele_positif: 1200, duree: "6.5h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge de Góriz", telephone: "+34 974 34 12 01" },
-                    { etape: 38, date: "2025-10-15", depart: "Refuge de Góriz", arrivee: "Refuge de la Rencluse", distance: 18, denivele_positif: 400, duree: "7.5h", difficulte: "Difficile", terrain: "Montagnes et vallées", hebergement: "Refuge de la Rencluse", telephone: "05 61 79 21 43" },
-                    { etape: 39, date: "2025-10-16", depart: "Refuge de la Rencluse", arrivee: "Mérens-les-Vals", distance: 20, denivele_positif: 600, duree: "8h", difficulte: "Simple", terrain: "Vallées et montagnes", hebergement: "Gîte Mérens", telephone: "05 61 02 87 22" },
-                    { etape: 40, date: "2025-10-17", depart: "Mérens-les-Vals", arrivee: "Refuge des Besines", distance: 16, denivele_positif: 1300, duree: "7h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge des Besines", telephone: "05 61 64 24 24" },
-                    { etape: 41, date: "2025-10-18", depart: "Refuge des Besines", arrivee: "Refuge de Rulhe", distance: 15, denivele_positif: 500, duree: "6.5h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge de Rulhe", telephone: "04 68 04 21 97" },
-                    { etape: 42, date: "2025-10-19", depart: "Refuge de Rulhe", arrivee: "Refuge de Mariailles", distance: 17, denivele_positif: 400, duree: "7h", difficulte: "Simple", terrain: "Vallées et montagnes", hebergement: "Refuge de Mariailles", telephone: "04 68 05 12 99" },
-                    { etape: 43, date: "2025-10-20", depart: "Refuge de Mariailles", arrivee: "Refuge de Batère", distance: 16, denivele_positif: 600, duree: "6.5h", difficulte: "Moyenne", terrain: "Montagnes et vallées", hebergement: "Refuge de Batère", telephone: "04 68 39 70 83" },
-                    { etape: 44, date: "2025-10-21", depart: "Refuge de Batère", arrivee: "Las Illas", distance: 18, denivele_positif: 500, duree: "7.5h", difficulte: "Simple", terrain: "Vallées et rivières", hebergement: "Gîte Las Illas", telephone: "04 68 39 11 99" },
-                    { etape: 45, date: "2025-10-22", depart: "Las Illas", arrivee: "Ultrera / Sorède", distance: 19, denivele_positif: 800, duree: "7.5h", difficulte: "Moyenne", terrain: "Vallées et montagnes", hebergement: "Gîte Sorède", telephone: "04 68 89 23 85" },
-                    { etape: 46, date: "2025-10-23", depart: "Ultrera / Sorède", arrivee: "Banyuls-sur-Mer", distance: 17, denivele_positif: 300, duree: "6.1h", difficulte: "Moyenne", terrain: "Vallées et rivières", hebergement: "Fin du GR10", telephone: "—" },
-                    { etape: 47, date: "2025-10-24", depart: "Jour de repos", arrivee: "Banyuls-sur-Mer", distance: 0, denivele_positif: 0, duree: "0h", difficulte: "Repos", terrain: "Célébration", hebergement: "Hôtel Banyuls", telephone: "04 68 88 00 59" },
-                    { etape: 48, date: "2025-10-25", depart: "Retour", arrivee: "Départ de Banyuls", distance: 0, denivele_positif: 0, duree: "0h", difficulte: "Transport", terrain: "Voyage retour", hebergement: "Transport", telephone: "—" }
-                ];
-                return gr10Data;
+                // Fallback en cas de problème
+                return [];
             }
 
             loadProgress() {
@@ -3529,6 +3474,10 @@ Suggestions :
                                 <div class="stage-stat">
                                     <i class="fas fa-mountain"></i>
                                     <span class="stage-stat-value">+${stage.denivele_positif}m</span>
+                                </div>
+                                <div class="stage-stat">
+                                    <i class="fas fa-mountain" style="transform: rotate(180deg);"></i>
+                                    <span class="stage-stat-value">-${stage.denivele_negatif}m</span>
                                 </div>
                                 <div class="stage-stat">
                                     <i class="fas fa-clock"></i>
@@ -3845,6 +3794,13 @@ Suggestions :
                             </div>
                         </div>
                         <div class="modal-detail-item">
+                            <i class="fas fa-mountain" style="transform: rotate(180deg);"></i>
+                            <div class="modal-detail-content">
+                                <div class="modal-detail-label">Dénivelé -</div>
+                                <div class="modal-detail-value editable ${this.isAdminMode ? 'admin-editable' : ''}" data-field="denivele_negatif" data-type="number" data-suffix=" m">${stage.denivele_negatif} m</div>
+                            </div>
+                        </div>
+                        <div class="modal-detail-item">
                             <i class="fas fa-clock"></i>
                             <div class="modal-detail-content">
                                 <div class="modal-detail-label">Durée estimée</div>
@@ -4143,7 +4099,7 @@ Suggestions :
     if (!stage) return;
     
     // Sauvegarder la nouvelle valeur
-    if (field === 'distance' || field === 'denivele_positif') {
+    if (field === 'distance' || field === 'denivele_positif' || field === 'denivele_negatif') {
         stage[field] = parseFloat(newValue) || stage[field];
     } else if (field === 'temps_realise') {
         stage.temps_realise = newValue;
