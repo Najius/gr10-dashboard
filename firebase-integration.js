@@ -150,48 +150,11 @@ class GR10FirebaseIntegration {
         }
     }
 
-    // Ajouter un indicateur de connexion
+    // Ajouter un indicateur de connexion (désactivé)
     addConnectionIndicator() {
-        const indicator = document.createElement('div');
-        indicator.id = 'connection-indicator';
-        indicator.innerHTML = `
-            <div class="connection-status">
-                <i class="fas fa-wifi"></i>
-                <span class="status-text">Synchronisé</span>
-            </div>
-        `;
-        
-        // Styles pour l'indicateur
+        // Indicateur désactivé - seulement les styles pour les animations
         const style = document.createElement('style');
         style.textContent = `
-            #connection-indicator {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                z-index: 1000;
-                background: rgba(16, 185, 129, 0.9);
-                color: white;
-                padding: 8px 12px;
-                border-radius: 20px;
-                font-size: 12px;
-                backdrop-filter: blur(10px);
-                transition: all 0.3s ease;
-            }
-            
-            #connection-indicator.offline {
-                background: rgba(239, 68, 68, 0.9);
-            }
-            
-            #connection-indicator.syncing {
-                background: rgba(245, 158, 11, 0.9);
-            }
-            
-            .connection-status {
-                display: flex;
-                align-items: center;
-                gap: 6px;
-            }
-            
             .stage-card.updated {
                 animation: pulse-update 2s ease;
             }
@@ -204,34 +167,16 @@ class GR10FirebaseIntegration {
         `;
         
         document.head.appendChild(style);
-        document.body.appendChild(indicator);
 
-        // Mettre à jour le statut de connexion
-        this.updateConnectionIndicator();
-        
-        // Écouter les changements de connexion
+        // Écouter les changements de connexion (pour la logique interne)
         window.addEventListener('online', () => this.updateConnectionIndicator());
         window.addEventListener('offline', () => this.updateConnectionIndicator());
     }
 
-    // Mettre à jour l'indicateur de connexion
+    // Mettre à jour l'indicateur de connexion (désactivé)
     updateConnectionIndicator() {
-        const indicator = document.getElementById('connection-indicator');
-        if (!indicator) return;
-
-        const status = this.firebaseSync.getConnectionStatus();
-        const statusText = indicator.querySelector('.status-text');
-        const icon = indicator.querySelector('i');
-
-        statusText.textContent = status.status;
-        
-        indicator.className = '';
-        if (!status.online) {
-            indicator.classList.add('offline');
-            icon.className = 'fas fa-wifi-slash';
-        } else {
-            icon.className = 'fas fa-wifi';
-        }
+        // Fonction désactivée - pas d'indicateur visuel
+        return;
     }
 
     // Afficher une notification de synchronisation
