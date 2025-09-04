@@ -1,25 +1,25 @@
-Éetape,date,depart,arrivee,distance,denivele_positif,denivele_negatif,duree,difficulte,terrain,hebergement,bivouacA,bivouacB,eau,ravitaillement,altitude,exposition,reseau,telephone
-1,2025-09-08,Hendaye,Ibardin,15,850,450,6h,Moyenne,forêt/colline,Venta Elizalde,Col d'Ibardin – vue sur océan et Pyrénées,replat boisé avant col,Fontaine Ibardin,commerce Ibardin,317,variable,variable,05 59 20 79 20
-2,2025-09-09,Ibardin,Sare,16.5,700,1000,6.5h,Difficile,forêt ombragée,Gîte La Petite Rhune,Sommet de la Rhune – panorama exceptionnel,clairière avant Sare,Fontaine Sare,épicerie/boulangerie,700,variable,bon,05 59 54 20 14
-3,2025-09-10,Sare,Col des Veaux,16,600,200,5.7h,Simple,crête herbeuse,Maison Bordacharia,Col des Veaux – vue sur vallées basques,replat côté ouest,Source de crête,—,493,vent/soleil,variable,05 59 54 31 12
-4,2025-09-11,Col des Veaux,Bidarray,12.5,450,850,4.9h,Simple,chemins caillouteux,Gîte Aire Zabal,Crête d'Iparla – vue sur Nive,prairies avant descente,Fontaine Bidarray,épicerie,716,variable,bon,05 59 37 71 34
+etape,date,depart,arrivee,distance,denivele_positif,denivele_negatif,duree,difficulte,terrain,hebergement,bivouacA,bivouacB,eau,ravitaillement,altitude,exposition,reseau,telephone
+1,2025-09-08,Hendaye,Ibardin,15,850,450,6h,Moyenne,forêt/colline,Venta Elizalde,Col d'Ibardin – vue sur océan et Pyrénées,replat boisé avant col,Fontaine Ibardin,commerce Ibardin,317,variable,variable,+34 948 63 10 24
+2,2025-09-09,Ibardin,Sare,16.5,700,1000,6.5h,Difficile,forêt ombragée,Gîte La Petite Rhune,Sommet de la Rhune – panorama exceptionnel,clairière avant Sare,Fontaine Sare,épicerie/boulangerie,700,variable,bon,05 59 54 23 97
+3,2025-09-10,Sare,Col des Veaux,16,600,200,5.7h,Simple,crête herbeuse,Maison Bordacharia,Col des Veaux – vue sur vallées basques,replat côté ouest,Source de crête,—,493,vent/soleil,variable,05 59 54 28 58
+4,2025-09-11,Col des Veaux,Bidarray,12.5,450,850,4.9h,Simple,chemins caillouteux,Gîte Aire Zabal,Crête d'Iparla – vue sur Nive,prairies avant descente,Fontaine Bidarray,épicerie,716,variable,bon,+33 7 50 04 11 61
 5,2025-09-12,Bidarray,St‑Étienne‑de‑Baïgorry,18.5,1250,1250,8.2h,Difficile,crêtes basques,Gîte Mendizaleen Pausa,Pic d'Artzamendi – panorama 360°,replat hors crête,Fontaines Baïgorry,superette/boulangerie,1456,variable,variable,05 59 37 40 14
 6,2025-09-13,St‑Étienne‑de‑Baïgorry,St‑Jean‑Pied‑de‑Port,19,950,950,7.6h,Difficile,vallons doux,Gîte municipal,Col de Buztanzelhay – vue sur Compostelle,aire avant ville,Fontaines SJPP,pleins commerces,430,variable,bon,05 59 37 03 57
-7,2025-09-14,St‑Jean‑Pied‑de‑Port,Estérençuby,12,500,450,4.5h,Simple,gorges,Gîte Kaskoleta,Gorges de Kakuetta – vue sur cascades,replat de rive,Fontaine Estérençuby,épicerie/resto,1008,variable,variable,05 59 37 30 44
+7,2025-09-14,St‑Jean‑Pied‑de‑Port,Estérençuby,12,500,450,4.5h,Simple,gorges,Gîte Kaskoleta,Clairière d'Estérençuby (abritée, rive),Replat avant village (Estérençuby),Fontaine Estérençuby,épicerie/resto,1008,variable,variable,05 59 37 30 44
 8,2025-09-15,Estérençuby,Phagalcette,8.5,400,150,3.2h,Simple,pâturages,Plateau pastoral,Plateau de Phagalcette – vue montagnes basques,clairière abritée,Source locale,—,1200,variable,variable,05 59 37 30 44
 9,2025-09-16,Phagalcette,Iraty (chalets),14.5,1000,550,6.2h,Simple,forêt de hêtres,Chalets d'Iraty,Forêt d'Iraty – vue sur hêtraie,clairières sous crête,Fontaines Iraty,supérette saisonnière,1300,variable,variable,05 59 28 51 29
-10,2025-09-17,Iraty (chalets),Logibar,16,450,1400,6.2h,Moyenne,descente forestière,Gîte Logibar,Pic d'Orhy – sommet emblématique,replat forestier,Ruisseau Olhadoko,bar/auberge,500,variable,variable,05 59 28 61 83
+10,2025-09-17,Iraty (chalets),Logibar,16,450,1400,6.2h,Moyenne,descente forestière,Gîte Logibar,Pic d'Orhy – sommet emblématique,replat forestier,Ruisseau Olhadoko,bar/auberge,500,variable,variable,05 59 28 61 14
 11,2025-09-18,Logibar,Ste‑Engrâce,18,950,750,7.2h,Moyenne,gorges,Gîte d'étape Ste-Engrâce,Gorges de Kakuetta – site naturel,clairières rive droite,Uhaitza,épicerie/auberge,1600,variable,variable,05 59 28 61 83
 12,2025-09-19,Ste‑Engrâce,La Pierre‑St‑Martin,11,550,350,4.3h,Simple,karst pierreux,Station PSM,Col de la Pierre-St-Martin – vue Béarn/Navarre,zone abritée contrebas,Point d'eau station,supérette station,1760,variable,irrégulier,05 59 66 20 09
 13,2025-09-20,La Pierre‑St‑Martin,Lescun,15.5,500,1200,6h,Moyenne,vallée glaciaire,Gîtes Lescun,Plateau de Sanchèse – vue aiguilles d'Ansabère,vallon abrité,Fontaine Lescun,épicerie/gîte,1200,variable,variable,05 59 34 71 54
 14,2025-09-21,Lescun,Etsaut,16,850,1150,6.7h,Difficile,chemin de la Mâture,Auberge Etsaut,Crête de Borce – panorama vallée d'Aspe,replat avant Lucharry,Fontaine Etsaut,petite épicerie,900,variable,variable,05 59 34 88 98
 15,2025-09-22,Etsaut,Gourette,18,1400,500,7.8h,Difficile,haute montagne,Station Gourette,Lac d'Anglas – vue haute montagne,vallon abrité,Fontaine Gourette,commerces station,2070,orages possibles,irrégulier,05 59 05 12 17
 16,2025-09-23,Gourette,Arrens-Marsous,20,800,1200,8h,Moyenne,vallées et montagnes,Gîte Arrens,Lac d'Arrens – panorama Balaïtous,prairies avant village,Fontaines Arrens,épicerie/boulangerie,1200,variable,bon,05 62 97 02 64
-17,2025-09-24,Arrens-Marsous,Cauterets (Pont d'Espagne),18,900,950,7.2h,Difficile,sentier aménagé,Refuge Wallon,Lac de Gaube – vue Vignemale,zone boisée,Eau captée PN,resto/snack,1725,orages possibles,variable,05 62 92 40 25
-18,2025-09-25,Cauterets,Gavarnie,18,400,1100,7.5h,Moyenne,vallées et montagnes,Hôtel Gavarnie,Cascade d'Ars – panorama,prairies avant cirque,Fontaines Gavarnie,pleins commerces,1365,variable,bon,05 62 92 48 02
+17,2025-09-24,Arrens-Marsous,Cauterets (Pont d'Espagne),18,900,950,7.2h,Difficile,sentier aménagé,Refuge Wallon,Lac de Gaube – vue Vignemale,zone boisée,Eau captée PN,resto/snack,1725,orages possibles,variable,09 88 77 37 905
+18,2025-09-25,Cauterets,Gavarnie,18,400,1100,7.5h,Moyenne,vallées et montagnes,Hôtel Gavarnie,Plateau de Bellevue (avant Gavarnie, vue cirque),Clairière sous Gavarnie,Fontaines Gavarnie,pleins commerces,1365,variable,bon,05 62 92 48 02
 19,2025-09-26,Gavarnie,Luz‑St‑Sauveur,19,300,700,8h,Simple,vallées et rivières,Hôtel Luz,Col de Riou – panorama vallée,clairières avant ville,Fontaine Luz,pleins commerces,710,variable,bon,05 62 92 81 58
 20,2025-09-27,Luz‑St‑Sauveur,Barèges,12,600,500,5h,Simple,montagne pastorale,Hôtel Barèges,Plateau du Lienz – vue Néouvielle,lisière sous le Lienz,Fontaine Barèges,épicerie/boulangerie,1240,variable,bon,05 62 92 68 19
-21,2025-09-28,Barèges,Lac de l'Oule (Refuge),18,1000,700,7.2h,Moyenne,rives lac/barrage,Refuge de l'Oule,Bords du lac – vue sur massifs,zone abritée rive est,Eau refuge,—,1820,variable,variable,05 62 92 40 46
+21,2025-09-28,Barèges,Lac de l'Oule (Refuge),18,1000,700,7.2h,Moyenne,rives lac/barrage,Refuge de l'Oule,Bords du lac – vue sur massifs,zone abritée rive est,Eau refuge,—,1820,variable,variable,+33 5 62 98 48 6246
 22,2025-09-29,Lac de l'Oule,St‑Lary‑Soulan,14,300,1200,5.2h,Simple,vallée encaissée,Multiples hébergements,Hauteurs du Pla d'Adet – panorama,clairière avant bourg,Fontaines St‑Lary,pleins commerces,2100,variable,bon,05 62 39 50 81
 23,2025-09-30,St‑Lary‑Soulan,Refuge de Bastan,16,1100,300,7h,Moyenne,montagnes et vallées,Refuge de Bastan,Lacs de Bassiès – vue sur crêtes,plateau herbeux avant refuge,Sources refuge,refuge,1850,variable,variable,05 62 39 68 20
 24,2025-10-01,Refuge de Bastan,Refuge de Campana de Cloutou,14,600,400,6.5h,Moyenne,montagnes et vallées,Refuge Campana de Cloutou,Hauteurs du Quioulès – panorama,replat avant col,Sources refuge,refuge,2200,orages possibles,irrégulier,05 62 39 61 24
@@ -47,35 +47,3 @@
 46,2025-10-23,Batère,Las Illas,16,500,900,6h,Moyenne,collines boisées,Gîte Col de Lli,Col de Lli – vue sur plaine,replat avant col,Fontaine Las Illas,épicerie,750,variable,variable,04 68 87 73 42
 47,2025-10-24,Las Illas,Pic Neulos,18,800,700,6.9h,Moyenne,crête finale,Gîte du Pic Neulos,Pic Neulos – dernière montagne,replat sous crête,Source locale,—,1256,vent/soleil,irrégulier,04 68 89 74 12
 48,2025-10-25,Pic Neulos,Banyuls‑sur‑Mer,17,300,1200,6.1h,Moyenne,vignes et côte,Hôtel Les Elmes,Tour Madeloc – vue sur Méditerranée,vignes avant mer,Fontaine Banyuls,pleins commerces,50,variable,bon,04 68 88 03 12
-17,2025-09-24,Cauterets,Luz‑St‑Sauveur,19,700,1100,7.3h,Difficile,"vallée, pistes",Multiples hébergements,"Col de Riou – panorama vallée","clairières avant ville",Fontaine Luz,pleins commerces,1949,"variable (vallée/forêt)","souvent bon (vallée/ville)",
-18,2025-09-25,Luz‑St‑Sauveur,Barèges,12,600,500,4.7h,Simple,montagne pastorale,Hôtels/gîtes Barèges,"Plateau du Lienz – vue Néouvielle","lisière sous le Lienz",Fontaine Barèges,épicerie/boulangerie,1600,"variable (vallée/forêt)","souvent bon (vallée/ville)",
-19,2025-09-26,Barèges,Lac de l'Oule (Refuge),18,1000,700,7.2h,Moyenne,"rives lac/barrage, sentier",Refuge de l'Oule,"Bords du lac – vue sur massifs","zone abritée rive est",Eau refuge / captage,—,1820,"variable (vallée/forêt)",variable,
-20,2025-09-27,Lac de l'Oule,St‑Lary‑Soulan,14,300,1200,5.2h,Simple,vallée encaissée,Multiples hébergements,"Hauteurs du Pla d'Adet – panorama","clairière avant bourg",Fontaines St‑Lary,pleins commerces,2100,"variable (vallée/forêt)","souvent bon (vallée/ville)",
-21,2025-09-28,Gourette,Arrens-Marsous,20,800,,8h,Moyenne,Vallées et montagnes,Gîte Arrens,,,,,,,05 62 97 02 64
-22,2025-09-29,Arrens-Marsous,Refuge Wallon,16,1200,,7h,Moyenne,Montagnes et vallées,Refuge Wallon,,,,,,,05 62 92 40 25
-23,2025-09-30,Refuge Wallon,Gavarnie,18,400,,7.5h,Moyenne,Vallées et montagnes,Hôtel Gavarnie,,,,,,,05 62 92 48 02
-24,2025-10-01,Gavarnie,Refuge des Espuguettes,15,1100,,6.5h,Moyenne,Montagnes et vallées,Refuge des Espuguettes,,,,,,,05 62 92 40 63
-25,2025-10-02,Refuge des Espuguettes,Luz-Saint-Sauveur,19,300,,8h,Simple,Vallées et rivières,Hôtel Luz,,,,,,,05 62 92 81 58
-26,2025-10-03,Luz-Saint-Sauveur,Barèges,12,600,,5h,Simple,Vallées et rivières,Hôtel Barèges,,,,,,,05 62 92 68 19
-27,2025-10-04,Barèges,Refuge de la Glère,14,1000,,6h,Moyenne,Montagnes et vallées,Refuge de la Glère,,,,,,,05 62 92 40 46
-28,2025-10-05,Refuge de la Glère,Vielle-Aure,20,400,,8.5h,Moyenne,Vallées et montagnes,Gîte Vielle-Aure,,,,,,,05 62 39 50 83
-29,2025-10-06,Vielle-Aure,Refuge du Portillon,18,1400,,8h,Difficile,Montagnes et vallées,Refuge du Portillon,,,,,,,05 61 79 21 43
-30,2025-10-07,Refuge du Portillon,Luchon,16,200,,7h,Simple,Vallées et rivières,Hôtel Luchon,,,,,,,05 61 79 01 42
-31,2025-10-08,Luchon,Refuge d'Espingo,19,1600,,8.5h,Difficile,Montagnes et vallées,Refuge d'Espingo,,,,,,,05 61 79 20 68
-32,2025-10-09,Refuge d'Espingo,Fos,17,300,,7.5h,Moyenne,Vallées et montagnes,Gîte Fos,,,,,,,05 61 79 11 24
-33,2025-10-10,Fos,Refuge de Rioumajou,21,1300,,9h,Difficile,Montagnes et vallées,Refuge de Rioumajou,,,,,,,05 62 39 61 09
-34,2025-10-11,Refuge de Rioumajou,Saint-Lary-Soulan,18,400,,7.5h,Simple,Vallées et rivières,Hôtel Saint-Lary,,,,,,,05 62 39 50 81
-35,2025-10-12,Saint-Lary-Soulan,Refuge de Bastan,16,1100,,7h,Moyenne,Montagnes et vallées,Refuge de Bastan,,,,,,,05 62 39 68 20
-36,2025-10-13,Refuge de Bastan,Refuge de Campana de Cloutou,14,600,,6.5h,Moyenne,Montagnes et vallées,Refuge Campana de Cloutou,,,,,,,05 62 39 61 24
-37,2025-10-14,Refuge de Campana de Cloutou,Chalet-Hôtel de Oô,15,200,,6.5h,Simple,Vallées et rivières,Chalet-Hôtel de Oô,,,,,,,05 61 79 21 97
-38,2025-10-15,Chalet-Hôtel de Oô,Refuge d'Estom,13,800,,6h,Moyenne,Montagnes et vallées,Refuge d'Estom,,,,,,,05 62 92 40 63
-39,2025-10-16,Refuge d'Estom,Cauterets,17,300,,7.5h,Simple,Vallées et rivières,Hôtel Cauterets,,,,,,,05 62 92 52 53
-40,2025-10-17,Cauterets,Refuge des Oulettes,14,900,,6h,Moyenne,Montagnes et vallées,Refuge des Oulettes,,,,,,,05 62 92 40 63
-41,2025-10-18,Refuge des Oulettes,Refuge Bayssellance,12,500,,5.5h,Difficile,Montagnes et vallées,Refuge Bayssellance,,,,,,,05 62 92 40 25
-42,2025-10-19,Refuge Bayssellance,Refuge de Pineta (Espagne),16,200,,7h,Moyenne,Montagnes et vallées,Refuge de Pineta,,,,,,,+34 974 50 10 92
-43,2025-10-20,Refuge de Pineta,Refuge de Góriz (Espagne),14,1200,,6.5h,Moyenne,Montagnes et vallées,Refuge de Góriz,,,,,,,+34 974 34 12 01
-44,2025-10-21,Refuge de Góriz,Refuge de la Rencluse,18,400,,7.5h,Difficile,Montagnes et vallées,Refuge de la Rencluse,,,,,,,05 61 79 21 43
-45,2025-10-22,Refuge de la Rencluse,Mérens-les-Vals,20,600,,8h,Simple,Vallées et montagnes,Gîte Mérens,,,,,,,05 61 02 87 22
-46,2025-10-23,Mérens-les-Vals,Refuge des Besines,16,1300,,7h,Moyenne,Montagnes et vallées,Refuge des Besines,,,,,,,05 61 64 24 24
-47,2025-10-24,Refuge des Besines,Refuge de Rulhe,15,500,,6.5h,Moyenne,Montagnes et vallées,Refuge de Rulhe,,,,,,,04 68 04 21 97
-48,2025-10-25,Refuge de Rulhe,Refuge de Mariailles,17,400,,7h,Simple,Vallées et montagnes,Refuge de Mariailles,,,,,,,04 68 05 12 99
