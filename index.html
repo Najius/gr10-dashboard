@@ -12,6 +12,7 @@
     <script src="gr10-data-unified.js"></script>
     <script type="module" src="firebase-config.js"></script>
     <script src="firebase-integration.js"></script>
+    <script src="firebase-data-migration.js"></script>
     <style>
         :root {
             --primary-color: #2563eb;
@@ -2952,7 +2953,7 @@ Suggestions :
     <script>
         class GR10Dashboard {
             constructor() {
-                this.itineraryData = this.loadGR10Data();
+                this.itineraryData = [];
                 this.completedStages = new Set();
                 this.stageNotes = {};
                 this.stageRatings = {};
@@ -2962,7 +2963,32 @@ Suggestions :
                 this.currentStageId = 1;
                 this.map = null;
                 this.currentWeatherData = null;
+                this.firebaseSync = null;
+                this.initializeData();
                 this.init();
+            }
+
+            async initializeData() {
+                // Attendre que Firebase soit disponible
+                await this.waitForFirebase();
+                // Charger les données
+                this.itineraryData = await this.loadGR10Data();
+                // Recharger l'interface avec les nouvelles données
+                this.renderStages();
+            }
+
+            waitForFirebase() {
+                return new Promise((resolve) => {
+                    const checkFirebase = () => {
+                        if (window.firebaseSync) {
+                            this.firebaseSync = window.firebaseSync;
+                            resolve();
+                        } else {
+                            setTimeout(checkFirebase, 100);
+                        }
+                    };
+                    checkFirebase();
+                });
             }
 
             loadSavedData() {
@@ -3274,13 +3300,44 @@ Suggestions :
                 ];
             }
 
-            loadGR10Data() {
-                // Utiliser la base de données unifiée
+            async loadGR10Data() {
+                // Essayer de charger depuis Firebase d'abord
+                if (this.firebaseSync) {
+                    try {
+                        const firebaseStages = await this.firebaseSync.getStages();
+                        if (firebaseStages && firebaseStages.length > 0) {
+                            console.log('📥 Données chargées depuis Firebase');
+                            // Sauvegarder en cache local
+                            localStorage.setItem('gr10-stages-cache', JSON.stringify({
+                                data: firebaseStages,
+                                timestamp: Date.now()
+                            }));
+                            return firebaseStages;
+                        }
+                    } catch (error) {
+                        console.warn('⚠️ Erreur Firebase, utilisation du cache:', error);
+                    }
+                }
+
+                // Fallback 1: Cache local (si moins de 24h)
+                const cached = localStorage.getItem('gr10-stages-cache');
+                if (cached) {
+                    const { data, timestamp } = JSON.parse(cached);
+                    const age = Date.now() - timestamp;
+                    if (age < 24 * 60 * 60 * 1000) { // 24 heures
+                        console.log('💾 Données chargées depuis le cache local');
+                        return data;
+                    }
+                }
+
+                // Fallback 2: Fichier JavaScript statique
                 if (typeof gr10Data !== 'undefined') {
+                    console.log('📄 Données chargées depuis le fichier JS');
                     return gr10Data;
                 }
                 
-                // Fallback en cas de problème
+                // Fallback final
+                console.error('❌ Aucune source de données disponible');
                 return [];
             }
 

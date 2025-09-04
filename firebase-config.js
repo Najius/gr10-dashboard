@@ -41,8 +41,94 @@ class FirebaseSync {
         });
     }
 
-    // Sauvegarder la progression d'une étape
+    // Sauvegarder les données d'une étape
     async saveStageProgress(stageId, data) {
+        if (!this.isOnline) {
+            console.log('Mode hors ligne - sauvegarde locale uniquement');
+            return;
+        }
+
+        try {
+            const docRef = doc(db, 'stages', `stage-${stageId}`);
+            await setDoc(docRef, {
+                ...data,
+                lastUpdated: new Date(),
+                userId: 'anonymous' // À remplacer par un vrai système d'auth
+            }, { merge: true });
+            
+            console.log(`Étape ${stageId} sauvegardée dans Firebase`);
+        } catch (error) {
+            console.error('Erreur sauvegarde Firebase:', error);
+        }
+    }
+
+    // Sauvegarder une étape complète (données de base)
+    async saveStage(stageData) {
+        if (!this.isOnline) {
+            throw new Error('Connexion Firebase requise pour sauvegarder les données d\'étape');
+        }
+
+        try {
+            const docRef = doc(db, 'gr10-stages', `stage-${stageData.etape}`);
+            await setDoc(docRef, {
+                ...stageData,
+                lastUpdated: new Date()
+            });
+            
+            console.log(`Données étape ${stageData.etape} sauvegardées`);
+        } catch (error) {
+            console.error('Erreur sauvegarde étape:', error);
+            throw error;
+        }
+    }
+
+    // Récupérer toutes les étapes depuis Firebase
+    async getStages() {
+        if (!this.isOnline) {
+            return null;
+        }
+
+        try {
+            const querySnapshot = await getDocs(collection(db, 'gr10-stages'));
+            const stages = [];
+            querySnapshot.forEach((doc) => {
+                stages.push({ id: doc.id, ...doc.data() });
+            });
+            
+            // Trier par numéro d'étape
+            stages.sort((a, b) => a.etape - b.etape);
+            console.log(`${stages.length} étapes récupérées depuis Firebase`);
+            return stages;
+        } catch (error) {
+            console.error('Erreur récupération étapes:', error);
+            return null;
+        }
+    }
+
+    // Écouter les changements en temps réel sur les étapes
+    listenToStagesChanges(callback) {
+        if (!this.isOnline) {
+            return null;
+        }
+
+        try {
+            const q = collection(db, 'gr10-stages');
+            return onSnapshot(q, (querySnapshot) => {
+                const stages = [];
+                querySnapshot.forEach((doc) => {
+                    stages.push({ id: doc.id, ...doc.data() });
+                });
+                stages.sort((a, b) => a.etape - b.etape);
+                callback(stages);
+            });
+        } catch (error) {
+            console.error('Erreur écoute changements étapes:', error);
+            return null;
+        }
+    }
+
+    // Sauvegarder la progression d'une étape
+    async saveProgress(stageId, data) {
         try {
             if (this.isOnline) {
                 await setDoc(doc(db, 'gr10-progress', `stage-${stageId}`), {
