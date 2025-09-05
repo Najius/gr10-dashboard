@@ -1,0 +1,511 @@
+/* ========================================
+   INTERFACE MOBILE OPTIMISÉE GR10 DASHBOARD
+   Conçue pour l'usage en randonnée avec gants
+   ======================================== */
+
+/* Variables spécifiques mobile */
+:root {
+    --mobile-touch-target: 48px;
+    --mobile-large-touch: 56px;
+    --mobile-padding: 16px;
+    --mobile-margin: 12px;
+    --mobile-font-base: 16px;
+    --mobile-font-large: 18px;
+    --mobile-border-radius: 12px;
+    --mobile-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ========================================
+   NAVIGATION TACTILE OPTIMISÉE
+   ======================================== */
+
+@media (max-width: 768px) {
+    /* Navigation principale avec boutons plus grands */
+    .main-tabs {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--border-color);
+        padding: 8px 0;
+    }
+
+    .main-tabs .nav-tabs {
+        display: flex;
+        justify-content: space-around;
+        padding: 0 var(--mobile-padding);
+        gap: 8px;
+    }
+
+    .main-tabs .nav-link {
+        min-height: var(--mobile-large-touch);
+        min-width: var(--mobile-large-touch);
+        padding: 12px 16px;
+        font-size: var(--mobile-font-base);
+        font-weight: 600;
+        border-radius: var(--mobile-border-radius);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: var(--mobile-shadow);
+    }
+
+    .main-tabs .nav-link.active {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-dark);
+        transform: scale(1.05);
+    }
+
+    .main-tabs .nav-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Icônes plus grandes pour les onglets */
+    .main-tabs .nav-link i {
+        font-size: 20px;
+        margin-bottom: 4px;
+    }
+
+    /* Texte des onglets plus petit mais lisible */
+    .main-tabs .nav-link span {
+        font-size: 12px;
+        font-weight: 500;
+    }
+}
+
+/* ========================================
+   BOUTONS OPTIMISÉS POUR GANTS
+   ======================================== */
+
+@media (max-width: 768px) {
+    /* Tous les boutons principaux */
+    .btn, button, .admin-toggle, .validate-btn {
+        min-height: var(--mobile-large-touch);
+        min-width: var(--mobile-large-touch);
+        padding: 14px 20px;
+        font-size: var(--mobile-font-base);
+        font-weight: 600;
+        border-radius: var(--mobile-border-radius);
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: var(--mobile-shadow);
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Effet de pression tactile */
+    .btn:active, button:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Bouton admin plus visible */
+    .admin-toggle {
+        background: linear-gradient(135deg, var(--warning-color), #ff8c00);
+        color: white;
+        border: 3px solid #ff6b00;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .admin-toggle.active {
+        background: linear-gradient(135deg, var(--success-color), #059669);
+        border-color: var(--secondary-color);
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+    }
+
+    /* Boutons de validation d'étapes */
+    .validate-btn {
+        background: linear-gradient(135deg, var(--success-color), #059669);
+        color: white;
+        margin: var(--mobile-margin) 0;
+        width: 100%;
+        font-size: var(--mobile-font-large);
+    }
+
+    .validate-btn:hover {
+        background: linear-gradient(135deg, #059669, var(--success-color));
+        transform: translateY(-2px);
+    }
+
+    /* Boutons de fermeture de modal plus grands */
+    .modal .btn-close, .close {
+        width: var(--mobile-large-touch);
+        height: var(--mobile-large-touch);
+        font-size: 24px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        border: 2px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* ========================================
+   LISIBILITÉ SUR PETIT ÉCRAN
+   ======================================== */
+
+@media (max-width: 768px) {
+    /* Typographie optimisée */
+    body {
+        font-size: var(--mobile-font-base);
+        line-height: 1.6;
+    }
+
+    h1 { font-size: 2rem; margin-bottom: 1rem; }
+    h2 { font-size: 1.5rem; margin-bottom: 0.8rem; }
+    h3 { font-size: 1.25rem; margin-bottom: 0.6rem; }
+    h4 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+
+    /* Conteneurs avec padding adapté */
+    .container {
+        padding: 0 var(--mobile-padding);
+        max-width: 100%;
+    }
+
+    /* Cards d'étapes plus lisibles */
+    .stage-card {
+        margin-bottom: var(--mobile-margin);
+        padding: var(--mobile-padding);
+        border-radius: var(--mobile-border-radius);
+        box-shadow: var(--mobile-shadow);
+    }
+
+    .stage-card h3 {
+        font-size: var(--mobile-font-large);
+        margin-bottom: var(--mobile-margin);
+    }
+
+    /* Informations d'étape plus espacées */
+    .stage-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--mobile-margin);
+        margin: var(--mobile-margin) 0;
+    }
+
+    .stage-info-item {
+        padding: 8px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .stage-info-item strong {
+        display: block;
+        font-size: 14px;
+        color: var(--text-light);
+        margin-bottom: 4px;
+    }
+
+    .stage-info-item span {
+        font-size: var(--mobile-font-base);
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+}
+
+/* ========================================
+   NAVIGATION PAR SWIPE
+   ======================================== */
+
+@media (max-width: 768px) {
+    /* Zone de swipe pour navigation entre étapes */
+    .stage-navigation {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        z-index: 200;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 12px 20px;
+        border-radius: 25px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+    }
+
+    .stage-nav-btn {
+        width: var(--mobile-large-touch);
+        height: var(--mobile-large-touch);
+        border-radius: 50%;
+        border: none;
+        background: var(--primary-color);
+        color: white;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .stage-nav-btn:hover {
+        background: var(--primary-dark);
+        transform: scale(1.1);
+    }
+
+    .stage-nav-btn:disabled {
+        background: var(--border-color);
+        color: var(--text-light);
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Indicateur de swipe */
+    .swipe-indicator {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 12px 20px;
+        border-radius: var(--mobile-border-radius);
+        font-size: var(--mobile-font-base);
+        z-index: 300;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+
+    .swipe-indicator.show {
+        opacity: 1;
+    }
+}
+
+/* ========================================
+   MODE PLEIN ÉCRAN
+   ======================================== */
+
+@media (max-width: 768px) {
+    /* Bouton mode plein écran */
+    .fullscreen-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: var(--mobile-touch-target);
+        height: var(--mobile-touch-target);
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        border: none;
+        font-size: 18px;
+        z-index: 250;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .fullscreen-toggle:hover {
+        background: rgba(0, 0, 0, 0.9);
+        transform: scale(1.1);
+    }
+
+    /* Mode plein écran activé */
+    body.fullscreen-mode {
+        background: #000;
+        color: white;
+    }
+
+    body.fullscreen-mode .main-tabs {
+        background: rgba(0, 0, 0, 0.9);
+        border-bottom-color: #333;
+    }
+
+    body.fullscreen-mode .stage-card {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+
+    body.fullscreen-mode .stage-info-item {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+    }
+}
+
+/* ========================================
+   WIDGETS MÉTÉO MOBILE
+   ======================================== */
+
+@media (max-width: 768px) {
+    .weather-widgets-grid {
+        grid-template-columns: 1fr;
+        gap: var(--mobile-margin);
+        margin: var(--mobile-margin) 0;
+    }
+
+    .weather-widget {
+        padding: var(--mobile-padding);
+        border-radius: var(--mobile-border-radius);
+        box-shadow: var(--mobile-shadow);
+    }
+
+    .weather-widget h3 {
+        font-size: var(--mobile-font-base);
+        margin-bottom: 8px;
+    }
+
+    .weather-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .weather-temp {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    .weather-icon {
+        font-size: 2.5rem;
+    }
+}
+
+/* ========================================
+   MODAL MOBILE
+   ======================================== */
+
+@media (max-width: 768px) {
+    .modal {
+        padding: 0;
+    }
+
+    .modal-dialog {
+        margin: 0;
+        max-width: 100%;
+        height: 100vh;
+        display: flex;
+        align-items: stretch;
+    }
+
+    .modal-content {
+        border-radius: 0;
+        border: none;
+        height: 100%;
+        overflow-y: auto;
+        padding: var(--mobile-padding);
+    }
+
+    .modal-header {
+        padding: var(--mobile-padding);
+        border-bottom: 2px solid var(--border-color);
+        position: sticky;
+        top: 0;
+        background: white;
+        z-index: 10;
+    }
+
+    .modal-body {
+        padding: var(--mobile-padding);
+        font-size: var(--mobile-font-base);
+        line-height: 1.6;
+    }
+
+    .modal-footer {
+        padding: var(--mobile-padding);
+        border-top: 2px solid var(--border-color);
+        position: sticky;
+        bottom: 0;
+        background: white;
+    }
+}
+
+/* ========================================
+   ANIMATIONS TACTILES
+   ======================================== */
+
+@media (max-width: 768px) {
+    /* Feedback tactile pour tous les éléments interactifs */
+    .stage-card:active,
+    .weather-widget:active,
+    .nav-link:active {
+        transform: scale(0.98);
+        transition: transform 0.1s ease;
+    }
+
+    /* Animation de chargement mobile */
+    .loading-mobile {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: var(--primary-color);
+        animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+}
+
+/* ========================================
+   OPTIMISATIONS PERFORMANCE MOBILE
+   ======================================== */
+
+@media (max-width: 768px) {
+    /* Désactiver les animations coûteuses sur mobile */
+    .mountainBreeze,
+    .floatingParticles {
+        animation: none;
+    }
+
+    body::before {
+        display: none;
+    }
+
+    /* Optimiser les gradients pour mobile */
+    body {
+        background: linear-gradient(135deg, #0f766e 0%, #0369a1 100%);
+        background-attachment: scroll;
+    }
+
+    /* Réduire les ombres complexes */
+    .card, .stage-card {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* ========================================
+   ACCESSIBILITÉ MOBILE
+   ======================================== */
+
+@media (max-width: 768px) {
+    /* Contraste amélioré */
+    .btn:focus,
+    .nav-link:focus,
+    button:focus {
+        outline: 3px solid var(--primary-color);
+        outline-offset: 2px;
+    }
+
+    /* Taille de texte minimum pour lisibilité */
+    small, .small {
+        font-size: 14px;
+    }
+
+    /* Espacement tactile minimum */
+    a, button, .clickable {
+        margin: 2px;
+    }
+}

@@ -2,11 +2,16 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0f766e">
     <title>En GR 10 - Septembre 2025</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="css/mobile-optimized.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="gr10-data-unified.js"></script>
@@ -14,6 +19,7 @@
     <script src="firebase-integration.js"></script>
     <script src="firebase-data-migration-fixed.js"></script>
     <script src="check-firebase-data.js"></script>
+    <script src="js/mobile-interactions.js"></script>
     <script>
         // Vérification Firebase immédiate au chargement
         window.addEventListener('load', () => {
@@ -3405,18 +3411,23 @@ Suggestions :
             }
 
             renderStages() {
-                const container = document.getElementById('stages-container');
-                if (!container) {
-                    console.error('ERREUR: Container stages-container introuvable!');
-                    return;
-                }
-                container.innerHTML = '';
+            const container = document.getElementById('stages-container');
+            if (!container) {
+                console.error('ERREUR: Container stages-container introuvable!');
+                return;
+            }
+            container.innerHTML = '';
 
-                this.itineraryData.forEach((stage, index) => {
-                    const isCompleted = this.completedStages.has(stage.etape);
-                    const canValidate = this.canValidateStage(stage.etape);
-                    const isCurrent = canValidate && !isCompleted;
-                    const isUpcoming = !canValidate && !isCompleted;
+            this.itineraryData.forEach((stage, index) => {
+                const isCompleted = this.completedStages.has(stage.etape);
+                const canValidate = this.canValidateStage(stage.etape);
+                const isCurrent = canValidate && !isCompleted;
+                const isUpcoming = !canValidate && !isCompleted;
+                
+                // Mettre à jour l'index de l'étape actuelle pour les interactions mobiles
+                if (isCurrent && window.mobileInteractions) {
+                    window.mobileInteractions.setCurrentStage(index);
+                }
                     
                     const stageCard = document.createElement('div');
                     let cardClass = 'stage-card';
@@ -5775,6 +5786,12 @@ Suggestions :
             const dashboard = new GR10Dashboard();
             window.dashboard = dashboard; // Rendre accessible globalement
             console.log('Dashboard initialisé:', dashboard);
+            
+            // Initialiser les interactions mobiles avec le dashboard
+            if (window.mobileInteractions) {
+                window.mobileInteractions.updateStageCount(dashboard.itineraryData.length);
+                console.log('📱 Interactions mobiles synchronisées avec le dashboard');
+            }
             
             // Fonction de test globale pour la météo
             window.testWeather = function() {
