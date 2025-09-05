@@ -27,57 +27,87 @@
         z-index: 100;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         padding: 8px 0;
     }
 
-    .main-tabs .nav-tabs {
+    .main-tabs .container {
         display: flex;
         justify-content: space-around;
         padding: 0 var(--mobile-padding);
-        gap: 8px;
+        gap: 4px;
     }
 
-    .main-tabs .nav-link {
-        min-height: var(--mobile-large-touch);
-        min-width: var(--mobile-large-touch);
-        padding: 12px 16px;
-        font-size: var(--mobile-font-base);
-        font-weight: 600;
-        border-radius: var(--mobile-border-radius);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        border: 2px solid transparent;
-        transition: all 0.3s ease;
-        background: rgba(255, 255, 255, 0.8);
-        box-shadow: var(--mobile-shadow);
+    .main-tabs .tab-btn {
+        min-height: var(--mobile-large-touch) !important;
+        min-width: 70px !important;
+        padding: 6px 8px !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        border-radius: var(--mobile-border-radius) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        border: 2px solid transparent !important;
+        transition: all 0.3s ease !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        box-shadow: var(--mobile-shadow) !important;
+        flex: 1 !important;
+        max-width: 100px !important;
+        color: #374151 !important;
+        text-decoration: none !important;
     }
 
-    .main-tabs .nav-link.active {
-        background: var(--primary-color);
-        color: white;
-        border-color: var(--primary-dark);
-        transform: scale(1.05);
+    .main-tabs .tab-btn.active {
+        background: var(--primary-color) !important;
+        color: white !important;
+        border-color: var(--primary-dark) !important;
+        transform: scale(1.02) !important;
     }
 
-    .main-tabs .nav-link:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    .main-tabs .tab-btn:hover {
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
     }
 
-    /* Icônes plus grandes pour les onglets */
-    .main-tabs .nav-link i {
-        font-size: 20px;
-        margin-bottom: 4px;
+    /* Icônes des onglets */
+    .main-tabs .tab-btn i {
+        font-size: 16px !important;
+        margin-bottom: 2px !important;
+        display: block !important;
     }
 
-    /* Texte des onglets plus petit mais lisible */
-    .main-tabs .nav-link span {
-        font-size: 12px;
-        font-weight: 500;
+    /* Assurer que le texte est visible */
+    .main-tabs .tab-btn {
+        color: #374151 !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        white-space: nowrap;
+        overflow: visible;
+        text-overflow: clip;
+        line-height: 1.1;
+    }
+
+    .main-tabs .tab-btn.active {
+        color: white !important;
+    }
+
+    /* Forcer l'affichage du texte sur mobile */
+    .main-tabs .tab-btn span,
+    .main-tabs .tab-btn {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+    }
+
+    /* Icône et texte empilés verticalement */
+    .main-tabs .tab-btn i {
+        display: block !important;
+        margin-bottom: 2px !important;
     }
 }
 
