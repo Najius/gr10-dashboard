@@ -3615,6 +3615,11 @@ Suggestions :
                 await this.waitForFirebase();
                 // Charger les données d'étapes
                 this.itineraryData = await this.loadGR10Data();
+                
+                // Vider le cache local pour forcer le rechargement depuis Firebase
+                console.log('🗑️ Vidage cache local pour rechargement Firebase complet');
+                localStorage.removeItem('gr10-progress');
+                
                 // Charger le progrès utilisateur
                 await this.loadProgress();
                 // Recharger l'interface avec les nouvelles données
@@ -4036,12 +4041,12 @@ Suggestions :
                             }
                         }
                         
-                        // Fusionner avec les données locales existantes
+                        // Priorité aux données Firebase (plus récentes), puis fusion avec local
                         const localData = localStorage.getItem('gr10-progress');
                         if (localData) {
                             const local = JSON.parse(localData);
                             
-                            // Fusionner les données Firebase avec les données locales
+                            // Firebase en priorité, puis local en fallback
                             this.completedStages = new Set([...completedStages, ...(local.completedStages || [])]);
                             this.stageNotes = { ...(local.stageNotes || {}), ...stageNotes };
                             this.stageRatings = { ...(local.stageRatings || {}), ...stageRatings };
