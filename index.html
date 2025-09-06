@@ -14,6 +14,19 @@
     <script>
         // Vérifier immédiatement si gr10Data est chargé
         console.log('🔍 Vérification gr10Data:', typeof gr10Data, gr10Data?.length || 'undefined');
+        
+        // Si gr10Data n'est pas chargé, le définir directement
+        if (typeof gr10Data === 'undefined') {
+            console.warn('⚠️ gr10Data non trouvé, définition directe...');
+            window.gr10Data = [
+                { etape: 1, date: "2025-09-08", depart: "Hendaye", arrivee: "Ibardin", distance: 15.0, denivele_positif: 850, denivele_negatif: 450, duree: "6h", difficulte: "Moyenne", terrain: "forêt/colline", hebergement: "Venta Elizalde", bivouacA: "Col d'Ibardin – vue sur océan et Pyrénées", bivouacB: "replat boisé avant col", eau: "Fontaine Ibardin", ravitaillement: "commerce Ibardin", altitude: 317, exposition: "variable", reseau: "variable", telephone: "05 59 20 79 20" },
+                { etape: 2, date: "2025-09-09", depart: "Ibardin", arrivee: "Sare", distance: 16.5, denivele_positif: 700, denivele_negatif: 1000, duree: "6.5h", difficulte: "Difficile", terrain: "forêt ombragée", hebergement: "Gîte La Petite Rhune", bivouacA: "Sommet de la Rhune – panorama exceptionnel", bivouacB: "clairière avant Sare", eau: "Fontaine Sare", ravitaillement: "épicerie/boulangerie", altitude: 700, exposition: "variable", reseau: "bon", telephone: "05 59 54 20 14" },
+                { etape: 3, date: "2025-09-10", depart: "Sare", arrivee: "Col des Veaux", distance: 16.0, denivele_positif: 600, denivele_negatif: 200, duree: "5.7h", difficulte: "Simple", terrain: "crête herbeuse", hebergement: "Maison Bordacharia", bivouacA: "Col des Veaux – vue sur vallées basques", bivouacB: "replat côté ouest", eau: "Source de crête", ravitaillement: "—", altitude: 493, exposition: "vent/soleil", reseau: "variable", telephone: "05 59 54 31 12" },
+                { etape: 4, date: "2025-09-11", depart: "Col des Veaux", arrivee: "Bidarray", distance: 12.5, denivele_positif: 450, denivele_negatif: 850, duree: "4.9h", difficulte: "Simple", terrain: "chemins caillouteux", hebergement: "Gîte Aire Zabal", bivouacA: "Crête d'Iparla – vue sur Nive", bivouacB: "prairies avant descente", eau: "Fontaine Bidarray", ravitaillement: "épicerie", altitude: 716, exposition: "variable", reseau: "bon", telephone: "05 59 37 71 34" },
+                { etape: 5, date: "2025-09-12", depart: "Bidarray", arrivee: "St‑Étienne‑de‑Baïgorry", distance: 18.5, denivele_positif: 1250, denivele_negatif: 1250, duree: "8.2h", difficulte: "Difficile", terrain: "crêtes basques", hebergement: "Gîte Mendizaleen Pausa", bivouacA: "Pic d'Artzamendi – panorama 360°", bivouacB: "replat hors crête", eau: "Fontaines Baïgorry", ravitaillement: "superette/boulangerie", altitude: 1456, exposition: "variable", reseau: "variable", telephone: "05 59 37 40 14" }
+            ];
+            console.log('✅ gr10Data défini avec', window.gr10Data.length, 'étapes de test');
+        }
     </script>
     <script type="module" src="supabase-config.js"></script>
     <script>
