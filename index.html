@@ -6131,6 +6131,10 @@ Suggestions :
             }
 
             calculateOverallRating() {
+                if (!this.currentStageId) {
+                    console.error('❌ currentStageId non défini dans calculateOverallRating');
+                    return 0;
+                }
                 const ratings = this.detailedRatings[this.currentStageId];
                 if (!ratings) return 0;
                 
@@ -6144,6 +6148,10 @@ Suggestions :
             }
 
             updateOverallRating() {
+                if (!this.currentStageId) {
+                    console.error('❌ currentStageId non défini dans updateOverallRating');
+                    return;
+                }
                 const overallRating = this.calculateOverallRating();
                 this.stageRatings[this.currentStageId] = overallRating;
                 
@@ -6295,6 +6303,10 @@ Suggestions :
                                 // Le rating global ne peut pas être modifié directement
                                 return;
                             } else {
+                                if (!this.currentStageId) {
+                                    console.error('❌ currentStageId non défini dans setupRatingEventListeners');
+                                    return;
+                                }
                                 if (!this.detailedRatings[this.currentStageId]) {
                                     this.detailedRatings[this.currentStageId] = {};
                                 }
