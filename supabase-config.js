@@ -95,42 +95,8 @@ class SupabaseSync {
         }
     }
 
-    // Sauvegarder toutes les données utilisateur d'un coup
-    async saveAllUserData(allData) {
-        if (!this.isOnline) return false;
-
-        try {
-            const records = Object.entries(allData).map(([stageId, stageData]) => ({
-                stage_id: stageId.toString(),
-                user_id: 'anonymous',
-                completed: stageData.completed || false,
-                completed_at: stageData.completedAt,
-                notes: stageData.notes || '',
-                rating: stageData.rating,
-                photos: stageData.photos || [],
-                featured_photo: stageData.featuredPhoto,
-                comments: stageData.comments || [],
-                detailed_rating: stageData.detailedRating || {},
-                time: stageData.time,
-                timestamp: Date.now(),
-                last_updated: new Date().toISOString()
-            }));
-
-            const { data, error } = await this.supabase
-                .from('gr10_progress')
-                .upsert(records, {
-                    onConflict: 'stage_id,user_id'
-                });
-
-            if (error) throw error;
-            console.log('📤 Toutes les données sauvegardées dans Supabase');
-            return true;
-        } catch (error) {
-            console.error('Erreur sauvegarde batch Supabase:', error);
-            console.error('Détails de l\'erreur:', error.message, error.code);
-            return false;
-        }
-    }
+    // MÉTHODE SUPPRIMÉE - utiliser saveProgress() individuellement
+    // Cette méthode causait l'erreur "operator_gt" avec Supabase
 
     // Méthode pour récupérer le progrès d'une étape
     async getProgress(stageId) {
