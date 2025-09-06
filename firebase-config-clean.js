@@ -3,17 +3,16 @@
 
 // Import Firebase modules
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection, updateDoc, getDocs, addDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection, updateDoc, getDocs, addDoc, writeBatch } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-// Configuration Firebase
+// Configuration Firebase - Créer un nouveau projet Firebase
 const firebaseConfig = {
-    apiKey: "ATzaSyDTmIpbqAowDv9XbcGM0j1YCANK9I1",
-    authDomain: "gr10-dashboard.firebaseapp.com",
-    databaseURL: "https://gr10-dashboard-default-rtdb.europe-west1.firebasedatabase.app/",
-    projectId: "gr10-dashboard",
-    storageBucket: "gr10-dashboard.firebasestorage.app",
-    messagingSenderId: "989702167215",
-    appId: "1:989702167215:web:3b94f2d75394d6c7d62ca"
+    apiKey: "REMPLACER_PAR_VOTRE_API_KEY",
+    authDomain: "VOTRE_PROJET.firebaseapp.com",
+    projectId: "VOTRE_PROJET_ID",
+    storageBucket: "VOTRE_PROJET.appspot.com",
+    messagingSenderId: "VOTRE_SENDER_ID",
+    appId: "VOTRE_APP_ID"
 };
 
 // Initialiser Firebase
@@ -23,20 +22,22 @@ const db = getFirestore(app);
 // Classe de gestion Firebase
 class FirebaseSync {
     constructor() {
-        this.isOnline = true;
+        this.isOnline = false;
         this.db = db;
-        this.checkConnection();
+        this.testConnection();
     }
 
-    // Vérifier la connexion Firebase
-    async checkConnection() {
+    async testConnection() {
         try {
-            await getDoc(doc(db, 'test', 'connection'));
+            // Test simple de connexion à Firestore
+            const testDoc = doc(db, 'test', 'connection');
+            await getDoc(testDoc);
             this.isOnline = true;
-            console.log('✅ Firebase connecté');
+            console.log('✅ Firebase connecté et opérationnel');
         } catch (error) {
             this.isOnline = false;
-            console.warn('⚠️ Firebase hors ligne');
+            console.error('❌ Firebase connexion échouée:', error.message, error.code);
+            console.warn('⚠️ Mode hors ligne activé');
         }
     }
 
