@@ -6,7 +6,7 @@
 
 // Configuration Supabase - Clés du projet GR10 (corrigées)
 const supabaseUrl = 'https://nuaplzxrmuossobklvo.supabase.co'
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhcGx6eHJtdW9zc29ia2x2byIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzI1NjM0NzQ5LCJleHAiOjIwNDEyMTA3NDl9.Eo7nwGNEWJaLHdLkHCGzJBdHFgRXfCqJKOhGqOjZWqw'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im51c3BpenhybXVvb3NvYmtsbHZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxNjk4NDksImV4cCI6MjA3Mjc0NTg0OX0.HZGDnlspgnL0zP1yklqpnriCNqSwjjXIwojwKY_0Wlw'
 
 // Attendre que Supabase soit chargé depuis le CDN
 let supabase = null;
