@@ -22,6 +22,11 @@ function initSupabase() {
     return false;
 }
 
+// Initialiser immédiatement si Supabase est déjà disponible
+if (window.supabase) {
+    initSupabase();
+}
+
 // Classe de gestion Supabase
 class SupabaseSync {
     constructor() {
