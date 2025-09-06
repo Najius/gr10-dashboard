@@ -14,6 +14,7 @@ const supabase = createClient(supabaseUrl, supabaseKey)
 // Classe de gestion Supabase
 class SupabaseSync {
     constructor() {
+        this.supabase = supabase; // Référence vers l'instance Supabase globale
         this.isOnline = false;
         this.testConnection();
     }
@@ -21,7 +22,7 @@ class SupabaseSync {
     async testConnection() {
         try {
             // Test de connexion avec la table gr10_progress existante
-            const { data, error } = await supabase.from('gr10_progress').select('*').limit(1);
+            const { data, error } = await this.supabase.from('gr10_progress').select('*').limit(1);
             if (error && error.code !== 'PGRST116') { // PGRST116 = aucune donnée (OK)
                 throw error;
             }
