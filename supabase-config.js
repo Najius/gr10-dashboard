@@ -124,23 +124,29 @@ class SupabaseSync {
                 .select('*')
                 .eq('stage_id', stageId.toString()) // Forcer en string
                 .eq('user_id', 'anonymous')
-                .single();
+                .maybeSingle(); // Utiliser maybeSingle au lieu de single
 
-            if (error && error.code !== 'PGRST116') {
+            if (error) {
                 console.error(`❌ Erreur récupération étape ${stageId}:`, error);
                 return null;
             }
 
-            return data ? {
-                completed: data.completed,
-                notes: data.notes,
-                photos: data.photos || [],
-                comments: data.comments || [],
-                rating: data.rating,
-                detailedRating: data.detailed_rating,
-                featuredPhoto: data.featured_photo,
-                time: data.time
-            } : null;
+            if (data) {
+                console.log(`📥 Données trouvées pour étape ${stageId}:`, data);
+                return {
+                    completed: data.completed,
+                    notes: data.notes,
+                    photos: data.photos || [],
+                    comments: data.comments || [],
+                    rating: data.rating,
+                    detailedRating: data.detailed_rating,
+                    featuredPhoto: data.featured_photo,
+                    time: data.time
+                };
+            } else {
+                console.log(`📭 Aucune donnée pour étape ${stageId}`);
+                return null;
+            }
         } catch (error) {
             console.error(`❌ Erreur getProgress étape ${stageId}:`, error);
             return null;
