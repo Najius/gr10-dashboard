@@ -4,23 +4,32 @@
 // Import Supabase client depuis CDN officiel - Version compatible
 // import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
 
-// Alternative: Charger Supabase via script global
-const { createClient } = window.supabase || (() => {
-    console.warn('⚠️ Supabase non disponible, mode fallback activé');
-    return { createClient: () => null };
-})();
-
 // Configuration Supabase - Clés du projet GR10
 const supabaseUrl = 'https://nuspizxrmuoosobkllvo.supabase.co'
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im51c3BpenhybXVvb3NvYmtsbHZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxNjk4NDksImV4cCI6MjA3Mjc0NTg0OX0.HZGDnlspgnL0zP1yklqpnriCNqSwjjXIwojwKY_0Wlw'
 
-// Initialiser Supabase avec vérification
-const supabase = createClient ? createClient(supabaseUrl, supabaseKey) : null
+// Attendre que Supabase soit chargé depuis le CDN
+let supabase = null;
+
+// Fonction d'initialisation différée
+function initSupabase() {
+    if (window.supabase && window.supabase.createClient) {
+        supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        console.log('✅ Client Supabase initialisé avec succès');
+        return true;
+    }
+    console.warn('⚠️ Supabase CDN non encore chargé');
+    return false;
+}
 
 // Classe de gestion Supabase
 class SupabaseSync {
     constructor() {
-        this.supabase = supabase; // Référence vers l'instance Supabase globale
+        // Initialiser Supabase si pas encore fait
+        if (!supabase) {
+            initSupabase();
+        }
+        this.supabase = supabase;
         this.isOnline = false;
         this.testConnection();
     }
