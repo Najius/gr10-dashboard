@@ -74,12 +74,37 @@ class SupabaseSync {
     }
 
     async testConnection() {
-        // Forcer mode hors ligne immédiatement pour éviter les blocages
-        console.log('🔍 Test de connexion Supabase désactivé temporairement');
-        console.log('⚠️ Forçage mode hors ligne pour éviter les blocages de production');
-        this.isOnline = false;
-        console.log('🔍 Status isOnline forcé à:', this.isOnline);
-        return;
+        console.log('🔍 Test de connexion Supabase simplifié...');
+        
+        try {
+            if (!this.supabase) {
+                throw new Error('Client Supabase non initialisé');
+            }
+            
+            // Test simplifié avec timeout court
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3000);
+            
+            const { data, error } = await this.supabase
+                .from('gr10_progress')
+                .select('stage_id')
+                .limit(1)
+                .abortSignal(controller.signal);
+            
+            clearTimeout(timeoutId);
+            
+            if (error && error.code !== 'PGRST116') {
+                throw error;
+            }
+            
+            this.isOnline = true;
+            console.log('✅ Supabase connecté - synchronisation mobile activée');
+            
+        } catch (error) {
+            this.isOnline = false;
+            console.log('⚠️ Supabase hors ligne, mode localStorage uniquement');
+            console.log('🔍 Erreur:', error.message);
+        }
         
         /* Code original commenté pour debug
         try {
