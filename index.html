@@ -3619,7 +3619,20 @@ Suggestions :
                 this.map = null;
                 this.currentWeatherData = null;
                 this.firebaseSync = null;
-                this.initializeData();
+                console.log('🔍 Avant initializeData()');
+                
+                // Forcer l'exécution immédiate pour test
+                setTimeout(async () => {
+                    try {
+                        console.log('🔍 === DÉBUT initializeData() FORCÉE ===');
+                        await this.initializeData();
+                        console.log('🔍 === FIN initializeData() FORCÉE ===');
+                    } catch (error) {
+                        console.error('❌ Erreur dans initializeData() forcée:', error);
+                    }
+                }, 100);
+                
+                console.log('🔍 Avant init()');
                 this.init();
             }
 
@@ -6741,9 +6754,11 @@ Suggestions :
             });
 
             // Initialiser le dashboard global
+            console.log('🔍 Création du dashboard...');
             const dashboard = new GR10Dashboard();
             window.dashboard = dashboard; // Rendre accessible globalement
-            console.log('Dashboard initialisé:', dashboard);
+            console.log('✅ Dashboard initialisé:', dashboard);
+            console.log('🔍 Dashboard.itineraryData.length:', dashboard.itineraryData?.length || 'undefined');
             
             // Fonction de test globale pour la météo
             window.testWeather = function() {
