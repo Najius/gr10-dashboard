@@ -83,8 +83,9 @@ class SupabaseSync {
             
             // Test simplifié avec timeout court
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 3000);
+            const timeoutId = setTimeout(() => controller.abort(), 5000);
             
+            console.log('🔍 Tentative de requête vers gr10_progress...');
             const { data, error } = await this.supabase
                 .from('gr10_progress')
                 .select('stage_id')
@@ -93,17 +94,23 @@ class SupabaseSync {
             
             clearTimeout(timeoutId);
             
+            console.log('🔍 Réponse Supabase - data:', data, 'error:', error);
+            
             if (error && error.code !== 'PGRST116') {
+                console.log('❌ Erreur Supabase détectée:', error.code, error.message);
                 throw error;
             }
             
             this.isOnline = true;
             console.log('✅ Supabase connecté - synchronisation mobile activée');
+            console.log('✅ Test réussi - isOnline:', this.isOnline);
             
         } catch (error) {
             this.isOnline = false;
             console.log('⚠️ Supabase hors ligne, mode localStorage uniquement');
-            console.log('🔍 Erreur:', error.message);
+            console.log('🔍 Erreur complète:', error);
+            console.log('🔍 Type erreur:', error.name);
+            console.log('🔍 Message erreur:', error.message);
         }
         
         /* Code original commenté pour debug
