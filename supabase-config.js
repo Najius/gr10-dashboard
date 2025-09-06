@@ -95,8 +95,20 @@ class SupabaseSync {
         }
     }
 
-    // MÉTHODE SUPPRIMÉE - utiliser saveProgress() individuellement
-    // Cette méthode causait l'erreur "operator_gt" avec Supabase
+    // Méthode de sauvegarde batch simplifiée (sans upsert problématique)
+    async saveAllUserData(allData) {
+        console.log('⚠️ saveAllUserData appelée - redirection vers sauvegarde individuelle');
+        
+        // Au lieu d'utiliser upsert (qui cause operator_gt), sauvegarder individuellement
+        let successCount = 0;
+        for (const [stageId, stageData] of Object.entries(allData)) {
+            const success = await this.saveProgress(parseInt(stageId), stageData);
+            if (success) successCount++;
+        }
+        
+        console.log(`📤 ${successCount}/${Object.keys(allData).length} étapes sauvegardées individuellement`);
+        return successCount > 0;
+    }
 
     // Méthode pour récupérer le progrès d'une étape
     async getProgress(stageId) {
