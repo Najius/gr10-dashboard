@@ -4126,22 +4126,9 @@ Suggestions :
                             }
                         }
                         
-                        // Toujours utiliser les données Firebase (même vides) et fusionner avec local
-                        const localData = localStorage.getItem('gr10-progress');
-                        if (localData) {
-                            const local = JSON.parse(localData);
-                            
-                            // Fusionner Firebase + Local (local en priorité pour éviter les pertes)
-                            this.completedStages = new Set([...completedStages, ...(local.completedStages || [])]);
-                            this.stageNotes = { ...stageNotes, ...(local.stageNotes || {}) };
-                            this.stageRatings = { ...stageRatings, ...(local.stageRatings || {}) };
-                            this.stagePhotos = { ...stagePhotos, ...(local.stagePhotos || {}) };
-                            this.stageFeaturedPhotos = { ...stageFeaturedPhotos, ...(local.stageFeaturedPhotos || {}) };
-                            this.stageComments = { ...stageComments, ...(local.stageComments || {}) };
-                            this.detailedRatings = { ...detailedRatings, ...(local.detailedRatings || {}) };
-                            this.stageTimes = { ...stageTimes, ...(local.stageTimes || {}) };
-                        } else {
-                            // Utiliser seulement Firebase si pas de cache local
+                        // En mode admin, Firebase a priorité absolue (pour respecter les suppressions)
+                        if (this.isAdminMode) {
+                            console.log('🔐 Mode admin: Firebase prioritaire sur cache local');
                             this.completedStages = completedStages;
                             this.stageNotes = stageNotes;
                             this.stageRatings = stageRatings;
@@ -4150,6 +4137,32 @@ Suggestions :
                             this.stageComments = stageComments;
                             this.detailedRatings = detailedRatings;
                             this.stageTimes = stageTimes;
+                        } else {
+                            // En mode normal, fusionner Firebase + Local (local en priorité)
+                            const localData = localStorage.getItem('gr10-progress');
+                            if (localData) {
+                                const local = JSON.parse(localData);
+                                console.log('👤 Mode normal: fusion Firebase + Local');
+                                
+                                this.completedStages = new Set([...completedStages, ...(local.completedStages || [])]);
+                                this.stageNotes = { ...stageNotes, ...(local.stageNotes || {}) };
+                                this.stageRatings = { ...stageRatings, ...(local.stageRatings || {}) };
+                                this.stagePhotos = { ...stagePhotos, ...(local.stagePhotos || {}) };
+                                this.stageFeaturedPhotos = { ...stageFeaturedPhotos, ...(local.stageFeaturedPhotos || {}) };
+                                this.stageComments = { ...stageComments, ...(local.stageComments || {}) };
+                                this.detailedRatings = { ...detailedRatings, ...(local.detailedRatings || {}) };
+                                this.stageTimes = { ...stageTimes, ...(local.stageTimes || {}) };
+                            } else {
+                                // Utiliser seulement Firebase si pas de cache local
+                                this.completedStages = completedStages;
+                                this.stageNotes = stageNotes;
+                                this.stageRatings = stageRatings;
+                                this.stagePhotos = stagePhotos;
+                                this.stageFeaturedPhotos = stageFeaturedPhotos;
+                                this.stageComments = stageComments;
+                                this.detailedRatings = detailedRatings;
+                                this.stageTimes = stageTimes;
+                            }
                         }
                         
                         console.log('📥 Données fusionnées Firebase + Local:', {
