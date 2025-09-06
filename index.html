@@ -3620,6 +3620,49 @@ Suggestions :
                 // Recharger l'interface avec les nouvelles données
                 this.renderStages();
                 this.updateProgress();
+                
+                // Écouter les changements Firebase en temps réel
+                this.setupRealtimeSync();
+            }
+
+            setupRealtimeSync() {
+                if (!this.firebaseSync) return;
+                
+                // Écouter les changements sur toutes les étapes
+                for (let i = 1; i <= 48; i++) {
+                    this.firebaseSync.listenToProgress(i, (data) => {
+                        if (data && data.exists()) {
+                            const stageData = data.data();
+                            const stageId = i;
+                            
+                            console.log(`🔄 Mise à jour temps réel étape ${stageId}:`, stageData);
+                            
+                            // Mettre à jour les données locales
+                            if (stageData.completed && !this.completedStages.has(stageId)) {
+                                this.completedStages.add(stageId);
+                            }
+                            if (stageData.photos && stageData.photos.length > 0) {
+                                this.stagePhotos[stageId] = stageData.photos;
+                                console.log(`📷 ${stageData.photos.length} photos mises à jour pour étape ${stageId}`);
+                            }
+                            if (stageData.notes) {
+                                this.stageNotes[stageId] = stageData.notes;
+                            }
+                            if (stageData.comments && stageData.comments.length > 0) {
+                                this.stageComments[stageId] = stageData.comments;
+                            }
+                            
+                            // Mettre à jour l'affichage
+                            this.renderStages();
+                            this.updateProgress();
+                            
+                            // Si la modal est ouverte pour cette étape, la rafraîchir
+                            if (this.currentStageId === stageId) {
+                                this.loadStagePhotos(stageId);
+                            }
+                        }
+                    });
+                }
             }
 
             waitForFirebase() {
@@ -5261,7 +5304,7 @@ Suggestions :
                 Array.from(files).forEach(file => {
                     if (file.type.startsWith('image/')) {
                         const reader = new FileReader();
-                        reader.onload = (e) => {
+                        reader.onload = async (e) => {
                             if (!this.stagePhotos[this.currentStageId]) {
                                 this.stagePhotos[this.currentStageId] = [];
                             }
@@ -5273,7 +5316,8 @@ Suggestions :
                             };
                             
                             this.stagePhotos[this.currentStageId].push(photoData);
-                            this.saveProgress();
+                            console.log(`📸 Photo ajoutée pour étape ${this.currentStageId}:`, photoData.name);
+                            await this.saveProgress();
                             this.loadStagePhotos(this.currentStageId);
                             // Mettre à jour l'affichage des cartes pour montrer la nouvelle photo
                             setTimeout(() => {
