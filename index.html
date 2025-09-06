@@ -3633,9 +3633,92 @@ Suggestions :
             }
 
             setupRealtimeSync() {
-                // Désactiver temporairement la sync temps réel pour éviter les conflits
-                console.log('⏸️ Sync temps réel désactivée temporairement');
-                return;
+                if (!this.firebaseSync) return;
+                
+                console.log('🔄 Configuration synchronisation temps réel Firebase');
+                
+                // Écouter tous les changements Firebase en temps réel
+                this.firebaseUnsubscribe = this.firebaseSync.listenToAllProgress((firebaseData) => {
+                    console.log('📥 Changements Firebase détectés:', Object.keys(firebaseData).length, 'étapes');
+                    
+                    let hasChanges = false;
+                    
+                    // Traiter chaque étape mise à jour
+                    for (const [stageId, stageData] of Object.entries(firebaseData)) {
+                        const id = parseInt(stageId);
+                        if (isNaN(id)) continue;
+                        
+                        // Vérifier si c'est une vraie mise à jour (timestamp plus récent)
+                        const localTimestamp = this.lastUpdateTimestamp?.[id] || 0;
+                        const firebaseTimestamp = stageData.timestamp || 0;
+                        
+                        if (firebaseTimestamp > localTimestamp) {
+                            hasChanges = true;
+                            
+                            // Mettre à jour les données locales
+                            if (stageData.completed && !this.completedStages.has(id)) {
+                                this.completedStages.add(id);
+                                console.log(`✅ Étape ${id} marquée complétée`);
+                            }
+                            
+                            if (stageData.photos && stageData.photos.length > 0) {
+                                this.stagePhotos[id] = stageData.photos;
+                                console.log(`📷 ${stageData.photos.length} photos mises à jour pour étape ${id}`);
+                            }
+                            
+                            if (stageData.notes) {
+                                this.stageNotes[id] = stageData.notes;
+                            }
+                            
+                            if (stageData.comments && stageData.comments.length > 0) {
+                                this.stageComments[id] = stageData.comments;
+                            }
+                            
+                            if (stageData.rating) {
+                                this.stageRatings[id] = stageData.rating;
+                            }
+                            
+                            if (stageData.detailedRating) {
+                                this.detailedRatings[id] = stageData.detailedRating;
+                            }
+                            
+                            if (stageData.time) {
+                                this.stageTimes[id] = stageData.time;
+                            }
+                            
+                            // Sauvegarder le timestamp de cette mise à jour
+                            if (!this.lastUpdateTimestamp) this.lastUpdateTimestamp = {};
+                            this.lastUpdateTimestamp[id] = firebaseTimestamp;
+                        }
+                    }
+                    
+                    // Mettre à jour l'interface si des changements ont été détectés
+                    if (hasChanges) {
+                        // Sauvegarder en local
+                        const localData = {
+                            completedStages: Array.from(this.completedStages),
+                            stageNotes: this.stageNotes,
+                            stageRatings: this.stageRatings,
+                            stagePhotos: this.stagePhotos,
+                            stageFeaturedPhotos: this.stageFeaturedPhotos,
+                            stageComments: this.stageComments,
+                            detailedRatings: this.detailedRatings,
+                            stageTimes: this.stageTimes
+                        };
+                        localStorage.setItem('gr10-progress', JSON.stringify(localData));
+                        
+                        // Rafraîchir l'interface
+                        this.renderStages();
+                        this.updateProgress();
+                        
+                        // Si une modal est ouverte, la rafraîchir
+                        if (this.currentStageId) {
+                            this.loadStagePhotos(this.currentStageId);
+                        }
+                        
+                        console.log('🔄 Interface mise à jour avec les changements Firebase');
+                    }
+                });
             }
 
             waitForFirebase() {
@@ -4143,35 +4226,54 @@ Suggestions :
                         // Sauvegarder le progrès global
                         await this.firebaseSync.saveProgress('global', data);
                         
-                        // Sauvegarder toutes les étapes avec des données (pas seulement les complétées)
-                        const allStageIds = new Set([
-                            ...this.completedStages,
-                            ...Object.keys(this.stageNotes).map(Number),
-                            ...Object.keys(this.stagePhotos).map(Number),
-                            ...Object.keys(this.stageComments).map(Number),
-                            ...Object.keys(this.stageRatings).map(Number),
-                            ...Object.keys(this.detailedRatings).map(Number),
-                            ...Object.keys(this.stageTimes).map(Number)
-                        ]);
+                        // Sauvegarder en mode admin uniquement
+                        if (this.isAdminMode && this.firebaseSync) {
+                            // Préparer toutes les données pour sauvegarde batch
+                            const allStageData = {};
+                            const allStageIds = new Set([
+                                ...this.completedStages,
+                                ...Object.keys(this.stageNotes).map(Number),
+                                ...Object.keys(this.stagePhotos).map(Number),
+                                ...Object.keys(this.stageComments).map(Number),
+                                ...Object.keys(this.stageRatings).map(Number),
+                                ...Object.keys(this.detailedRatings).map(Number),
+                                ...Object.keys(this.stageTimes).map(Number)
+                            ]);
 
-                        for (const stageId of allStageIds) {
-                            const stageData = {
-                                completed: this.completedStages.has(stageId),
-                                completedAt: this.completedStages.has(stageId) ? new Date().toISOString() : null,
-                                notes: this.stageNotes[stageId] || '',
-                                rating: this.stageRatings[stageId] || null,
-                                photos: this.stagePhotos[stageId] || [],
-                                featuredPhoto: this.stageFeaturedPhotos[stageId] || null,
-                                comments: this.stageComments[stageId] || [],
-                                detailedRating: this.detailedRatings[stageId] || {},
-                                time: this.stageTimes[stageId] || null
-                            };
-                            
-                            // Ne sauvegarder que si il y a des données
-                            if (stageData.completed || stageData.notes || stageData.photos.length > 0 || 
-                                stageData.comments.length > 0 || stageData.rating || 
-                                Object.keys(stageData.detailedRating).length > 0 || stageData.time) {
-                                await this.firebaseSync.saveProgress(stageId, stageData);
+                            const timestamp = Date.now();
+                            if (!this.lastUpdateTimestamp) this.lastUpdateTimestamp = {};
+
+                            for (const stageId of allStageIds) {
+                                const stageData = {
+                                    completed: this.completedStages.has(stageId),
+                                    completedAt: this.completedStages.has(stageId) ? new Date().toISOString() : null,
+                                    notes: this.stageNotes[stageId] || '',
+                                    rating: this.stageRatings[stageId] || null,
+                                    photos: this.stagePhotos[stageId] || [],
+                                    featuredPhoto: this.stageFeaturedPhotos[stageId] || null,
+                                    comments: this.stageComments[stageId] || [],
+                                    detailedRating: this.detailedRatings[stageId] || {},
+                                    time: this.stageTimes[stageId] || null,
+                                    timestamp: timestamp
+                                };
+                                
+                                // Ne sauvegarder que si il y a des données
+                                if (stageData.completed || stageData.notes || stageData.photos.length > 0 || 
+                                    stageData.comments.length > 0 || stageData.rating || 
+                                    Object.keys(stageData.detailedRating).length > 0 || stageData.time) {
+                                    allStageData[stageId] = stageData;
+                                    this.lastUpdateTimestamp[stageId] = timestamp;
+                                }
+                            }
+
+                            // Sauvegarde batch Firebase
+                            try {
+                                const success = await this.firebaseSync.saveAllUserData(allStageData);
+                                if (success) {
+                                    console.log('🔄 Synchronisation admin Firebase réussie');
+                                }
+                            } catch (error) {
+                                console.error('❌ Erreur synchronisation admin Firebase:', error);
                             }
                         }
                         
@@ -5323,19 +5425,27 @@ Suggestions :
                             localStorage.setItem('gr10-progress', JSON.stringify(localData));
                             console.log(`💾 Photo sauvegardée localement pour étape ${this.currentStageId}`);
                             
-                            // Ensuite tenter Firebase
-                            if (this.firebaseSync) {
+                            // Sauvegarder dans Firebase avec timestamp pour éviter les boucles
+                            if (this.firebaseSync && this.isAdminMode) {
                                 try {
-                                    await this.firebaseSync.saveProgress(this.currentStageId, {
+                                    const timestamp = Date.now();
+                                    if (!this.lastUpdateTimestamp) this.lastUpdateTimestamp = {};
+                                    this.lastUpdateTimestamp[this.currentStageId] = timestamp;
+                                    
+                                    const success = await this.firebaseSync.saveProgress(this.currentStageId, {
                                         completed: this.completedStages.has(this.currentStageId),
                                         photos: this.stagePhotos[this.currentStageId],
                                         notes: this.stageNotes[this.currentStageId] || '',
                                         rating: this.stageRatings[this.currentStageId] || null,
                                         comments: this.stageComments[this.currentStageId] || [],
                                         detailedRating: this.detailedRatings[this.currentStageId] || {},
-                                        time: this.stageTimes[this.currentStageId] || null
+                                        time: this.stageTimes[this.currentStageId] || null,
+                                        timestamp: timestamp
                                     });
-                                    console.log(`✅ Photo sauvegardée dans Firebase pour étape ${this.currentStageId}`);
+                                    
+                                    if (success) {
+                                        console.log(`✅ Photo sauvegardée dans Firebase pour étape ${this.currentStageId}`);
+                                    }
                                 } catch (error) {
                                     console.error('❌ Erreur sauvegarde photo Firebase (mais sauvegardée localement):', error);
                                 }

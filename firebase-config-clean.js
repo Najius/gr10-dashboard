@@ -42,7 +42,7 @@ class FirebaseSync {
 
     // Sauvegarder le progrès d'une étape
     async saveProgress(stageId, progressData) {
-        if (!this.isOnline) return;
+        if (!this.isOnline) return false;
 
         try {
             // Convertir les photos en base64 si nécessaire pour Firebase
@@ -62,12 +62,46 @@ class FirebaseSync {
             await setDoc(doc(db, 'gr10-progress', stageId.toString()), {
                 ...processedData,
                 lastUpdated: new Date(),
+                timestamp: Date.now(),
                 userId: 'anonymous'
             }, { merge: true });
             
             console.log(`📤 Étape ${stageId} sauvegardée dans Firebase avec ${progressData.photos?.length || 0} photos`);
+            return true;
         } catch (error) {
             console.error('Erreur sauvegarde Firebase:', error);
+            return false;
+        }
+    }
+
+    // Sauvegarder toutes les données utilisateur d'un coup
+    async saveAllUserData(allData) {
+        if (!this.isOnline) return false;
+
+        try {
+            const batch = writeBatch(db);
+            
+            // Sauvegarder chaque étape avec des données
+            for (const [stageId, stageData] of Object.entries(allData)) {
+                if (stageData && (stageData.completed || stageData.photos?.length > 0 || 
+                    stageData.notes || stageData.comments?.length > 0)) {
+                    
+                    const docRef = doc(db, 'gr10-progress', stageId.toString());
+                    batch.set(docRef, {
+                        ...stageData,
+                        lastUpdated: new Date(),
+                        timestamp: Date.now(),
+                        userId: 'anonymous'
+                    }, { merge: true });
+                }
+            }
+            
+            await batch.commit();
+            console.log('📤 Toutes les données sauvegardées dans Firebase');
+            return true;
+        } catch (error) {
+            console.error('Erreur sauvegarde batch Firebase:', error);
+            return false;
         }
     }
 
@@ -157,16 +191,16 @@ class FirebaseSync {
         });
     }
 
-    // Écouter tous les changements de progrès
+    // Écouter tous les changements en temps réel
     listenToAllProgress(callback) {
         if (!this.isOnline) return;
 
         return onSnapshot(collection(db, 'gr10-progress'), (snapshot) => {
-            const progressData = {};
+            const allData = {};
             snapshot.forEach((doc) => {
-                progressData[doc.id] = doc.data();
+                allData[doc.id] = doc.data();
             });
-            callback(progressData);
+            callback(allData);
         });
     }
 
