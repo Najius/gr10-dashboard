@@ -5344,7 +5344,11 @@ Suggestions :
                         newBtn.addEventListener('click', (e) => {
                             e.preventDefault();
                             console.log('🔥 Bouton commentaire cliqué');
-                            this.addComment(this.currentStageId);
+                            if (this.currentStageId) {
+                                this.addComment(this.currentStageId);
+                            } else {
+                                console.error('❌ currentStageId non défini');
+                            }
                         });
                     }
 
@@ -5354,7 +5358,11 @@ Suggestions :
                         commentText.addEventListener('keydown', (e) => {
                             if (e.key === 'Enter' && e.ctrlKey) {
                                 e.preventDefault();
-                                this.addComment(this.currentStageId);
+                                if (this.currentStageId) {
+                                    this.addComment(this.currentStageId);
+                                } else {
+                                    console.error('❌ currentStageId non défini');
+                                }
                             }
                         });
                     }
@@ -6929,9 +6937,13 @@ Suggestions :
             
             // Recharger les commentaires avec un délai pour s'assurer que l'onglet est visible
             setTimeout(() => {
-                this.loadStageComments(stageId);
-                // Mettre à jour l'affichage des cards pour refléter le nouveau compteur
-                this.renderStages();
+                if (this.currentStageId) {
+                    this.loadStageComments(this.currentStageId);
+                    // Mettre à jour l'affichage des cards pour refléter le nouveau compteur
+                    this.renderStages();
+                } else {
+                    console.error('❌ currentStageId non défini lors du rechargement des commentaires');
+                }
             }, 100);
             
             console.log('✅ Commentaire ajouté avec succès');
@@ -7012,7 +7024,11 @@ Suggestions :
                 this.saveProgress();
                 
                 // Recharger l'affichage des commentaires
-                this.loadStageComments(stageId);
+                if (this.currentStageId) {
+                    this.loadStageComments(this.currentStageId);
+                } else {
+                    this.loadStageComments(stageId);
+                }
                 
                 // Mettre à jour l'affichage des cards pour refléter le nouveau compteur
                 this.renderStages();
