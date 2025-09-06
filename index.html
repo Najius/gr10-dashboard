@@ -4177,11 +4177,15 @@ Suggestions :
                         
                         // Vérifier les étapes 1 à 48
                         for (let i = 1; i <= 48; i++) {
+                            console.log(`🔍 Vérification étape ${i}...`);
                             const stageData = await this.firebaseSync.getProgress(i);
+                            console.log(`🔍 Résultat getProgress(${i}):`, stageData);
+                            
                             if (stageData) {
                                 console.log(`📥 Données Supabase étape ${i}:`, stageData);
                                 
                                 if (stageData.completed) {
+                                    console.log(`✅ Étape ${i} marquée comme complétée`);
                                     completedStages.add(i);
                                 }
                                 if (stageData.notes) stageNotes[i] = stageData.notes;
@@ -4197,6 +4201,8 @@ Suggestions :
                                 }
                                 if (stageData.detailedRating) detailedRatings[i] = stageData.detailedRating;
                                 if (stageData.time) stageTimes[i] = stageData.time;
+                            } else {
+                                console.log(`📭 Aucune donnée pour étape ${i}`);
                             }
                         }
                         
