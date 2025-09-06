@@ -4560,20 +4560,12 @@ Suggestions :
                     return;
                 }
                 
-                // Vérifier qu'aucune étape suivante n'est validée
-                const hasSubsequentValidatedStages = Array.from(this.completedStages).some(id => id > stageId);
-                if (hasSubsequentValidatedStages) {
-                    alert(`Impossible de retirer la validation de l'étape ${stageId}. Vous devez d'abord retirer la validation des étapes suivantes.`);
-                    return;
+                // Actions spécifiques pour l'onglet commentaires
+                if (tabName === 'comments' && this.currentStageId) {
+                    setTimeout(() => {
+                        this.loadStageComments(this.currentStageId);
+                    }, 100);
                 }
-                
-                console.log('Retrait de la validation de l\'étape', stageId);
-                this.completedStages.delete(stageId);
-                this.saveProgress();
-                this.renderStages();
-                this.updateProgress();
-                this.updateModalValidateButton(stageId);
-                console.log('Validation retirée avec succès');
             }
 
             initPhotoUpload() {
@@ -5521,11 +5513,11 @@ Suggestions :
                             <img src="${photo.data}" alt="Photo étape ${stageId}" onclick="window.dashboard.openLightbox('${photo.data}')">
                             <div class="photo-controls">
                                 <button class="set-featured-photo admin-only ${isFeatured ? 'active' : ''}" 
-                                        onclick="window.dashboard.setFeaturedPhoto(${stageId}, '${photo.id}')" 
+                                        onclick="window.dashboard.setFeaturedPhoto(${this.currentStageId || stageId}, '${photo.id}')" 
                                         title="${isFeatured ? 'Photo principale' : 'Définir comme photo principale'}">
                                     <i class="fas fa-star"></i>
                                 </button>
-                                <button class="delete-photo admin-only" onclick="window.dashboard.deletePhoto(${stageId}, '${photo.id}')">
+                                <button class="delete-photo admin-only" onclick="window.dashboard.deletePhoto(${this.currentStageId || stageId}, '${photo.id}')">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -6987,7 +6979,7 @@ Suggestions :
                             <span class="comment-author">${this.escapeHtml(comment.author)}</span>
                             <div style="display: flex; align-items: center; gap: 1rem;">
                                 <span class="comment-date">${formattedDate}</span>
-                                <button class="admin-only delete-comment-btn" onclick="dashboard.deleteComment(${stageId}, ${comment.id})">
+                                <button class="admin-only delete-comment-btn" onclick="dashboard.deleteComment(${this.currentStageId || stageId}, ${comment.id})">
                                     <i class="fas fa-trash"></i> Supprimer
                                 </button>
                             </div>
