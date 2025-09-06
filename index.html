@@ -6591,36 +6591,34 @@ Suggestions :
                 adminBtn.addEventListener('click', function() {
                     console.log('🔐 Clic sur bouton admin');
                     // Vérifier si déjà en mode admin (déconnexion)
-                    if (document.body.classList.contains('admin-mode')) {
+                    if (adminBtn.classList.contains('active')) {
                         // Déconnexion
-                        if (adminBtn.classList.contains('active')) {
-                            // Déconnexion
-                            adminBtn.classList.remove('active');
-                            document.getElementById('admin-toggle-text').textContent = 'Admin';
-                            document.getElementById('export-data').style.display = 'none';
-                            document.getElementById('import-data').style.display = 'none';
-                            dashboard.isAdminMode = false;
-                            localStorage.setItem('gr10-admin-mode', 'false');
-                            console.log('🚪 Déconnexion admin');
-                        } else {
-                            // Connexion avec modal personnalisée pour Mac
-                            console.log('🔑 Tentative de connexion admin');
-                            showPasswordModal((pwd) => {
-                                if (pwd === '7253') {
-                                    document.body.classList.add('admin-mode');
-                                    adminBtn.classList.add('active');
-                                    document.getElementById('admin-toggle-text').textContent = 'Déconnexion';
-                                    document.getElementById('export-data').style.display = 'inline-block';
-                                    document.getElementById('import-data').style.display = 'inline-block';
-                                    dashboard.isAdminMode = true;
-                                    localStorage.setItem('gr10-admin-mode', 'true');
-                                    console.log('✅ Connexion admin réussie');
-                                } else if (pwd && pwd !== '') {
-                                    console.log('❌ Mot de passe incorrect');
-                                    alert('Mot de passe incorrect');
-                                }
-                            });
-                        }
+                        adminBtn.classList.remove('active');
+                        document.body.classList.remove('admin-mode');
+                        document.getElementById('admin-toggle-text').textContent = 'Admin';
+                        document.getElementById('export-data').style.display = 'none';
+                        document.getElementById('import-data').style.display = 'none';
+                        dashboard.isAdminMode = false;
+                        localStorage.setItem('gr10-admin-mode', 'false');
+                        console.log('🚪 Déconnexion admin');
+                    } else {
+                        // Connexion avec modal personnalisée pour Mac
+                        console.log('🔑 Tentative de connexion admin');
+                        showPasswordModal((pwd) => {
+                            if (pwd === '7253') {
+                                document.body.classList.add('admin-mode');
+                                adminBtn.classList.add('active');
+                                document.getElementById('admin-toggle-text').textContent = 'Déconnexion';
+                                document.getElementById('export-data').style.display = 'inline-block';
+                                document.getElementById('import-data').style.display = 'inline-block';
+                                dashboard.isAdminMode = true;
+                                localStorage.setItem('gr10-admin-mode', 'true');
+                                console.log('✅ Connexion admin réussie');
+                            } else if (pwd && pwd !== '') {
+                                console.log('❌ Mot de passe incorrect');
+                                alert('Mot de passe incorrect');
+                            }
+                        });
                     }
                 });
             } else {
