@@ -11,7 +11,16 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="gr10-data-unified.js"></script>
-    <script type="module" src="firebase-config-clean.js"></script>
+    <script type="module" src="supabase-config.js"></script>
+    <script>
+        // Initialiser Supabase au chargement de la page
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (window.SupabaseSync) {
+                window.dashboard.firebaseSync = new window.SupabaseSync();
+                console.log('🚀 Supabase activé pour synchronisation GR10');
+            }
+        });
+    </script>
     <script src="firebase-integration.js"></script>
     <script src="firebase-data-migration-fixed.js"></script>
     <script src="check-firebase-data.js"></script>
