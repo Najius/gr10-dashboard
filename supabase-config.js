@@ -74,6 +74,14 @@ class SupabaseSync {
     }
 
     async testConnection() {
+        // Forcer mode hors ligne immédiatement pour éviter les blocages
+        console.log('🔍 Test de connexion Supabase désactivé temporairement');
+        console.log('⚠️ Forçage mode hors ligne pour éviter les blocages de production');
+        this.isOnline = false;
+        console.log('🔍 Status isOnline forcé à:', this.isOnline);
+        return;
+        
+        /* Code original commenté pour debug
         try {
             console.log('🔍 Test de connexion Supabase...');
             console.log('🔍 Client Supabase:', !!this.supabase);
@@ -115,6 +123,7 @@ class SupabaseSync {
             console.warn('⚠️ Mode hors ligne activé - utilisation localStorage uniquement');
             console.log('🔍 Status isOnline mis à jour:', this.isOnline);
         }
+        */
     }
 
     // Méthode pour sauvegarder le progrès d'une étape
