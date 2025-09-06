@@ -36,11 +36,66 @@
             window.gr10DataGlobal = gr10Data; // Sauvegarder globalement aussi
         }
     </script>
-    <!-- CDN Supabase (global window.supabase) -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    
-    <!-- Configuration Supabase -->
-    <script src="supabase-config.js?v=20250906-1835" defer></script>
+    <!-- CDN Supabase (global window.supabase) avec retry -->
+    <script>
+        // Fonction de chargement avec retry pour la production
+        function loadSupabaseWithRetry() {
+            let retryCount = 0;
+            const maxRetries = 3;
+            
+            function tryLoad() {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+                script.defer = true;
+                
+                script.onload = function() {
+                    console.log('✅ Supabase CDN chargé avec succès');
+                    // Charger la configuration après le CDN
+                    loadSupabaseConfig();
+                };
+                
+                script.onerror = function() {
+                    retryCount++;
+                    console.warn(`⚠️ Échec chargement Supabase CDN (tentative ${retryCount}/${maxRetries})`);
+                    
+                    if (retryCount < maxRetries) {
+                        setTimeout(tryLoad, 1000 * retryCount); // Délai croissant
+                    } else {
+                        console.error('❌ Impossible de charger Supabase CDN après', maxRetries, 'tentatives');
+                        // Continuer sans Supabase
+                        loadSupabaseConfig();
+                    }
+                };
+                
+                document.head.appendChild(script);
+            }
+            
+            tryLoad();
+        }
+        
+        function loadSupabaseConfig() {
+            const configScript = document.createElement('script');
+            configScript.src = 'supabase-config.js?v=20250906-1900';
+            configScript.defer = true;
+            
+            configScript.onload = function() {
+                console.log('✅ Configuration Supabase chargée');
+            };
+            
+            configScript.onerror = function() {
+                console.error('❌ Échec chargement configuration Supabase');
+            };
+            
+            document.head.appendChild(configScript);
+        }
+        
+        // Démarrer le chargement
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadSupabaseWithRetry);
+        } else {
+            loadSupabaseWithRetry();
+        }
+    </script>
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -51,7 +106,16 @@
                 if (window.SupabaseSync && window.dashboard) {
                     window.dashboard.firebaseSync = new window.SupabaseSync();
                     console.log('🚀 Supabase activé pour synchronisation GR10');
-                    console.log('✅ firebaseSync initialisé:', typeof window.dashboard.firebaseSync.getProgress);
+                    console.log('✅ firebaseSync initialisé:', typeof window.dashboard.firebaseSync);
+                    
+                    // Attendre que la connexion Supabase soit établie
+                    setTimeout(() => {
+                        if (window.dashboard.firebaseSync && window.dashboard.firebaseSync.isOnline) {
+                            console.log('✅ Connexion Supabase confirmée');
+                        } else {
+                            console.log('⚠️ Connexion Supabase en cours...');
+                        }
+                    }, 2000);
                 } else if (attempts++ < max) {
                     setTimeout(wait, 100);
                 } else {
@@ -4173,77 +4237,86 @@ Suggestions :
             async loadProgress() {
                 console.log('🔍 === DÉBUT loadProgress() ===');
                 
-                // TOUJOURS charger depuis Supabase en premier (source de vérité)
+                // Charger d'abord depuis localStorage pour avoir une base
+                this.loadFromLocalStorage();
+                console.log('📱 Données localStorage chargées - étapes complétées:', Array.from(this.completedStages));
+                
+                // Ensuite, synchroniser avec Supabase si disponible
                 if (this.firebaseSync) {
                     try {
-                        console.log('🔍 Chargement depuis Supabase...');
+                        console.log('🔍 Synchronisation avec Supabase...');
                         
-                        const completedStages = new Set();
-                        const stageNotes = {};
-                        const stageRatings = {};
-                        const stagePhotos = {};
-                        const stageFeaturedPhotos = {};
-                        const stageComments = {};
-                        const detailedRatings = {};
-                        const stageTimes = {};
+                        const supabaseCompletedStages = new Set();
+                        const supabaseStageNotes = {};
+                        const supabaseStageRatings = {};
+                        const supabaseStagePhotos = {};
+                        const supabaseStageFeaturedPhotos = {};
+                        const supabaseStageComments = {};
+                        const supabaseDetailedRatings = {};
+                        const supabaseStageTimes = {};
                         
                         // Vérifier les étapes 1 à 48
                         for (let i = 1; i <= 48; i++) {
-                            console.log(`🔍 Vérification étape ${i}...`);
                             const stageData = await this.firebaseSync.getProgress(i);
-                            console.log(`🔍 Résultat getProgress(${i}):`, stageData);
                             
                             if (stageData) {
                                 console.log(`📥 Données Supabase étape ${i}:`, stageData);
                                 
                                 if (stageData.completed) {
-                                    console.log(`✅ Étape ${i} marquée comme complétée`);
-                                    completedStages.add(i);
+                                    console.log(`✅ Étape ${i} marquée comme complétée dans Supabase`);
+                                    supabaseCompletedStages.add(i);
                                 }
-                                if (stageData.notes) stageNotes[i] = stageData.notes;
-                                if (stageData.rating) stageRatings[i] = stageData.rating;
+                                if (stageData.notes) supabaseStageNotes[i] = stageData.notes;
+                                if (stageData.rating) supabaseStageRatings[i] = stageData.rating;
                                 if (stageData.photos && stageData.photos.length > 0) {
-                                    stagePhotos[i] = stageData.photos;
+                                    supabaseStagePhotos[i] = stageData.photos;
                                     console.log(`📷 ${stageData.photos.length} photos chargées pour étape ${i}`);
                                 }
-                                if (stageData.featuredPhoto) stageFeaturedPhotos[i] = stageData.featuredPhoto;
+                                if (stageData.featuredPhoto) supabaseStageFeaturedPhotos[i] = stageData.featuredPhoto;
                                 if (stageData.comments && stageData.comments.length > 0) {
-                                    stageComments[i] = stageData.comments;
+                                    supabaseStageComments[i] = stageData.comments;
                                     console.log(`💬 ${stageData.comments.length} commentaires chargés pour étape ${i}`);
                                 }
-                                if (stageData.detailedRating) detailedRatings[i] = stageData.detailedRating;
-                                if (stageData.time) stageTimes[i] = stageData.time;
-                            } else {
-                                console.log(`📭 Aucune donnée pour étape ${i}`);
+                                if (stageData.detailedRating) supabaseDetailedRatings[i] = stageData.detailedRating;
+                                if (stageData.time) supabaseStageTimes[i] = stageData.time;
                             }
                         }
                         
                         console.log('📊 Données Supabase chargées:', {
-                            completedStages: Array.from(completedStages),
-                            photosCount: Object.keys(stagePhotos).length,
-                            notesCount: Object.keys(stageNotes).length
+                            completedStages: Array.from(supabaseCompletedStages),
+                            photosCount: Object.keys(supabaseStagePhotos).length,
+                            notesCount: Object.keys(supabaseStageNotes).length
                         });
                         
-                        // Supabase a TOUJOURS priorité (source de vérité unique)
-                        this.completedStages = completedStages;
-                        this.stageNotes = stageNotes;
-                        this.stageRatings = stageRatings;
-                        this.stagePhotos = stagePhotos;
-                        this.stageFeaturedPhotos = stageFeaturedPhotos;
-                        this.stageComments = stageComments;
-                        this.detailedRatings = detailedRatings;
-                        this.stageTimes = stageTimes;
+                        // Fusionner les données : Supabase a priorité, mais on garde les données locales si Supabase est vide
+                        if (supabaseCompletedStages.size > 0 || Object.keys(supabaseStageNotes).length > 0) {
+                            console.log('🔄 Fusion des données Supabase avec localStorage');
+                            
+                            // Fusionner les étapes complétées
+                            for (const stageId of supabaseCompletedStages) {
+                                this.completedStages.add(stageId);
+                            }
+                            
+                            // Fusionner les autres données
+                            Object.assign(this.stageNotes, supabaseStageNotes);
+                            Object.assign(this.stageRatings, supabaseStageRatings);
+                            Object.assign(this.stagePhotos, supabaseStagePhotos);
+                            Object.assign(this.stageFeaturedPhotos, supabaseStageFeaturedPhotos);
+                            Object.assign(this.stageComments, supabaseStageComments);
+                            Object.assign(this.detailedRatings, supabaseDetailedRatings);
+                            Object.assign(this.stageTimes, supabaseStageTimes);
+                        } else {
+                            console.log('📱 Aucune donnée Supabase, conservation des données localStorage');
+                        }
                         
-                        console.log('✅ Données Supabase appliquées - étapes complétées:', Array.from(this.completedStages));
+                        console.log('✅ Données finales - étapes complétées:', Array.from(this.completedStages));
                         
                     } catch (error) {
                         console.error('❌ Erreur chargement Supabase:', error);
-                        // Fallback vers localStorage uniquement
-                        this.loadFromLocalStorage();
+                        console.log('📱 Utilisation des données localStorage uniquement');
                     }
                 } else {
-                    console.log('⚠️ Pas de connexion Supabase, utilisation localStorage');
-                    this.loadFromLocalStorage();
+                    console.log('⚠️ Pas de connexion Supabase, utilisation localStorage uniquement');
                 }
                 
                 console.log('🔍 === FIN loadProgress() ===');
@@ -4291,7 +4364,7 @@ Suggestions :
                 localStorage.setItem('gr10-progress', JSON.stringify(data));
                 console.log('💾 Données sauvegardées localement:', data);
                 
-                // Synchroniser avec Supabase TOUJOURS en mode admin
+                // Synchroniser avec Supabase SEULEMENT en mode admin
                 if (this.firebaseSync && this.isAdminMode) {
                     console.log('🔄 Mode admin détecté, synchronisation Supabase...');
                     try {
@@ -4314,6 +4387,27 @@ Suggestions :
                                 console.log(`✅ Étape ${stageId} sauvegardée dans Supabase`);
                             } else {
                                 console.error(`❌ Échec sauvegarde étape ${stageId} dans Supabase`);
+                            }
+                        }
+                        
+                        // Aussi sauvegarder les étapes non-complétées pour les marquer comme telles
+                        for (let i = 1; i <= 48; i++) {
+                            if (!this.completedStages.has(i)) {
+                                const stageData = {
+                                    completed: false,
+                                    notes: this.stageNotes[i] || null,
+                                    rating: this.stageRatings[i] || null,
+                                    photos: this.stagePhotos[i] || [],
+                                    comments: this.stageComments[i] || [],
+                                    detailedRating: this.detailedRatings[i] || null,
+                                    time: this.stageTimes[i] || null
+                                };
+                                
+                                // Seulement sauvegarder si il y a des données à sauvegarder
+                                if (stageData.notes || stageData.rating || stageData.photos.length > 0 || 
+                                    stageData.comments.length > 0 || stageData.detailedRating || stageData.time) {
+                                    await this.firebaseSync.saveProgress(i, stageData);
+                                }
                             }
                         }
                         

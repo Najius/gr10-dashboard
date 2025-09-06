@@ -13,14 +13,29 @@ let supabase = null;
 
 // Fonction d'initialisation différée
 function initSupabase() {
+    console.log('🔍 Tentative d\'initialisation Supabase...');
+    console.log('🔍 window.supabase disponible:', !!window.supabase);
+    console.log('🔍 window.supabase.createClient disponible:', !!(window.supabase && window.supabase.createClient));
+    
     if (window.supabase && window.supabase.createClient) {
-        supabase = window.supabase.createClient(supabaseUrl, supabaseKey, {
-            auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
-        });
-        console.log('✅ Client Supabase initialisé avec succès');
-        return true;
+        try {
+            supabase = window.supabase.createClient(supabaseUrl, supabaseKey, {
+                auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+            });
+            console.log('✅ Client Supabase initialisé avec succès');
+            console.log('🔍 URL Supabase:', supabaseUrl);
+            return true;
+        } catch (error) {
+            console.error('❌ Erreur lors de l\'initialisation Supabase:', error);
+            return false;
+        }
     }
     console.warn('⚠️ Supabase CDN non encore chargé');
+    console.log('🔍 Environnement:', {
+        userAgent: navigator.userAgent,
+        location: window.location.href,
+        protocol: window.location.protocol
+    });
     return false;
 }
 
@@ -38,25 +53,39 @@ class SupabaseSync {
         }
         this.supabase = supabase;
         this.isOnline = false;
-        this.testConnection();
+        // Tester la connexion de manière asynchrone
+        this.initializeConnection();
+    }
+
+    async initializeConnection() {
+        await this.testConnection();
     }
 
     async testConnection() {
         try {
+            console.log('🔍 Test de connexion Supabase...');
+            console.log('🔍 Client Supabase:', !!this.supabase);
+            
             if (!this.supabase) {
                 throw new Error('Client Supabase non initialisé');
             }
             
             // Test de connexion avec la table gr10_progress existante
+            console.log('🔍 Tentative de requête vers gr10_progress...');
             const { data, error } = await this.supabase.from('gr10_progress').select('*').limit(1);
+            
+            console.log('🔍 Réponse Supabase:', { data, error });
+            
             if (error && error.code !== 'PGRST116') { // PGRST116 = aucune donnée (OK)
                 throw error;
             }
             this.isOnline = true;
             console.log('✅ Supabase connecté et opérationnel');
+            console.log('🔍 Données existantes:', data?.length || 0, 'enregistrements');
         } catch (error) {
             this.isOnline = false;
             console.error('❌ Supabase connexion échouée:', error.message);
+            console.error('❌ Détails de l\'erreur:', error);
             console.warn('⚠️ Mode hors ligne activé - utilisation localStorage uniquement');
         }
     }
