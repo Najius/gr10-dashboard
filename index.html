@@ -3615,11 +3615,6 @@ Suggestions :
                 await this.waitForFirebase();
                 // Charger les données d'étapes
                 this.itineraryData = await this.loadGR10Data();
-                
-                // Vider le cache local pour forcer le rechargement depuis Firebase
-                console.log('🗑️ Vidage cache local pour rechargement Firebase complet');
-                localStorage.removeItem('gr10-progress');
-                
                 // Charger le progrès utilisateur
                 await this.loadProgress();
                 // Recharger l'interface avec les nouvelles données
@@ -4041,22 +4036,10 @@ Suggestions :
                             }
                         }
                         
-                        // Priorité aux données Firebase (plus récentes), puis fusion avec local
-                        const localData = localStorage.getItem('gr10-progress');
-                        if (localData) {
-                            const local = JSON.parse(localData);
+                        // Utiliser les données Firebase si disponibles
+                        if (completedStages.size > 0 || Object.keys(stagePhotos).length > 0 || 
+                            Object.keys(stageNotes).length > 0 || Object.keys(stageComments).length > 0) {
                             
-                            // Firebase en priorité, puis local en fallback
-                            this.completedStages = new Set([...completedStages, ...(local.completedStages || [])]);
-                            this.stageNotes = { ...(local.stageNotes || {}), ...stageNotes };
-                            this.stageRatings = { ...(local.stageRatings || {}), ...stageRatings };
-                            this.stagePhotos = { ...(local.stagePhotos || {}), ...stagePhotos };
-                            this.stageFeaturedPhotos = { ...(local.stageFeaturedPhotos || {}), ...stageFeaturedPhotos };
-                            this.stageComments = { ...(local.stageComments || {}), ...stageComments };
-                            this.detailedRatings = { ...(local.detailedRatings || {}), ...detailedRatings };
-                            this.stageTimes = { ...(local.stageTimes || {}), ...stageTimes };
-                        } else {
-                            // Utiliser seulement les données Firebase si pas de cache local
                             this.completedStages = completedStages;
                             this.stageNotes = stageNotes;
                             this.stageRatings = stageRatings;
@@ -4065,6 +4048,15 @@ Suggestions :
                             this.stageComments = stageComments;
                             this.detailedRatings = detailedRatings;
                             this.stageTimes = stageTimes;
+                            
+                            console.log('📥 Données Firebase chargées:', {
+                                completedStages: this.completedStages.size,
+                                notes: Object.keys(this.stageNotes).length,
+                                ratings: Object.keys(this.stageRatings).length,
+                                photos: Object.keys(this.stagePhotos).length
+                            });
+                        } else {
+                            console.log('⚠️ Aucune donnée Firebase trouvée, utilisation cache local');
                         }
                         
                         // Sauvegarder les données fusionnées en cache local
@@ -5299,6 +5291,25 @@ Suggestions :
                             
                             this.stagePhotos[this.currentStageId].push(photoData);
                             console.log(`📸 Photo ajoutée pour étape ${this.currentStageId}:`, photoData.name);
+                            
+                            // Forcer la sauvegarde immédiate dans Firebase
+                            if (this.firebaseSync) {
+                                try {
+                                    await this.firebaseSync.saveProgress(this.currentStageId, {
+                                        completed: this.completedStages.has(this.currentStageId),
+                                        photos: this.stagePhotos[this.currentStageId],
+                                        notes: this.stageNotes[this.currentStageId] || '',
+                                        rating: this.stageRatings[this.currentStageId] || null,
+                                        comments: this.stageComments[this.currentStageId] || [],
+                                        detailedRating: this.detailedRatings[this.currentStageId] || {},
+                                        time: this.stageTimes[this.currentStageId] || null
+                                    });
+                                    console.log(`✅ Photo sauvegardée dans Firebase pour étape ${this.currentStageId}`);
+                                } catch (error) {
+                                    console.error('❌ Erreur sauvegarde photo Firebase:', error);
+                                }
+                            }
+                            
                             await this.saveProgress();
                             this.loadStagePhotos(this.currentStageId);
                             // Mettre à jour l'affichage des cartes pour montrer la nouvelle photo
