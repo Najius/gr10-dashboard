@@ -108,14 +108,23 @@
                     console.log('🚀 Supabase activé pour synchronisation GR10');
                     console.log('✅ firebaseSync initialisé:', typeof window.dashboard.firebaseSync);
                     
-                    // Attendre que la connexion Supabase soit établie
-                    setTimeout(() => {
-                        if (window.dashboard.firebaseSync && window.dashboard.firebaseSync.isOnline) {
-                            console.log('✅ Connexion Supabase confirmée');
-                        } else {
-                            console.log('⚠️ Connexion Supabase en cours...');
+                    // Attendre que la connexion Supabase soit établie avant de continuer
+                    async function waitForConnection() {
+                        let connectionAttempts = 0;
+                        const maxConnectionAttempts = 20; // 10 secondes max
+                        
+                        while (connectionAttempts < maxConnectionAttempts) {
+                            if (window.dashboard.firebaseSync && window.dashboard.firebaseSync.isOnline) {
+                                console.log('✅ Connexion Supabase confirmée');
+                                return;
+                            }
+                            await new Promise(resolve => setTimeout(resolve, 500));
+                            connectionAttempts++;
                         }
-                    }, 2000);
+                        console.log('⚠️ Timeout connexion Supabase - continuera en mode localStorage');
+                    }
+                    
+                    waitForConnection();
                 } else if (attempts++ < max) {
                     setTimeout(wait, 100);
                 } else {

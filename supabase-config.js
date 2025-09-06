@@ -82,11 +82,13 @@ class SupabaseSync {
             this.isOnline = true;
             console.log('✅ Supabase connecté et opérationnel');
             console.log('🔍 Données existantes:', data?.length || 0, 'enregistrements');
+            console.log('🔍 Status isOnline mis à jour:', this.isOnline);
         } catch (error) {
             this.isOnline = false;
             console.error('❌ Supabase connexion échouée:', error.message);
             console.error('❌ Détails de l\'erreur:', error);
             console.warn('⚠️ Mode hors ligne activé - utilisation localStorage uniquement');
+            console.log('🔍 Status isOnline mis à jour:', this.isOnline);
         }
     }
 
