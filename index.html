@@ -2,16 +2,12 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#0f766e">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>En GR 10 - Septembre 2025</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="fonts/made-mountain.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="css/mobile-optimized.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="gr10-data-unified.js"></script>
@@ -19,10 +15,12 @@
     <script src="firebase-integration.js"></script>
     <script src="firebase-data-migration-fixed.js"></script>
     <script src="check-firebase-data.js"></script>
-    <script src="js/mobile-interactions.js"></script>
     <script>
         // Vérification Firebase immédiate au chargement
         window.addEventListener('load', () => {
+            // Le logo remplace maintenant le titre animé
+            console.log('🏔️ Logo EN GR 10 chargé');
+
             setTimeout(() => {
                 if (window.firebaseSync) {
                     console.log('🔍 Vérification Firebase automatique...');
@@ -55,22 +53,22 @@
     </script>
     <style>
         :root {
-            --primary-color: #2563eb;
-            --primary-light: #3b82f6;
-            --primary-dark: #1d4ed8;
-            --secondary-color: #10b981;
-            --accent-color: #f59e0b;
-            --text-color: #1a202c;
-            --text-light: #4a5568;
-            --bg-color: #f7fafc;
-            --card-bg: #ffffff;
+            --primary-color: #1e3a5f;
+            --primary-dark: #0f1d2f;
+            --secondary-color: #7dd3c0;
+            --accent-color: #1e3a5f;
+            --success-color: #48bb78;
+            --warning-color: #ed8936;
+            --error-color: #f56565;
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7fafc;
             --border-color: #e2e8f0;
-            --shadow-color: rgba(0, 0, 0, 0.1);
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --danger-color: #ef4444;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-
+        
+        /* Reset global */
         * {
             margin: 0;
             padding: 0;
@@ -80,92 +78,69 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
-            color: var(--text-dark);
-            background: 
-                /* Couche de texture montagneuse */
-                radial-gradient(ellipse 800px 600px at 20% 100%, rgba(34, 197, 94, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse 600px 400px at 80% 100%, rgba(22, 163, 74, 0.2) 0%, transparent 50%),
-                radial-gradient(ellipse 400px 300px at 50% 100%, rgba(21, 128, 61, 0.25) 0%, transparent 50%),
-                /* Gradient principal avec tons naturels */
-                linear-gradient(135deg, 
-                    #0f766e 0%,     /* Teal foncé (forêt) */
-                    #059669 15%,    /* Emerald (nature) */
-                    #0d9488 35%,    /* Teal (montagne) */
-                    #0891b2 60%,    /* Sky (ciel) */
-                    #0284c7 85%,    /* Blue (horizon) */
-                    #0369a1 100%    /* Blue foncé (ciel profond) */
-                ),
-                /* Texture subtile */
-                repeating-linear-gradient(
-                    45deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(255, 255, 255, 0.03) 2px,
-                    rgba(255, 255, 255, 0.03) 4px
-                );
-            background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 20px 20px;
-            background-position: center, center, center, center, 0 0;
-            animation: mountainBreeze 20s ease-in-out infinite;
-            background-attachment: fixed;
+            color: var(--text-primary);
+            background: linear-gradient(180deg, 
+                #1e3a5f 0%,           /* Bleu marine foncé en haut */
+                #2c5f5f 15%,          /* Bleu-vert */
+                #4a7c7c 30%,          /* Bleu-vert plus clair */
+                #7dd3c0 45%,          /* Vert turquoise */
+                #a0e7d4 60%,          /* Vert turquoise clair */
+                #c7f2e8 75%,          /* Très clair turquoise */
+                #e8faf6 90%,          /* Presque blanc turquoise */
+                #ffffff 100%);        /* Blanc pur */
             min-height: 100vh;
+            overflow-x: hidden;
             position: relative;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
         
-        /* Animation douce comme une brise de montagne */
-        @keyframes mountainBreeze {
-            0%, 100% { 
-                filter: hue-rotate(0deg) brightness(1) contrast(1);
-                background-position: center, center, center, center, 0 0;
-            }
-            25% { 
-                filter: hue-rotate(5deg) brightness(1.05) contrast(1.02);
-                background-position: center, center, center, center, -5px -5px;
-            }
-            50% { 
-                filter: hue-rotate(10deg) brightness(1.1) contrast(1.05);
-                background-position: center, center, center, center, -10px 0;
-            }
-            75% { 
-                filter: hue-rotate(5deg) brightness(1.05) contrast(1.02);
-                background-position: center, center, center, center, -5px 5px;
-            }
-        }
-        
-        /* Effet de particules flottantes */
+        /* Silhouettes de montagnes en CSS */
         body::before {
+            content: '';
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40vh;
+            background: 
+                /* Montagne lointaine */
+                radial-gradient(ellipse 800px 300px at 20% 100%, rgba(26, 32, 44, 0.8) 0%, transparent 70%),
+                /* Montagne centrale */
+                radial-gradient(ellipse 1000px 400px at 50% 100%, rgba(45, 55, 72, 0.9) 0%, transparent 70%),
+                /* Montagne proche */
+                radial-gradient(ellipse 600px 250px at 80% 100%, rgba(26, 32, 44, 0.7) 0%, transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* Étoiles scintillantes */
+        body::after {
             content: '';
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            right: 0;
+            height: 50vh;
             background-image: 
-                radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.4), transparent),
-                radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.3), transparent),
-                radial-gradient(1px 1px at 90px 40px, rgba(255, 255, 255, 0.5), transparent),
-                radial-gradient(1px 1px at 130px 80px, rgba(255, 255, 255, 0.4), transparent),
-                radial-gradient(2px 2px at 160px 30px, rgba(255, 255, 255, 0.3), transparent);
+                radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.6), transparent),
+                radial-gradient(1px 1px at 90px 40px, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255, 255, 255, 0.7), transparent),
+                radial-gradient(2px 2px at 160px 30px, rgba(255, 255, 255, 0.8), transparent);
             background-repeat: repeat;
             background-size: 200px 100px;
-            animation: floatingParticles 25s linear infinite;
+            z-index: -1;
             pointer-events: none;
-            z-index: 1;
+            animation: twinkle 4s ease-in-out infinite alternate;
         }
         
-        @keyframes floatingParticles {
-            0% { transform: translateY(0px) translateX(0px); opacity: 0.8; }
-            25% { transform: translateY(-20px) translateX(10px); opacity: 1; }
-            50% { transform: translateY(-40px) translateX(-5px); opacity: 0.9; }
-            75% { transform: translateY(-20px) translateX(15px); opacity: 1; }
-            100% { transform: translateY(0px) translateX(0px); opacity: 0.8; }
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: center, 0% 0%; }
-            25% { background-position: center, 100% 0%; }
-            50% { background-position: center, 100% 100%; }
-            75% { background-position: center, 0% 100%; }
-            100% { background-position: center, 0% 0%; }
+        @keyframes twinkle {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
         }
 
         .container {
@@ -174,27 +149,551 @@
             padding: 0 1rem;
         }
 
-        /* Hero Section */
+        /* Hero Section - Design moderne minimaliste */
         .hero {
             background: transparent;
-            color: white;
-            padding: 2rem 0 1rem;
             text-align: center;
+            padding: 1rem 0 0;
             position: relative;
+            overflow: visible;
+            min-height: 8vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            animation: heroBreath 8s ease-in-out infinite;
+        }
+
+        @keyframes heroBreath {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.02);
+            }
+        }
+
+        /* Couches de montagnes en arrière-plan */
+        .mountain-layers {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100vh;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .mountain-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+        }
+
+        .mountain-far {
+            background: rgba(71, 85, 105, 0.4);
+            clip-path: polygon(0% 100%, 12% 40%, 25% 45%, 40% 30%, 55% 35%, 70% 25%, 85% 30%, 100% 35%, 100% 100%);
+            animation: mountainFloat 20s ease-in-out infinite, mountainSway 25s linear infinite;
+        }
+
+        .mountain-mid {
+            background: rgba(51, 65, 85, 0.5);
+            clip-path: polygon(0% 100%, 8% 50%, 20% 55%, 35% 40%, 50% 45%, 65% 35%, 80% 40%, 95% 45%, 100% 50%, 100% 100%);
+            animation: mountainFloat 15s ease-in-out infinite reverse, mountainSway 18s linear infinite reverse;
+        }
+
+        .mountain-near {
+            background: rgba(30, 41, 59, 0.6);
+            clip-path: polygon(0% 100%, 15% 60%, 30% 65%, 45% 50%, 60% 55%, 75% 45%, 90% 50%, 100% 55%, 100% 100%);
+            animation: mountainFloat 12s ease-in-out infinite, mountainSway 22s linear infinite;
+        }
+
+        @keyframes mountainSway {
+            0%, 100% { transform: translateX(0) skewX(0deg); }
+            25% { transform: translateX(2px) skewX(0.2deg); }
+            50% { transform: translateX(0) skewX(0deg); }
+            75% { transform: translateX(-2px) skewX(-0.2deg); }
+        }
+
+        @keyframes mountainFloat {
+            0%, 100% {
+                transform: translateY(0) scale(1) rotateZ(0deg);
+                opacity: 1;
+            }
+            25% {
+                transform: translateY(-8px) scale(1.03) rotateZ(0.5deg);
+                opacity: 0.9;
+            }
+            50% {
+                transform: translateY(-15px) scale(1.05) rotateZ(0deg);
+                opacity: 0.7;
+            }
+            75% {
+                transform: translateY(-10px) scale(1.02) rotateZ(-0.3deg);
+                opacity: 0.85;
+            }
+        }
+
+        .mountain-foreground {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            background-color: rgba(30, 41, 59, 0.6);
+            clip-path: polygon(0% 100%, 8% 60%, 15% 70%, 25% 40%, 35% 55%, 45% 30%, 55% 45%, 65% 25%, 75% 40%, 85% 35%, 92% 50%, 100% 45%, 100% 100%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .gr10-trail {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            height: 60px;
+            z-index: 5;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .gr10-trail svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .gr10-trail path {
+            fill: none;
+            stroke: url(#trailGradient);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 150 50;
+            animation: trailMove 8s linear infinite;
+            filter: drop-shadow(0 0 6px rgba(125, 211, 192, 0.4));
+            shape-rendering: geometricPrecision;
+        }
+
+        @keyframes trailAdvanced {
+            0%, 100% {
+                stroke-dashoffset: 200;
+                opacity: 0.6;
+                filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.4)) drop-shadow(0 0 15px rgba(245, 158, 11, 0.2));
+                transform: scaleY(1);
+            }
+            20% {
+                stroke-dashoffset: 120;
+                opacity: 0.9;
+                filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.7)) drop-shadow(0 0 30px rgba(239, 68, 68, 0.3));
+                transform: scaleY(1.1);
+            }
+            40% {
+                stroke-dashoffset: 40;
+                opacity: 1;
+                filter: drop-shadow(0 0 35px rgba(239, 68, 68, 0.9)) drop-shadow(0 0 50px rgba(245, 158, 11, 0.5));
+                transform: scaleY(1.2);
+            }
+            60% {
+                stroke-dashoffset: -40;
+                opacity: 1;
+                filter: drop-shadow(0 0 30px rgba(245, 158, 11, 0.8)) drop-shadow(0 0 40px rgba(239, 68, 68, 0.4));
+                transform: scaleY(1.15);
+            }
+            80% {
+                stroke-dashoffset: -120;
+                opacity: 0.8;
+                filter: drop-shadow(0 0 18px rgba(239, 68, 68, 0.6)) drop-shadow(0 0 25px rgba(245, 158, 11, 0.3));
+                transform: scaleY(1.05);
+            }
+        }
+
+        @keyframes trailAppear {
+            0% {
+                opacity: 0;
+                transform: scaleX(0);
+                transform-origin: left;
+            }
+            100% {
+                opacity: 0.8;
+                transform: scaleX(1);
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+            margin: 0 auto;
+            overflow: visible;
+            text-align: center;
+        }
+
+        .site-logo {
+            height: 240px;
+            width: auto;
+            max-width: 600px;
+            position: relative;
+            display: inline-block;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.3)) drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.4));
+            animation: logoFloat 6s ease-in-out infinite;
+            transition: all 0.3s ease;
+        }
+
+        .site-logo:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.5)) drop-shadow(2px 2px 6px rgba(0, 0, 0, 0.6));
+        }
+
+        @keyframes logoFloat {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-5px) scale(1.02);
+            }
+        }
+
+        .site-title .letter {
+            display: inline-block;
+            color: inherit;
+            transform-origin: center bottom;
+            animation: letterRevealLoop 4s ease-in-out infinite;
+            animation-delay: calc(var(--i) * 0.1s);
+            transition: all 0.3s ease;
+        }
+
+        .site-title .letter:hover {
+            transform: translateY(-3px) scale(1.1);
+            color: rgba(255, 255, 255, 1);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        }
+
+        .site-title .letter::before {
+            content: attr(data-letter);
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.8) 0%, 
+                rgba(255, 255, 255, 0.4) 50%,
+                rgba(255, 255, 255, 0.8) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: blur(1px);
+            z-index: -1;
+            animation: letterBlur 3s ease-in-out infinite;
+            animation-delay: calc(var(--i) * 0.1s);
+        }
+
+        .site-title .letter:hover {
+            animation: letterBounce 0.6s ease-out;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8)) 
+                    drop-shadow(0 8px 15px rgba(0, 0, 0, 0.4));
+        }
+
+        .hero-subtitle {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 5;
             overflow: hidden;
         }
 
-        .hero-content h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        .hero-subtitle .char {
+            display: inline-block;
+            animation: charSlideLoop 5s ease-in-out infinite;
+            animation-delay: calc(var(--i) * 0.03s + 0.5s);
         }
 
-        .hero-content p {
-            font-size: 1.25rem;
-            opacity: 0.9;
-            margin-bottom: 1rem;
+
+        .hero-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: particleFloat 8s linear infinite, particlePulse 3s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes particlePulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.6;
+                box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 1;
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            }
+        }
+
+        .particle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { top: 40%; left: 20%; animation-delay: 1s; }
+        .particle:nth-child(3) { top: 60%; left: 80%; animation-delay: 2s; }
+        .particle:nth-child(4) { top: 30%; left: 70%; animation-delay: 3s; }
+        .particle:nth-child(5) { top: 80%; left: 30%; animation-delay: 4s; }
+        .particle:nth-child(6) { top: 10%; left: 90%; animation-delay: 5s; }
+        .particle:nth-child(7) { top: 15%; left: 50%; animation-delay: 2.5s; }
+        .particle:nth-child(8) { top: 75%; left: 65%; animation-delay: 4.5s; }
+
+
+        @keyframes heroAmbient {
+            0%, 100% { 
+                opacity: 0.4;
+                transform: scale(1) rotate(0deg) skewX(0deg);
+            }
+            25% { 
+                opacity: 0.7;
+                transform: scale(1.2) rotate(90deg) skewX(2deg);
+            }
+            50% { 
+                opacity: 0.8;
+                transform: scale(1.3) rotate(180deg) skewX(-1deg);
+            }
+            75% { 
+                opacity: 0.6;
+                transform: scale(1.1) rotate(270deg) skewX(1deg);
+            }
+        }
+
+        @keyframes heroRotate {
+            0% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(90deg) scale(1.1); }
+            50% { transform: rotate(180deg) scale(0.9); }
+            75% { transform: rotate(270deg) scale(1.05); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        @keyframes letterRevealLoop {
+            0%, 80%, 100% {
+                opacity: 1;
+                transform: translateY(0) rotateX(0deg) scale(1);
+            }
+            10% {
+                opacity: 0.3;
+                transform: translateY(30px) rotateX(45deg) scale(0.8);
+            }
+            20% {
+                opacity: 0.7;
+                transform: translateY(-8px) rotateX(-10deg) scale(1.05);
+            }
+            30% {
+                opacity: 1;
+                transform: translateY(0) rotateX(0deg) scale(1);
+            }
+        }
+
+        @keyframes charSlideLoop {
+            0%, 85%, 100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            15% {
+                opacity: 0.4;
+                transform: translateY(15px) scale(0.95);
+            }
+            25% {
+                opacity: 0.8;
+                transform: translateY(-3px) scale(1.02);
+            }
+            35% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes letterGradient {
+            0%, 100% { background-position: 0% 0%; }
+            25% { background-position: 100% 0%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+        }
+
+        @keyframes letterGlow {
+            0% { 
+                filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.4)) 
+                        drop-shadow(0 8px 20px rgba(0, 0, 0, 0.3));
+            }
+            100% { 
+                filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.8)) 
+                        drop-shadow(0 12px 30px rgba(0, 0, 0, 0.5));
+            }
+        }
+
+        @keyframes letterBlur {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes letterPulse {
+            0%, 100% { 
+                transform: scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+            }
+            20% { 
+                transform: scale(1.4) rotateX(25deg) rotateY(15deg) rotateZ(10deg);
+            }
+            40% { 
+                transform: scale(0.8) rotateX(-20deg) rotateY(-25deg) rotateZ(-15deg);
+            }
+            60% { 
+                transform: scale(1.6) rotateX(30deg) rotateY(20deg) rotateZ(20deg);
+            }
+            80% { 
+                transform: scale(0.9) rotateX(-15deg) rotateY(-10deg) rotateZ(-8deg);
+            }
+        }
+
+        @keyframes letterWobble {
+            0%, 100% { 
+                transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px);
+            }
+            16.66% { 
+                transform: perspective(1000px) rotateX(20deg) rotateY(15deg) translateZ(50px);
+            }
+            33.33% { 
+                transform: perspective(1000px) rotateX(-15deg) rotateY(-20deg) translateZ(-30px);
+            }
+            50% { 
+                transform: perspective(1000px) rotateX(25deg) rotateY(-10deg) translateZ(70px);
+            }
+            66.66% { 
+                transform: perspective(1000px) rotateX(-20deg) rotateY(25deg) translateZ(-40px);
+            }
+            83.33% { 
+                transform: perspective(1000px) rotateX(10deg) rotateY(-15deg) translateZ(30px);
+            }
+        }
+
+        @keyframes letterSpin {
+            0% { 
+                transform: perspective(1000px) rotateY(0deg) rotateX(0deg) translateZ(0px);
+            }
+            25% { 
+                transform: perspective(1000px) rotateY(90deg) rotateX(15deg) translateZ(20px);
+            }
+            50% { 
+                transform: perspective(1000px) rotateY(180deg) rotateX(-10deg) translateZ(-15px);
+            }
+            75% { 
+                transform: perspective(1000px) rotateY(270deg) rotateX(20deg) translateZ(25px);
+            }
+            100% { 
+                transform: perspective(1000px) rotateY(360deg) rotateX(0deg) translateZ(0px);
+            }
+        }
+
+        @keyframes letterBounce {
+            0% { transform: translateY(0) scale(1); }
+            30% { transform: translateY(-20px) scale(1.2); }
+            60% { transform: translateY(-10px) scale(1.1); }
+            100% { transform: translateY(0) scale(1); }
+        }
+
+        @keyframes subtitleSweep {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes particleFloat {
+            0%, 100% { 
+                transform: translateY(0) translateX(0) scale(1) rotate(0deg);
+                opacity: 0.8;
+            }
+            16.66% { 
+                transform: translateY(-40px) translateX(20px) scale(1.5) rotate(60deg);
+                opacity: 1;
+            }
+            33.33% { 
+                transform: translateY(-60px) translateX(-15px) scale(0.7) rotate(120deg);
+                opacity: 0.9;
+            }
+            50% { 
+                transform: translateY(-80px) translateX(25px) scale(1.8) rotate(180deg);
+                opacity: 0.6;
+            }
+            66.66% { 
+                transform: translateY(-50px) translateX(-30px) scale(1.2) rotate(240deg);
+                opacity: 1;
+            }
+            83.33% { 
+                transform: translateY(-25px) translateX(35px) scale(0.9) rotate(300deg);
+                opacity: 0.8;
+            }
+        }
+
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+            border-radius: 50%;
+            animation: particleFloat 4s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .particle:nth-child(odd) {
+            animation-direction: reverse;
+        }
+
+        .particle:nth-child(1) { 
+            top: 15%; left: 8%; 
+            animation-delay: 0s; 
+            animation-duration: 3.5s;
+        }
+        .particle:nth-child(2) { 
+            top: 35%; left: 15%; 
+            animation-delay: 0.8s; 
+            animation-duration: 4.2s;
+        }
+        .particle:nth-child(3) { 
+            top: 55%; left: 75%; 
+            animation-delay: 1.6s; 
+            animation-duration: 3.8s;
+        }
+        .particle:nth-child(4) { 
+            top: 25%; left: 85%; 
+            animation-delay: 2.4s; 
+            animation-duration: 4.5s;
+        }
+        .particle:nth-child(5) { 
+            top: 75%; left: 25%; 
+            animation-delay: 3.2s; 
+            animation-duration: 3.2s;
+        }
+        .particle:nth-child(6) { 
+            top: 8%; left: 92%; 
+            animation-delay: 4s; 
+            animation-duration: 4.8s;
         }
 
         .hero-cta {
@@ -329,19 +828,21 @@
         }
 
         .main-tabs {
-            padding: 2rem 0;
+            padding: 0.25rem 0;
             margin-bottom: 0;
+            background: transparent;
+            border-radius: 16px;
+            margin: 0.25rem auto;
+            max-width: 1200px;
         }
         
         .main-tabs .container {
             display: flex;
             gap: 0.5rem;
-            padding: 0.5rem;
-            background: rgba(255, 255, 255, 0.1);
+            padding: 0.25rem;
+            background: transparent;
             border-radius: 1rem;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            max-width: 550px;
+            max-width: 600px;
             margin: 0 auto;
         }
 
@@ -349,22 +850,23 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.4rem;
-            padding: 0.75rem 1rem;
-            background: transparent;
-            color: rgba(255, 255, 255, 0.7);
-            border: none;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 0.75rem;
-            cursor: pointer;
+            color: rgba(255, 255, 255, 0.9);
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            cursor: pointer;
             transition: all 0.3s ease;
-            flex: 1;
-            text-align: center;
             position: relative;
             overflow: hidden;
             white-space: nowrap;
+            text-overflow: ellipsis;
             min-width: 0;
+            backdrop-filter: blur(8px);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         .main-tabs .tab-btn::before {
@@ -385,15 +887,21 @@
         }
 
         .main-tabs .tab-btn:hover {
-            color: rgba(255, 255, 255, 0.9);
-            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
         }
 
         .main-tabs .tab-btn.active {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: white;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            color: #1a202c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            text-shadow: none;
+            font-weight: 700;
         }
 
         .main-tabs .tab-btn.active::before {
@@ -423,6 +931,7 @@
 
         .tab-content {
             display: none;
+            margin-top: 0.5rem;
         }
 
         .tab-content.active {
@@ -431,10 +940,13 @@
 
         /* Analytics Dashboard */
         .analytics-dashboard {
-            background: var(--card-bg);
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 1rem;
             padding: 2rem;
             margin-bottom: 2rem;
+            border: 1px solid rgba(30, 58, 95, 0.2);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: #2d3748;
         }
 
         .weather-widgets-grid {
@@ -518,10 +1030,13 @@
         }
 
         .analytics-card {
-            background: var(--card-bg);
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 0.75rem;
             padding: 1.5rem;
-            border: 1px solid var(--border-color);
+            border: 1px solid rgba(30, 58, 95, 0.2);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            color: #2d3748;
         }
 
         .analytics-card h4 {
@@ -569,12 +1084,8 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 1rem;
             padding: 1.5rem;
-            backdrop-filter: blur(20px);
-            box-shadow: 
-                0 4px 16px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            position: relative;
-            z-index: 10;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
         .progress-bar {
@@ -602,10 +1113,11 @@
         }
 
         .legend-column {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             padding: 1rem;
             border-radius: 0.5rem;
-            border: 1px solid var(--border-color);
+            border: 1px solid rgba(30, 58, 95, 0.2);
+            color: #2d3748;
         }
 
         .legend-column h4 {
@@ -652,7 +1164,10 @@
             gap: 1.5rem;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 1rem;
+            padding: 1rem 0;
+            background: transparent;
+            min-height: 100vh;
+            position: relative;
         }
 
         .stage-card {
@@ -812,6 +1327,11 @@
         .stage-card.completed .stage-number {
             background: #d1fae5;
             color: #065f46;
+            font-size: 1.1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                0 4px 12px rgba(14, 165, 233, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
         .stage-card.current .stage-number {
@@ -963,7 +1483,6 @@
 
         .validate-btn:hover {
             background: var(--primary-dark);
-            transform: translateY(-1px);
         }
 
         .validate-btn.completed {
@@ -1023,32 +1542,61 @@
         /* Empêcher le scroll du body quand une modal est ouverte */
         body.modal-open {
             overflow: hidden;
-            position: fixed;
-            width: 100%;
         }
 
         .modal-content {
-            background: var(--card-bg);
+            background: #ffffff;
             margin: 5% auto;
             padding: 0;
-            border-radius: 1rem;
+            border: none;
             width: 90%;
             max-width: 800px;
-            max-height: 90vh;
+            max-height: 85vh;
+            border-radius: 1rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+            position: relative;
             overflow-y: auto;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, 
+                #0f172a 0%, 
+                #1e293b 25%, 
+                #334155 50%, 
+                #475569 75%, 
+                #64748b 100%);
+            background-attachment: fixed;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
             position: relative;
         }
 
         .modal-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            background: linear-gradient(135deg, #1e3a5f 0%, #7dd3c0 100%);
             color: white;
             padding: 1.5rem;
             border-radius: 1rem 1rem 0 0;
+            border: none;
             position: relative;
             display: flex;
             align-items: center;
             justify-content: space-between;
+        }
+
+
+        .modal-header h2 {
+            color: white !important;
+            font-weight: 600;
+            margin: 0;
+            font-size: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .modal-footer {
@@ -1122,6 +1670,10 @@
 
         .modal-body {
             padding: 1.5rem;
+            background: #ffffff;
+            color: #1e293b;
+            flex: 1;
+            overflow-y: auto;
         }
 
         .modal-tabs {
@@ -1148,6 +1700,7 @@
 
         .tab-content {
             display: none;
+            margin-top: 0.5rem;
         }
 
         .tab-content.active {
@@ -1359,9 +1912,9 @@
         }
 
         .map-control-btn:hover {
-            background: var(--primary-light);
+            background: var(--primary-color);
             color: white;
-            border-color: var(--primary-light);
+            border-color: var(--primary-color);
         }
 
         .map-control-btn.active {
@@ -1409,7 +1962,6 @@
 
         .weather-icon {
             font-size: 2rem;
-            margin-bottom: 0.5rem;
         }
 
         .weather-temp {
@@ -1574,17 +2126,19 @@
         }
 
         .upload-btn {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border: none;
+            border: 2px solid #667eea;
             padding: 0.75rem 1.5rem;
             border-radius: 0.5rem;
             cursor: pointer;
             font-size: 0.9rem;
+            font-weight: 500;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
 
         .upload-btn:hover {
@@ -2164,7 +2718,7 @@
         .main-label {
             font-size: 1rem;
             font-weight: 600;
-            color: white !important;
+            color: #2d3748 !important;
         }
 
         /* Styles pour le header de la modal */
@@ -2248,6 +2802,12 @@
             top: 20px;
             right: 20px;
             z-index: 1000;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
         }
 
         .admin-toggle {
@@ -2389,11 +2949,52 @@
         </button>
     </div>
 
+    <!-- Éléments globaux en arrière-plan -->
+    <div class="mountain-layers">
+        <div class="mountain-layer mountain-far"></div>
+        <div class="mountain-layer mountain-mid"></div>
+        <div class="mountain-layer mountain-near"></div>
+    </div>
+    
+    <div class="mountain-foreground"></div>
+    
+    <div class="hero-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    
+
     <header class="hero">
         <div class="container">
             <div class="hero-content">
-                <h1>En GR 10</h1>
-                <p>48 étapes • 8 septembre - 25 octobre 2025</p>
+                <img src="logo.png" alt="EN GR 10" class="site-logo" id="site-logo">
+            </div>
+            <div class="gr10-trail">
+                <svg viewBox="0 0 100 120" preserveAspectRatio="none" style="shape-rendering: geometricPrecision;">
+                    <defs>
+                        <linearGradient id="trailGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:transparent;stop-opacity:0" />
+                            <stop offset="5%" style="stop-color:#7dd3c0;stop-opacity:1" />
+                            <stop offset="15%" style="stop-color:#2c5f5f;stop-opacity:1" />
+                            <stop offset="25%" style="stop-color:#7dd3c0;stop-opacity:1" />
+                            <stop offset="35%" style="stop-color:#2c5f5f;stop-opacity:1" />
+                            <stop offset="45%" style="stop-color:#7dd3c0;stop-opacity:1" />
+                            <stop offset="55%" style="stop-color:#2c5f5f;stop-opacity:1" />
+                            <stop offset="65%" style="stop-color:#7dd3c0;stop-opacity:1" />
+                            <stop offset="75%" style="stop-color:#2c5f5f;stop-opacity:1" />
+                            <stop offset="85%" style="stop-color:#7dd3c0;stop-opacity:1" />
+                            <stop offset="95%" style="stop-color:#2c5f5f;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:transparent;stop-opacity:0" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M 0,45 Q 8,25 16,35 T 32,15 Q 40,30 48,8 T 64,20 Q 72,5 80,18 T 96,12 L 100,10" />
+                </svg>
             </div>
         </div>
     </header>
@@ -2550,7 +3151,7 @@
                 
                 <!-- Accès rapide par secteurs -->
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
-                    <div style="background: var(--bg-color); padding: 1.5rem; border-radius: 0.75rem; border: 1px solid var(--border-color);">
+                    <div style="background: rgba(255, 255, 255, 0.95); padding: 1.5rem; border-radius: 0.75rem; border: 1px solid rgba(30, 58, 95, 0.2); color: #2d3748;">
                         <h3 style="margin: 0 0 1rem 0; color: var(--primary-color); font-size: 1.1rem;">
                             <i class="fas fa-mountain"></i> Pyrénées Occidentales
                         </h3>
@@ -2564,7 +3165,7 @@
                         </a>
                     </div>
                     
-                    <div style="background: var(--bg-color); padding: 1.5rem; border-radius: 0.75rem; border: 1px solid var(--border-color);">
+                    <div style="background: rgba(255, 255, 255, 0.95); padding: 1.5rem; border-radius: 0.75rem; border: 1px solid rgba(30, 58, 95, 0.2); color: #2d3748;">
                         <h3 style="margin: 0 0 1rem 0; color: var(--primary-color); font-size: 1.1rem;">
                             <i class="fas fa-mountain"></i> Pyrénées Centrales
                         </h3>
@@ -2578,7 +3179,7 @@
                         </a>
                     </div>
                     
-                    <div style="background: var(--bg-color); padding: 1.5rem; border-radius: 0.75rem; border: 1px solid var(--border-color);">
+                    <div style="background: rgba(255, 255, 255, 0.95); padding: 1.5rem; border-radius: 0.75rem; border: 1px solid rgba(30, 58, 95, 0.2); color: #2d3748;">
                         <h3 style="margin: 0 0 1rem 0; color: var(--primary-color); font-size: 1.1rem;">
                             <i class="fas fa-mountain"></i> Pyrénées Ariégeoises
                         </h3>
@@ -2592,7 +3193,7 @@
                         </a>
                     </div>
                     
-                    <div style="background: var(--bg-color); padding: 1.5rem; border-radius: 0.75rem; border: 1px solid var(--border-color);">
+                    <div style="background: rgba(255, 255, 255, 0.95); padding: 1.5rem; border-radius: 0.75rem; border: 1px solid rgba(30, 58, 95, 0.2); color: #2d3748;">
                         <h3 style="margin: 0 0 1rem 0; color: var(--primary-color); font-size: 1.1rem;">
                             <i class="fas fa-mountain"></i> Pyrénées Orientales
                         </h3>
@@ -2608,11 +3209,11 @@
                 </div>
                 
                 <!-- Informations utiles -->
-                <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 0.75rem; padding: 1.5rem; margin-top: 2rem;">
+                <div style="background: rgba(255, 255, 255, 0.95); border: 1px solid rgba(30, 58, 95, 0.2); border-radius: 0.75rem; padding: 1.5rem; margin-top: 2rem; color: #2d3748;">
                     <h3 style="margin: 0 0 1rem 0; color: var(--secondary-color); display: flex; align-items: center; gap: 0.5rem;">
                         <i class="fas fa-info-circle"></i> Informations importantes
                     </h3>
-                    <ul style="color: var(--text-color); line-height: 1.6; margin: 0; padding-left: 1.5rem;">
+                    <ul style="color: #2d3748; line-height: 1.6; margin: 0; padding-left: 1.5rem;">
                         <li>Le bivouac est réglementé : autorisé de 19h à 8h uniquement</li>
                         <li>Respectez la réglementation du Parc National des Pyrénées</li>
                         <li>Laissez les lieux propres et préservez la nature</li>
@@ -2778,9 +3379,6 @@
                 <!-- Carte IGN officielle -->
                 <div class="map-container">
                     
-                    <div id="elevation-chart-container" class="elevation-container">
-                        <canvas id="elevation-chart"></canvas>
-                    </div>
                     <div id="weather-info" class="weather-info" style="display: none;">
                         <h3><i class="fas fa-cloud-sun"></i> Météo simulée</h3>
                         <div class="weather-grid" id="weather-grid">
@@ -3411,23 +4009,18 @@ Suggestions :
             }
 
             renderStages() {
-            const container = document.getElementById('stages-container');
-            if (!container) {
-                console.error('ERREUR: Container stages-container introuvable!');
-                return;
-            }
-            container.innerHTML = '';
-
-            this.itineraryData.forEach((stage, index) => {
-                const isCompleted = this.completedStages.has(stage.etape);
-                const canValidate = this.canValidateStage(stage.etape);
-                const isCurrent = canValidate && !isCompleted;
-                const isUpcoming = !canValidate && !isCompleted;
-                
-                // Mettre à jour l'index de l'étape actuelle pour les interactions mobiles
-                if (isCurrent && window.mobileInteractions) {
-                    window.mobileInteractions.setCurrentStage(index);
+                const container = document.getElementById('stages-container');
+                if (!container) {
+                    console.error('ERREUR: Container stages-container introuvable!');
+                    return;
                 }
+                container.innerHTML = '';
+
+                this.itineraryData.forEach((stage, index) => {
+                    const isCompleted = this.completedStages.has(stage.etape);
+                    const canValidate = this.canValidateStage(stage.etape);
+                    const isCurrent = canValidate && !isCompleted;
+                    const isUpcoming = !canValidate && !isCompleted;
                     
                     const stageCard = document.createElement('div');
                     let cardClass = 'stage-card';
@@ -4357,13 +4950,6 @@ Suggestions :
                 });
 
 
-                // Map controls - vérifier l'existence avant d'attacher les listeners
-                const elevationBtn = document.getElementById('show-elevation-btn');
-                if (elevationBtn) {
-                    elevationBtn.addEventListener('click', () => {
-                        this.toggleElevationChart();
-                    });
-                }
 
                 const weatherBtn = document.getElementById('show-weather-btn');
                 if (weatherBtn) {
@@ -5151,72 +5737,7 @@ Suggestions :
                 });
             }
 
-            toggleElevationChart() {
-                const chartDiv = document.getElementById('elevation-chart');
-                const btn = document.getElementById('show-elevation-btn');
-                
-                if (chartDiv.style.display === 'none') {
-                    chartDiv.style.display = 'block';
-                    btn.classList.add('active');
-                    this.createElevationChart();
-                } else {
-                    chartDiv.style.display = 'none';
-                    btn.classList.remove('active');
-                }
-            }
 
-            createElevationChart() {
-                const canvas = document.getElementById('elevation-canvas');
-                const ctx = canvas.getContext('2d');
-                
-                if (this.elevationChart) {
-                    this.elevationChart.destroy();
-                }
-
-                const coordinates = this.getGR10Coordinates();
-                const labels = coordinates.map(coord => `Étape ${coord.etape}`);
-                const elevations = coordinates.map(coord => coord.alt);
-
-                this.elevationChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Altitude (m)',
-                            data: elevations,
-                            borderColor: '#2563eb',
-                            backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                            fill: true,
-                            tension: 0.4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'Profil altimétrique du GR10'
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: false,
-                                title: {
-                                    display: true,
-                                    text: 'Altitude (m)'
-                                }
-                            },
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'Étapes'
-                                }
-                            }
-                        }
-                    }
-                });
-            }
 
             toggleWeatherInfo() {
                 const weatherDiv = document.getElementById('weather-info');
@@ -5786,12 +6307,6 @@ Suggestions :
             const dashboard = new GR10Dashboard();
             window.dashboard = dashboard; // Rendre accessible globalement
             console.log('Dashboard initialisé:', dashboard);
-            
-            // Initialiser les interactions mobiles avec le dashboard
-            if (window.mobileInteractions) {
-                window.mobileInteractions.updateStageCount(dashboard.itineraryData.length);
-                console.log('📱 Interactions mobiles synchronisées avec le dashboard');
-            }
             
             // Fonction de test globale pour la météo
             window.testWeather = function() {

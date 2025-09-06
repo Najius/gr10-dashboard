@@ -1,0 +1,16 @@
+@font-face {
+    font-family: 'Dushick';
+    src: url('data:font/truetype;charset=utf-8;base64,') format('truetype'),
+         url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Fallback avec une police similaire */
+.dushick-fallback {
+    font-family: 'Orbitron', 'Bebas Neue', 'Impact', 'Arial Black', sans-serif !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+}
