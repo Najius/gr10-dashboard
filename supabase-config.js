@@ -20,9 +20,9 @@ class SupabaseSync {
 
     async testConnection() {
         try {
-            // Test simple de connexion
-            const { data, error } = await supabase.from('test').select('*').limit(1);
-            if (error && error.code !== 'PGRST116') { // PGRST116 = table n'existe pas (OK)
+            // Test de connexion avec la table gr10_progress existante
+            const { data, error } = await supabase.from('gr10_progress').select('*').limit(1);
+            if (error && error.code !== 'PGRST116') { // PGRST116 = aucune donnée (OK)
                 throw error;
             }
             this.isOnline = true;
