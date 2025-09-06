@@ -3626,43 +3626,9 @@ Suggestions :
             }
 
             setupRealtimeSync() {
-                if (!this.firebaseSync) return;
-                
-                // Écouter les changements sur toutes les étapes
-                for (let i = 1; i <= 48; i++) {
-                    this.firebaseSync.listenToProgress(i, (data) => {
-                        if (data && data.exists()) {
-                            const stageData = data.data();
-                            const stageId = i;
-                            
-                            console.log(`🔄 Mise à jour temps réel étape ${stageId}:`, stageData);
-                            
-                            // Mettre à jour les données locales
-                            if (stageData.completed && !this.completedStages.has(stageId)) {
-                                this.completedStages.add(stageId);
-                            }
-                            if (stageData.photos && stageData.photos.length > 0) {
-                                this.stagePhotos[stageId] = stageData.photos;
-                                console.log(`📷 ${stageData.photos.length} photos mises à jour pour étape ${stageId}`);
-                            }
-                            if (stageData.notes) {
-                                this.stageNotes[stageId] = stageData.notes;
-                            }
-                            if (stageData.comments && stageData.comments.length > 0) {
-                                this.stageComments[stageId] = stageData.comments;
-                            }
-                            
-                            // Mettre à jour l'affichage
-                            this.renderStages();
-                            this.updateProgress();
-                            
-                            // Si la modal est ouverte pour cette étape, la rafraîchir
-                            if (this.currentStageId === stageId) {
-                                this.loadStagePhotos(stageId);
-                            }
-                        }
-                    });
-                }
+                // Désactiver temporairement la sync temps réel pour éviter les conflits
+                console.log('⏸️ Sync temps réel désactivée temporairement');
+                return;
             }
 
             waitForFirebase() {
@@ -4070,11 +4036,22 @@ Suggestions :
                             }
                         }
                         
-                        // Utiliser les données Firebase si trouvées (étapes complétées OU données utilisateur)
-                        if (completedStages.size > 0 || globalData || 
-                            Object.keys(stageNotes).length > 0 || 
-                            Object.keys(stagePhotos).length > 0 || 
-                            Object.keys(stageComments).length > 0) {
+                        // Fusionner avec les données locales existantes
+                        const localData = localStorage.getItem('gr10-progress');
+                        if (localData) {
+                            const local = JSON.parse(localData);
+                            
+                            // Fusionner les données Firebase avec les données locales
+                            this.completedStages = new Set([...completedStages, ...(local.completedStages || [])]);
+                            this.stageNotes = { ...(local.stageNotes || {}), ...stageNotes };
+                            this.stageRatings = { ...(local.stageRatings || {}), ...stageRatings };
+                            this.stagePhotos = { ...(local.stagePhotos || {}), ...stagePhotos };
+                            this.stageFeaturedPhotos = { ...(local.stageFeaturedPhotos || {}), ...stageFeaturedPhotos };
+                            this.stageComments = { ...(local.stageComments || {}), ...stageComments };
+                            this.detailedRatings = { ...(local.detailedRatings || {}), ...detailedRatings };
+                            this.stageTimes = { ...(local.stageTimes || {}), ...stageTimes };
+                        } else {
+                            // Utiliser seulement les données Firebase si pas de cache local
                             this.completedStages = completedStages;
                             this.stageNotes = stageNotes;
                             this.stageRatings = stageRatings;
@@ -4083,28 +4060,28 @@ Suggestions :
                             this.stageComments = stageComments;
                             this.detailedRatings = detailedRatings;
                             this.stageTimes = stageTimes;
-                            
-                            // Sauvegarder en cache local
-                            const cacheData = {
-                                completedStages: Array.from(completedStages),
-                                stageNotes,
-                                stageRatings,
-                                stagePhotos,
-                                stageFeaturedPhotos,
-                                stageComments,
-                                detailedRatings,
-                                stageTimes
-                            };
-                            localStorage.setItem('gr10-progress', JSON.stringify(cacheData));
-                            
-                            console.log('📥 Progrès chargé depuis Firebase:', {
-                                completedStages: this.completedStages.size,
-                                notes: Object.keys(this.stageNotes).length,
-                                ratings: Object.keys(this.stageRatings).length,
-                                photos: Object.keys(this.stagePhotos).length
-                            });
-                            return;
                         }
+                        
+                        // Sauvegarder les données fusionnées en cache local
+                        const cacheData = {
+                            completedStages: Array.from(this.completedStages),
+                            stageNotes: this.stageNotes,
+                            stageRatings: this.stageRatings,
+                            stagePhotos: this.stagePhotos,
+                            stageFeaturedPhotos: this.stageFeaturedPhotos,
+                            stageComments: this.stageComments,
+                            detailedRatings: this.detailedRatings,
+                            stageTimes: this.stageTimes
+                        };
+                        localStorage.setItem('gr10-progress', JSON.stringify(cacheData));
+                        
+                        console.log('📥 Progrès fusionné Firebase + Local:', {
+                            completedStages: this.completedStages.size,
+                            notes: Object.keys(this.stageNotes).length,
+                            ratings: Object.keys(this.stageRatings).length,
+                            photos: Object.keys(this.stagePhotos).length
+                        });
+                        return;
                     } catch (error) {
                         console.warn('⚠️ Erreur chargement Firebase, utilisation cache local:', error);
                     }
