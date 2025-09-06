@@ -3613,10 +3613,13 @@ Suggestions :
             async initializeData() {
                 // Attendre que Firebase soit disponible
                 await this.waitForFirebase();
-                // Charger les données
+                // Charger les données d'étapes
                 this.itineraryData = await this.loadGR10Data();
+                // Charger le progrès utilisateur
+                await this.loadProgress();
                 // Recharger l'interface avec les nouvelles données
                 this.renderStages();
+                this.updateProgress();
             }
 
             waitForFirebase() {
@@ -3983,18 +3986,55 @@ Suggestions :
                 return [];
             }
 
-            loadProgress() {
+            async loadProgress() {
+                // Essayer de charger depuis Firebase d'abord
+                if (this.firebaseSync) {
+                    try {
+                        const firebaseData = await this.firebaseSync.getProgress();
+                        if (firebaseData) {
+                            this.completedStages = new Set(firebaseData.completedStages || []);
+                            this.stageNotes = firebaseData.stageNotes || {};
+                            this.stageRatings = firebaseData.stageRatings || {};
+                            this.stagePhotos = firebaseData.stagePhotos || {};
+                            this.stageFeaturedPhotos = firebaseData.stageFeaturedPhotos || {};
+                            this.stageComments = firebaseData.stageComments || {};
+                            this.detailedRatings = firebaseData.detailedRatings || {};
+                            this.stageTimes = firebaseData.stageTimes || {};
+                            
+                            // Sauvegarder en cache local
+                            localStorage.setItem('gr10-progress', JSON.stringify(firebaseData));
+                            
+                            console.log('📥 Progrès chargé depuis Firebase:', {
+                                completedStages: this.completedStages.size,
+                                notes: Object.keys(this.stageNotes).length,
+                                ratings: Object.keys(this.stageRatings).length,
+                                photos: Object.keys(this.stagePhotos).length
+                            });
+                            return;
+                        }
+                    } catch (error) {
+                        console.warn('⚠️ Erreur chargement Firebase, utilisation cache local:', error);
+                    }
+                }
+                
+                // Fallback: charger depuis localStorage
                 const saved = localStorage.getItem('gr10-progress');
                 if (saved) {
                     const data = JSON.parse(saved);
                     this.completedStages = new Set(data.completedStages || []);
                     this.stageNotes = data.stageNotes || {};
                     this.stageRatings = data.stageRatings || {};
-                    if (data.stagePhotos) this.stagePhotos = data.stagePhotos;
-                    if (data.stageFeaturedPhotos) this.stageFeaturedPhotos = data.stageFeaturedPhotos;
-                if (data.stageComments) this.stageComments = data.stageComments;
+                    this.stagePhotos = data.stagePhotos || {};
+                    this.stageFeaturedPhotos = data.stageFeaturedPhotos || {};
+                    this.stageComments = data.stageComments || {};
                     this.detailedRatings = data.detailedRatings || {};
                     this.stageTimes = data.stageTimes || {};
+                    console.log('💾 Progrès chargé depuis cache local:', {
+                        completedStages: this.completedStages.size,
+                        notes: Object.keys(this.stageNotes).length,
+                        ratings: Object.keys(this.stageRatings).length,
+                        photos: Object.keys(this.stagePhotos).length
+                    });
                 }
             }
 
@@ -4009,7 +4049,19 @@ Suggestions :
                     detailedRatings: this.detailedRatings,
                     stageTimes: this.stageTimes
                 };
+                
+                // Sauvegarder localement
                 localStorage.setItem('gr10-progress', JSON.stringify(data));
+                
+                // Synchroniser avec Firebase
+                if (this.firebaseSync) {
+                    try {
+                        this.firebaseSync.saveProgress(data);
+                        console.log('📤 Progrès synchronisé avec Firebase');
+                    } catch (error) {
+                        console.warn('⚠️ Erreur sync Firebase:', error);
+                    }
+                }
             }
 
             renderStages() {
