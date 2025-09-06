@@ -34,36 +34,47 @@ class SupabaseSync {
         }
     }
 
-    // Sauvegarder le progrès d'une étape
-    async saveProgress(stageId, progressData) {
-        if (!this.isOnline) return false;
-
+    // Méthode pour sauvegarder le progrès d'une étape
+    async saveProgress(stageId, data) {
         try {
-            const { data, error } = await supabase
+            console.log(`💾 Sauvegarde étape ${stageId}:`, data);
+            
+            // Forcer la création d'un nouvel enregistrement ou mise à jour complète
+            const saveData = {
+                stage_id: stageId,
+                user_id: 'default_user',
+                completed: data.completed || false,
+                notes: data.notes || null,
+                photos: data.photos || [],
+                comments: data.comments || [],
+                rating: data.rating || null,
+                detailed_rating: data.detailedRating || null,
+                featured_photo: data.featuredPhoto || null,
+                time: data.time || null,
+                updated_at: new Date().toISOString()
+            };
+            
+            // D'abord supprimer l'enregistrement existant s'il y en a un
+            await this.supabase
                 .from('gr10_progress')
-                .upsert({
-                    stage_id: stageId.toString(),
-                    user_id: 'anonymous',
-                    completed: progressData.completed || false,
-                    completed_at: progressData.completedAt,
-                    notes: progressData.notes || '',
-                    rating: progressData.rating,
-                    photos: progressData.photos || [],
-                    featured_photo: progressData.featuredPhoto,
-                    comments: progressData.comments || [],
-                    detailed_rating: progressData.detailedRating || {},
-                    time: progressData.time,
-                    timestamp: Date.now(),
-                    last_updated: new Date().toISOString()
-                }, {
-                    onConflict: 'stage_id,user_id'
-                });
+                .delete()
+                .eq('stage_id', stageId)
+                .eq('user_id', 'default_user');
+            
+            // Puis insérer le nouvel enregistrement
+            const { error } = await this.supabase
+                .from('gr10_progress')
+                .insert(saveData);
 
-            if (error) throw error;
-            console.log(`📤 Étape ${stageId} sauvegardée dans Supabase`);
+            if (error) {
+                console.error('❌ Erreur sauvegarde Supabase:', error);
+                return false;
+            }
+            
+            console.log(`✅ Étape ${stageId} sauvegardée avec succès (force refresh)`);
             return true;
         } catch (error) {
-            console.error('Erreur sauvegarde Supabase:', error);
+            console.error('❌ Erreur sauvegarde:', error);
             return false;
         }
     }

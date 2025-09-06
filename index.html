@@ -4157,13 +4157,13 @@ Suggestions :
             }
 
             async loadProgress() {
-                // Essayer de charger depuis Firebase d'abord
+                console.log('🔍 === DÉBUT loadProgress() ===');
+                
+                // TOUJOURS charger depuis Supabase en premier (source de vérité)
                 if (this.firebaseSync) {
                     try {
-                        // Charger le progrès global
-                        const globalData = await this.firebaseSync.getProgress('global');
+                        console.log('🔍 Chargement depuis Supabase...');
                         
-                        // Charger aussi chaque étape individuellement pour récupérer les validations
                         const completedStages = new Set();
                         const stageNotes = {};
                         const stageRatings = {};
@@ -4177,7 +4177,8 @@ Suggestions :
                         for (let i = 1; i <= 48; i++) {
                             const stageData = await this.firebaseSync.getProgress(i);
                             if (stageData) {
-                                // Charger toutes les données, pas seulement si completed
+                                console.log(`📥 Données Supabase étape ${i}:`, stageData);
+                                
                                 if (stageData.completed) {
                                     completedStages.add(i);
                                 }
@@ -4197,95 +4198,60 @@ Suggestions :
                             }
                         }
                         
-                        // En mode admin, Firebase a priorité absolue (pour respecter les suppressions)
-                        if (this.isAdminMode) {
-                            console.log('🔐 Mode admin: Firebase prioritaire sur cache local');
-                            this.completedStages = completedStages;
-                            this.stageNotes = stageNotes;
-                            this.stageRatings = stageRatings;
-                            this.stagePhotos = stagePhotos;
-                            this.stageFeaturedPhotos = stageFeaturedPhotos;
-                            this.stageComments = stageComments;
-                            this.detailedRatings = detailedRatings;
-                            this.stageTimes = stageTimes;
-                        } else {
-                            // En mode normal, fusionner Firebase + Local (local en priorité)
-                            const localData = localStorage.getItem('gr10-progress');
-                            if (localData) {
-                                const local = JSON.parse(localData);
-                                console.log('👤 Mode normal: fusion Firebase + Local');
-                                
-                                this.completedStages = new Set([...completedStages, ...(local.completedStages || [])]);
-                                this.stageNotes = { ...stageNotes, ...(local.stageNotes || {}) };
-                                this.stageRatings = { ...stageRatings, ...(local.stageRatings || {}) };
-                                this.stagePhotos = { ...stagePhotos, ...(local.stagePhotos || {}) };
-                                this.stageFeaturedPhotos = { ...stageFeaturedPhotos, ...(local.stageFeaturedPhotos || {}) };
-                                this.stageComments = { ...stageComments, ...(local.stageComments || {}) };
-                                this.detailedRatings = { ...detailedRatings, ...(local.detailedRatings || {}) };
-                                this.stageTimes = { ...stageTimes, ...(local.stageTimes || {}) };
-                            } else {
-                                // Utiliser seulement Firebase si pas de cache local
-                                this.completedStages = completedStages;
-                                this.stageNotes = stageNotes;
-                                this.stageRatings = stageRatings;
-                                this.stagePhotos = stagePhotos;
-                                this.stageFeaturedPhotos = stageFeaturedPhotos;
-                                this.stageComments = stageComments;
-                                this.detailedRatings = detailedRatings;
-                                this.stageTimes = stageTimes;
-                            }
-                        }
-                        
-                        console.log('📥 Données fusionnées Firebase + Local:', {
-                            completedStages: this.completedStages.size,
-                            notes: Object.keys(this.stageNotes).length,
-                            ratings: Object.keys(this.stageRatings).length,
-                            photos: Object.keys(this.stagePhotos).length
+                        console.log('📊 Données Supabase chargées:', {
+                            completedStages: Array.from(completedStages),
+                            photosCount: Object.keys(stagePhotos).length,
+                            notesCount: Object.keys(stageNotes).length
                         });
                         
-                        // Sauvegarder les données fusionnées en cache local
-                        const cacheData = {
-                            completedStages: Array.from(this.completedStages),
-                            stageNotes: this.stageNotes,
-                            stageRatings: this.stageRatings,
-                            stagePhotos: this.stagePhotos,
-                            stageFeaturedPhotos: this.stageFeaturedPhotos,
-                            stageComments: this.stageComments,
-                            detailedRatings: this.detailedRatings,
-                            stageTimes: this.stageTimes
-                        };
-                        localStorage.setItem('gr10-progress', JSON.stringify(cacheData));
+                        // Supabase a TOUJOURS priorité (source de vérité unique)
+                        this.completedStages = completedStages;
+                        this.stageNotes = stageNotes;
+                        this.stageRatings = stageRatings;
+                        this.stagePhotos = stagePhotos;
+                        this.stageFeaturedPhotos = stageFeaturedPhotos;
+                        this.stageComments = stageComments;
+                        this.detailedRatings = detailedRatings;
+                        this.stageTimes = stageTimes;
                         
-                        console.log('📥 Progrès fusionné Firebase + Local:', {
-                            completedStages: this.completedStages.size,
-                            notes: Object.keys(this.stageNotes).length,
-                            ratings: Object.keys(this.stageRatings).length,
-                            photos: Object.keys(this.stagePhotos).length
-                        });
-                        return;
+                        console.log('✅ Données Supabase appliquées - étapes complétées:', Array.from(this.completedStages));
+                        
                     } catch (error) {
-                        console.warn('⚠️ Erreur chargement Firebase, utilisation cache local:', error);
+                        console.error('❌ Erreur chargement Supabase:', error);
+                        // Fallback vers localStorage uniquement
+                        this.loadFromLocalStorage();
                     }
+                } else {
+                    console.log('⚠️ Pas de connexion Supabase, utilisation localStorage');
+                    this.loadFromLocalStorage();
                 }
                 
-                // Fallback: charger depuis localStorage
-                const saved = localStorage.getItem('gr10-progress');
-                if (saved) {
-                    const data = JSON.parse(saved);
-                    this.completedStages = new Set(data.completedStages || []);
-                    this.stageNotes = data.stageNotes || {};
-                    this.stageRatings = data.stageRatings || {};
-                    this.stagePhotos = data.stagePhotos || {};
-                    this.stageFeaturedPhotos = data.stageFeaturedPhotos || {};
-                    this.stageComments = data.stageComments || {};
-                    this.detailedRatings = data.detailedRatings || {};
-                    this.stageTimes = data.stageTimes || {};
-                    console.log('💾 Progrès chargé depuis cache local:', {
-                        completedStages: this.completedStages.size,
-                        notes: Object.keys(this.stageNotes).length,
-                        ratings: Object.keys(this.stageRatings).length,
-                        photos: Object.keys(this.stagePhotos).length
-                    });
+                console.log('🔍 === FIN loadProgress() ===');
+            }
+            
+            loadFromLocalStorage() {
+                console.log('💾 Chargement depuis localStorage uniquement');
+                const localData = localStorage.getItem('gr10-progress');
+                if (localData) {
+                    try {
+                        const local = JSON.parse(localData);
+                        console.log('📥 Données localStorage trouvées:', local);
+                        
+                        this.completedStages = new Set(local.completedStages || []);
+                        this.stageNotes = local.stageNotes || {};
+                        this.stageRatings = local.stageRatings || {};
+                        this.stagePhotos = local.stagePhotos || {};
+                        this.stageFeaturedPhotos = local.stageFeaturedPhotos || {};
+                        this.stageComments = local.stageComments || {};
+                        this.detailedRatings = local.detailedRatings || {};
+                        this.stageTimes = local.stageTimes || {};
+                    } catch (error) {
+                        console.error('❌ Erreur parsing localStorage:', error);
+                        this.initializeEmptyProgress();
+                    }
+                } else {
+                    console.log('📝 Aucune donnée localStorage, initialisation vide');
+                    this.initializeEmptyProgress();
                 }
             }
 
