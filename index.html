@@ -4273,11 +4273,12 @@ Suggestions :
                         }
 
                         // Sauvegarde batch Firebase
+                        console.log('🔄 Tentative de sauvegarde Firebase avec', Object.keys(allStageData).length, 'étapes');
                         const success = await this.firebaseSync.saveAllUserData(allStageData);
                         if (success) {
                             console.log('✅ Synchronisation admin Firebase réussie - ' + Object.keys(allStageData).length + ' étapes');
                         } else {
-                            console.error('❌ Échec synchronisation Firebase');
+                            console.error('❌ Échec synchronisation Firebase - vérifiez les logs Firebase ci-dessus');
                         }
                         
                     } catch (error) {

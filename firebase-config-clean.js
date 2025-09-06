@@ -97,6 +97,7 @@ class FirebaseSync {
             return true;
         } catch (error) {
             console.error('Erreur sauvegarde batch Firebase:', error);
+            console.error('Détails de l\'erreur:', error.message, error.code);
             return false;
         }
     }
