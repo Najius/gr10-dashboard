@@ -5,7 +5,7 @@
 // import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
 
 // Configuration Supabase - Clés du projet GR10 (corrigées)
-const supabaseUrl = 'https://nuaplzxrmuossobklvo.supabase.co'
+const supabaseUrl = 'https://nuspizxrmuoosobkllvo.supabase.co'
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im51c3BpenhybXVvb3NvYmtsbHZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxNjk4NDksImV4cCI6MjA3Mjc0NTg0OX0.HZGDnlspgnL0zP1yklqpnriCNqSwjjXIwojwKY_0Wlw'
 
 // Attendre que Supabase soit chargé depuis le CDN
