@@ -15,6 +15,12 @@
         // Vérifier immédiatement si gr10Data est chargé
         console.log('🔍 Vérification gr10Data:', typeof gr10Data, gr10Data?.length || 'undefined');
         
+        // Forcer le chargement depuis le fichier gr10-data-unified.js
+        if (typeof gr10Data !== 'undefined' && gr10Data.length > 0) {
+            console.log('✅ gr10Data trouvé avec', gr10Data.length, 'étapes');
+            window.gr10DataGlobal = gr10Data; // Sauvegarder globalement
+        }
+        
         // Si gr10Data n'est pas chargé, le définir directement
         if (typeof gr10Data === 'undefined') {
             console.warn('⚠️ gr10Data non trouvé, définition directe...');
@@ -27,6 +33,7 @@
                 { etape: 5, date: "2025-09-12", depart: "Bidarray", arrivee: "St‑Étienne‑de‑Baïgorry", distance: 18.5, denivele_positif: 1250, denivele_negatif: 1250, duree: "8.2h", difficulte: "Difficile", terrain: "crêtes basques", hebergement: "Gîte Mendizaleen Pausa", bivouacA: "Pic d'Artzamendi – panorama 360°", bivouacB: "replat hors crête", eau: "Fontaines Baïgorry", ravitaillement: "superette/boulangerie", altitude: 1456, exposition: "variable", reseau: "variable", telephone: "05 59 37 40 14" }
             ];
             console.log('✅ gr10Data défini avec', gr10Data.length, 'étapes de test');
+            window.gr10DataGlobal = gr10Data; // Sauvegarder globalement aussi
         }
     </script>
     <script type="module" src="supabase-config.js"></script>
@@ -4060,22 +4067,29 @@ Suggestions :
             }
 
             async loadGR10Data() {
-                // Essayer de charger depuis Firebase d'abord
+                console.log('🔍 === DÉBUT loadGR10Data() ===');
+                
+                // Essayer de charger depuis Supabase d'abord
                 if (this.firebaseSync) {
+                    console.log('🔍 Tentative de chargement depuis Supabase...');
                     try {
-                        const firebaseStages = await this.firebaseSync.getStages();
-                        if (firebaseStages && firebaseStages.length > 0) {
-                            console.log('📥 Données chargées depuis Firebase');
+                        const supabaseStages = await this.firebaseSync.getStages();
+                        if (supabaseStages && supabaseStages.length > 0) {
+                            console.log('📥 Données chargées depuis Supabase:', supabaseStages.length, 'étapes');
                             // Sauvegarder en cache local
                             localStorage.setItem('gr10-stages-cache', JSON.stringify({
-                                data: firebaseStages,
+                                data: supabaseStages,
                                 timestamp: Date.now()
                             }));
-                            return firebaseStages;
+                            return supabaseStages;
+                        } else {
+                            console.log('⚠️ Supabase retourne des données vides');
                         }
                     } catch (error) {
-                        console.warn('⚠️ Erreur Firebase, utilisation du cache:', error);
+                        console.warn('⚠️ Erreur Supabase, utilisation du cache:', error);
                     }
+                } else {
+                    console.log('⚠️ Pas de connexion Supabase disponible');
                 }
 
                 // Fallback 1: Cache local (si moins de 24h)
@@ -4090,18 +4104,22 @@ Suggestions :
                 }
 
                 // Fallback 2: Fichier JavaScript statique
-                if (typeof gr10Data !== 'undefined') {
+                if (typeof gr10Data !== 'undefined' && gr10Data.length > 0) {
                     console.log('📄 Données chargées depuis le fichier JS:', gr10Data.length, 'étapes');
                     return gr10Data;
                 }
                 
+                // Fallback 2b: Données sauvegardées globalement
+                if (window.gr10DataGlobal && window.gr10DataGlobal.length > 0) {
+                    console.log('🌐 Données chargées depuis window.gr10DataGlobal:', window.gr10DataGlobal.length, 'étapes');
+                    return window.gr10DataGlobal;
+                }
+                
                 // Fallback 3: Données par défaut (pour éviter un tableau vide)
                 console.log('🔄 Utilisation des données par défaut intégrées');
-                return this.getDefaultGR10Data();
-                
-                // Fallback final
-                console.error('❌ Aucune source de données disponible');
-                return [];
+                const defaultData = this.getDefaultGR10Data();
+                console.log('🔍 === FIN loadGR10Data() === Retour:', defaultData.length, 'étapes');
+                return defaultData;
             }
 
             async loadProgress() {
