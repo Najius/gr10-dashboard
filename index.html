@@ -4219,68 +4219,65 @@ Suggestions :
                 
                 // Sauvegarder localement
                 localStorage.setItem('gr10-progress', JSON.stringify(data));
+                console.log('💾 Données sauvegardées localement');
                 
-                // Synchroniser avec Firebase - sauvegarder chaque étape individuellement
-                if (this.firebaseSync) {
+                // Synchroniser avec Firebase TOUJOURS en mode admin
+                if (this.firebaseSync && this.isAdminMode) {
+                    console.log('🔄 Mode admin détecté, synchronisation Firebase...');
                     try {
-                        // Sauvegarder le progrès global
-                        await this.firebaseSync.saveProgress('global', data);
-                        
-                        // Sauvegarder en mode admin uniquement
-                        if (this.isAdminMode && this.firebaseSync) {
-                            // Préparer toutes les données pour sauvegarde batch
-                            const allStageData = {};
-                            const allStageIds = new Set([
-                                ...this.completedStages,
-                                ...Object.keys(this.stageNotes).map(Number),
-                                ...Object.keys(this.stagePhotos).map(Number),
-                                ...Object.keys(this.stageComments).map(Number),
-                                ...Object.keys(this.stageRatings).map(Number),
-                                ...Object.keys(this.detailedRatings).map(Number),
-                                ...Object.keys(this.stageTimes).map(Number)
-                            ]);
+                        // Préparer toutes les données pour sauvegarde batch
+                        const allStageData = {};
+                        const allStageIds = new Set([
+                            ...this.completedStages,
+                            ...Object.keys(this.stageNotes).map(Number),
+                            ...Object.keys(this.stagePhotos).map(Number),
+                            ...Object.keys(this.stageComments).map(Number),
+                            ...Object.keys(this.stageRatings).map(Number),
+                            ...Object.keys(this.detailedRatings).map(Number),
+                            ...Object.keys(this.stageTimes).map(Number)
+                        ]);
 
-                            const timestamp = Date.now();
-                            if (!this.lastUpdateTimestamp) this.lastUpdateTimestamp = {};
+                        const timestamp = Date.now();
+                        if (!this.lastUpdateTimestamp) this.lastUpdateTimestamp = {};
 
-                            for (const stageId of allStageIds) {
-                                const stageData = {
-                                    completed: this.completedStages.has(stageId),
-                                    completedAt: this.completedStages.has(stageId) ? new Date().toISOString() : null,
-                                    notes: this.stageNotes[stageId] || '',
-                                    rating: this.stageRatings[stageId] || null,
-                                    photos: this.stagePhotos[stageId] || [],
-                                    featuredPhoto: this.stageFeaturedPhotos[stageId] || null,
-                                    comments: this.stageComments[stageId] || [],
-                                    detailedRating: this.detailedRatings[stageId] || {},
-                                    time: this.stageTimes[stageId] || null,
-                                    timestamp: timestamp
-                                };
-                                
-                                // Ne sauvegarder que si il y a des données
-                                if (stageData.completed || stageData.notes || stageData.photos.length > 0 || 
-                                    stageData.comments.length > 0 || stageData.rating || 
-                                    Object.keys(stageData.detailedRating).length > 0 || stageData.time) {
-                                    allStageData[stageId] = stageData;
-                                    this.lastUpdateTimestamp[stageId] = timestamp;
-                                }
-                            }
-
-                            // Sauvegarde batch Firebase
-                            try {
-                                const success = await this.firebaseSync.saveAllUserData(allStageData);
-                                if (success) {
-                                    console.log('🔄 Synchronisation admin Firebase réussie');
-                                }
-                            } catch (error) {
-                                console.error('❌ Erreur synchronisation admin Firebase:', error);
+                        for (const stageId of allStageIds) {
+                            const stageData = {
+                                completed: this.completedStages.has(stageId),
+                                completedAt: this.completedStages.has(stageId) ? new Date().toISOString() : null,
+                                notes: this.stageNotes[stageId] || '',
+                                rating: this.stageRatings[stageId] || null,
+                                photos: this.stagePhotos[stageId] || [],
+                                featuredPhoto: this.stageFeaturedPhotos[stageId] || null,
+                                comments: this.stageComments[stageId] || [],
+                                detailedRating: this.detailedRatings[stageId] || {},
+                                time: this.stageTimes[stageId] || null,
+                                timestamp: timestamp
+                            };
+                            
+                            // Ne sauvegarder que si il y a des données
+                            if (stageData.completed || stageData.notes || stageData.photos.length > 0 || 
+                                stageData.comments.length > 0 || stageData.rating || 
+                                Object.keys(stageData.detailedRating).length > 0 || stageData.time) {
+                                allStageData[stageId] = stageData;
+                                this.lastUpdateTimestamp[stageId] = timestamp;
                             }
                         }
+
+                        // Sauvegarde batch Firebase
+                        const success = await this.firebaseSync.saveAllUserData(allStageData);
+                        if (success) {
+                            console.log('✅ Synchronisation admin Firebase réussie - ' + Object.keys(allStageData).length + ' étapes');
+                        } else {
+                            console.error('❌ Échec synchronisation Firebase');
+                        }
                         
-                        console.log('📤 Progrès synchronisé avec Firebase:', this.completedStages.size, 'étapes');
                     } catch (error) {
-                        console.warn('⚠️ Erreur sync Firebase:', error);
+                        console.error('❌ Erreur sync Firebase:', error);
                     }
+                } else if (!this.isAdminMode) {
+                    console.log('⚠️ Mode admin requis pour synchronisation Firebase');
+                } else if (!this.firebaseSync) {
+                    console.log('⚠️ Firebase non disponible');
                 }
             }
 
