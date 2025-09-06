@@ -153,6 +153,13 @@ class SupabaseSync {
         }
     }
 
+    // Méthode pour récupérer toutes les étapes (compatibilité avec loadGR10Data)
+    async getStages() {
+        console.log('⚠️ getStages() appelée - cette méthode ne charge pas les étapes depuis Supabase');
+        console.log('⚠️ Les étapes GR10 sont chargées depuis gr10Data ou le cache local');
+        return null; // Forcer l'utilisation du fallback
+    }
+
     // Écouter les changements en temps réel
     listenToProgress(stageId, callback) {
         if (!this.isOnline || !this.supabase) return;
