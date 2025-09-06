@@ -3990,19 +3990,57 @@ Suggestions :
                 // Essayer de charger depuis Firebase d'abord
                 if (this.firebaseSync) {
                     try {
-                        const firebaseData = await this.firebaseSync.getProgress();
-                        if (firebaseData) {
-                            this.completedStages = new Set(firebaseData.completedStages || []);
-                            this.stageNotes = firebaseData.stageNotes || {};
-                            this.stageRatings = firebaseData.stageRatings || {};
-                            this.stagePhotos = firebaseData.stagePhotos || {};
-                            this.stageFeaturedPhotos = firebaseData.stageFeaturedPhotos || {};
-                            this.stageComments = firebaseData.stageComments || {};
-                            this.detailedRatings = firebaseData.detailedRatings || {};
-                            this.stageTimes = firebaseData.stageTimes || {};
+                        // Charger le progrès global
+                        const globalData = await this.firebaseSync.getProgress('global');
+                        
+                        // Charger aussi chaque étape individuellement pour récupérer les validations
+                        const completedStages = new Set();
+                        const stageNotes = {};
+                        const stageRatings = {};
+                        const stagePhotos = {};
+                        const stageFeaturedPhotos = {};
+                        const stageComments = {};
+                        const detailedRatings = {};
+                        const stageTimes = {};
+                        
+                        // Vérifier les étapes 1 à 48
+                        for (let i = 1; i <= 48; i++) {
+                            const stageData = await this.firebaseSync.getProgress(i);
+                            if (stageData && stageData.completed) {
+                                completedStages.add(i);
+                                if (stageData.notes) stageNotes[i] = stageData.notes;
+                                if (stageData.rating) stageRatings[i] = stageData.rating;
+                                if (stageData.photos) stagePhotos[i] = stageData.photos;
+                                if (stageData.featuredPhoto) stageFeaturedPhotos[i] = stageData.featuredPhoto;
+                                if (stageData.comments) stageComments[i] = stageData.comments;
+                                if (stageData.detailedRating) detailedRatings[i] = stageData.detailedRating;
+                                if (stageData.time) stageTimes[i] = stageData.time;
+                            }
+                        }
+                        
+                        // Utiliser les données Firebase si trouvées
+                        if (completedStages.size > 0 || globalData) {
+                            this.completedStages = completedStages;
+                            this.stageNotes = stageNotes;
+                            this.stageRatings = stageRatings;
+                            this.stagePhotos = stagePhotos;
+                            this.stageFeaturedPhotos = stageFeaturedPhotos;
+                            this.stageComments = stageComments;
+                            this.detailedRatings = detailedRatings;
+                            this.stageTimes = stageTimes;
                             
                             // Sauvegarder en cache local
-                            localStorage.setItem('gr10-progress', JSON.stringify(firebaseData));
+                            const cacheData = {
+                                completedStages: Array.from(completedStages),
+                                stageNotes,
+                                stageRatings,
+                                stagePhotos,
+                                stageFeaturedPhotos,
+                                stageComments,
+                                detailedRatings,
+                                stageTimes
+                            };
+                            localStorage.setItem('gr10-progress', JSON.stringify(cacheData));
                             
                             console.log('📥 Progrès chargé depuis Firebase:', {
                                 completedStages: this.completedStages.size,
@@ -4038,7 +4076,7 @@ Suggestions :
                 }
             }
 
-            saveProgress() {
+            async saveProgress() {
                 const data = {
                     completedStages: Array.from(this.completedStages),
                     stageNotes: this.stageNotes,
@@ -4053,11 +4091,28 @@ Suggestions :
                 // Sauvegarder localement
                 localStorage.setItem('gr10-progress', JSON.stringify(data));
                 
-                // Synchroniser avec Firebase
+                // Synchroniser avec Firebase - sauvegarder chaque étape individuellement
                 if (this.firebaseSync) {
                     try {
-                        this.firebaseSync.saveProgress(data);
-                        console.log('📤 Progrès synchronisé avec Firebase');
+                        // Sauvegarder le progrès global
+                        await this.firebaseSync.saveProgress('global', data);
+                        
+                        // Sauvegarder chaque étape complétée individuellement
+                        for (const stageId of this.completedStages) {
+                            await this.firebaseSync.saveProgress(stageId, {
+                                completed: true,
+                                completedAt: new Date().toISOString(),
+                                notes: this.stageNotes[stageId] || '',
+                                rating: this.stageRatings[stageId] || null,
+                                photos: this.stagePhotos[stageId] || [],
+                                featuredPhoto: this.stageFeaturedPhotos[stageId] || null,
+                                comments: this.stageComments[stageId] || [],
+                                detailedRating: this.detailedRatings[stageId] || {},
+                                time: this.stageTimes[stageId] || null
+                            });
+                        }
+                        
+                        console.log('📤 Progrès synchronisé avec Firebase:', this.completedStages.size, 'étapes');
                     } catch (error) {
                         console.warn('⚠️ Erreur sync Firebase:', error);
                     }
