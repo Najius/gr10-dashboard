@@ -119,29 +119,33 @@ class SupabaseSync {
         }
 
         try {
+            console.log(`🔍 Requête Supabase pour étape ${stageId} (string: "${stageId.toString()}")`);
+            
             const { data, error } = await this.supabase
                 .from('gr10_progress')
                 .select('*')
-                .eq('stage_id', stageId.toString()) // Forcer en string
-                .eq('user_id', 'anonymous')
-                .maybeSingle(); // Utiliser maybeSingle au lieu de single
+                .eq('stage_id', stageId.toString())
+                .eq('user_id', 'anonymous');
+
+            console.log(`🔍 Réponse Supabase pour étape ${stageId}:`, { data, error });
 
             if (error) {
                 console.error(`❌ Erreur récupération étape ${stageId}:`, error);
                 return null;
             }
 
-            if (data) {
-                console.log(`📥 Données trouvées pour étape ${stageId}:`, data);
+            if (data && data.length > 0) {
+                const record = data[0]; // Prendre le premier enregistrement
+                console.log(`📥 Données trouvées pour étape ${stageId}:`, record);
                 return {
-                    completed: data.completed,
-                    notes: data.notes,
-                    photos: data.photos || [],
-                    comments: data.comments || [],
-                    rating: data.rating,
-                    detailedRating: data.detailed_rating,
-                    featuredPhoto: data.featured_photo,
-                    time: data.time
+                    completed: record.completed,
+                    notes: record.notes,
+                    photos: record.photos || [],
+                    comments: record.comments || [],
+                    rating: record.rating,
+                    detailedRating: record.detailed_rating,
+                    featuredPhoto: record.featured_photo,
+                    time: record.time
                 };
             } else {
                 console.log(`📭 Aucune donnée pour étape ${stageId}`);
