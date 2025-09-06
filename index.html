@@ -3772,7 +3772,14 @@ Suggestions :
             }
 
             getDefaultGR10Data() {
-                // Données par défaut si aucune autre source n'est disponible
+                // Utiliser directement les données du fichier gr10-data-unified.js
+                if (typeof gr10Data !== 'undefined' && gr10Data.length > 0) {
+                    console.log('📄 Utilisation des données gr10Data complètes:', gr10Data.length, 'étapes');
+                    return gr10Data;
+                }
+                
+                // Fallback minimal si vraiment aucune donnée
+                console.warn('⚠️ Aucune donnée gr10Data trouvée, utilisation du fallback minimal');
                 return [
                     { etape: 1, date: "2025-09-08", depart: "Hendaye", arrivee: "Ibardin", distance: 15.0, denivele_positif: 850, denivele_negatif: 450, duree: "6h", difficulte: "Moyenne", terrain: "forêt/colline", hebergement: "Venta Elizalde", bivouacA: "Col d'Ibardin – vue sur océan et Pyrénées", bivouacB: "replat boisé avant col", eau: "Fontaine Ibardin", ravitaillement: "commerce Ibardin", altitude: 317, exposition: "variable", reseau: "variable", telephone: "05 59 20 79 20" },
                     { etape: 2, date: "2025-09-09", depart: "Ibardin", arrivee: "Sare", distance: 16.5, denivele_positif: 700, denivele_negatif: 1000, duree: "6.5h", difficulte: "Difficile", terrain: "forêt ombragée", hebergement: "Gîte La Petite Rhune", bivouacA: "Sommet de la Rhune – panorama exceptionnel", bivouacB: "clairière avant Sare", eau: "Fontaine Sare", ravitaillement: "épicerie/boulangerie", altitude: 700, exposition: "variable", reseau: "bon", telephone: "05 59 54 20 14" },
@@ -4094,7 +4101,7 @@ Suggestions :
 
                 // Fallback 2: Fichier JavaScript statique
                 if (typeof gr10Data !== 'undefined') {
-                    console.log('📄 Données chargées depuis le fichier JS');
+                    console.log('📄 Données chargées depuis le fichier JS:', gr10Data.length, 'étapes');
                     return gr10Data;
                 }
                 
