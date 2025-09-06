@@ -3588,13 +3588,13 @@ Suggestions :
     </div>
 
     <!-- Modal personnalisée pour mot de passe admin -->
-    <div id="password-modal" class="modal" style="display: none; z-index: 10000;">
+    <div id="password-modal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000;">
         <div class="modal-content" style="max-width: 400px; margin: 20vh auto; padding: 2rem; background: white; border-radius: 1rem; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
             <h3 style="margin: 0 0 1rem 0; color: #333; text-align: center;">Connexion Admin</h3>
-            <input type="password" id="password-input" placeholder="Mot de passe" style="width: 100%; padding: 0.75rem; border: 2px solid #ddd; border-radius: 0.5rem; font-size: 1rem; margin-bottom: 1rem;">
+            <input type="password" id="password-input" placeholder="Mot de passe" style="width: 100%; padding: 0.75rem; border: 2px solid #ddd; border-radius: 0.5rem; font-size: 1rem; margin-bottom: 1rem; box-sizing: border-box;">
             <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
                 <button id="password-cancel" style="padding: 0.5rem 1rem; border: 1px solid #ddd; background: white; border-radius: 0.5rem; cursor: pointer;">Annuler</button>
-                <button id="password-confirm" style="padding: 0.5rem 1rem; border: none; background: var(--primary-color); color: white; border-radius: 0.5rem; cursor: pointer;">Connexion</button>
+                <button id="password-confirm" style="padding: 0.5rem 1rem; border: none; background: #1e3a5f; color: white; border-radius: 0.5rem; cursor: pointer;">Connexion</button>
             </div>
         </div>
     </div>
@@ -6535,15 +6535,22 @@ Suggestions :
 
         // Fonction pour afficher la modal de mot de passe
         function showPasswordModal(callback) {
+            console.log('🔐 Ouverture modal mot de passe');
             const modal = document.getElementById('password-modal');
             const input = document.getElementById('password-input');
             const confirmBtn = document.getElementById('password-confirm');
             const cancelBtn = document.getElementById('password-cancel');
             
+            if (!modal) {
+                console.error('❌ Modal password-modal non trouvée');
+                alert('Erreur: Modal non trouvée');
+                return;
+            }
+            
             modal.style.display = 'block';
             document.body.classList.add('modal-open');
             input.value = '';
-            input.focus();
+            setTimeout(() => input.focus(), 100);
             
             function handleConfirm() {
                 const password = input.value;
