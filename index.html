@@ -4269,64 +4269,43 @@ Suggestions :
                     stageTimes: this.stageTimes
                 };
                 
-                // Sauvegarder localement
+                // Sauvegarder localement TOUJOURS
                 localStorage.setItem('gr10-progress', JSON.stringify(data));
-                console.log('💾 Données sauvegardées localement');
+                console.log('💾 Données sauvegardées localement:', data);
                 
-                // Synchroniser avec Firebase TOUJOURS en mode admin
+                // Synchroniser avec Supabase TOUJOURS en mode admin
                 if (this.firebaseSync && this.isAdminMode) {
-                    console.log('🔄 Mode admin détecté, synchronisation Firebase...');
+                    console.log('🔄 Mode admin détecté, synchronisation Supabase...');
                     try {
-                        // Préparer toutes les données pour sauvegarde batch
-                        const allStageData = {};
-                        const allStageIds = new Set([
-                            ...this.completedStages,
-                            ...Object.keys(this.stageNotes).map(Number),
-                            ...Object.keys(this.stagePhotos).map(Number),
-                            ...Object.keys(this.stageComments).map(Number),
-                            ...Object.keys(this.stageRatings).map(Number),
-                            ...Object.keys(this.detailedRatings).map(Number),
-                            ...Object.keys(this.stageTimes).map(Number)
-                        ]);
-
-                        const timestamp = Date.now();
-                        if (!this.lastUpdateTimestamp) this.lastUpdateTimestamp = {};
-
-                        for (const stageId of allStageIds) {
+                        // Sauvegarder chaque étape complétée individuellement
+                        for (const stageId of this.completedStages) {
                             const stageData = {
-                                completed: this.completedStages.has(stageId),
-                                completedAt: this.completedStages.has(stageId) ? new Date().toISOString() : null,
-                                notes: this.stageNotes[stageId] || '',
+                                completed: true,
+                                notes: this.stageNotes[stageId] || null,
                                 rating: this.stageRatings[stageId] || null,
                                 photos: this.stagePhotos[stageId] || [],
-                                featuredPhoto: this.stageFeaturedPhotos[stageId] || null,
                                 comments: this.stageComments[stageId] || [],
-                                detailedRating: this.detailedRatings[stageId] || {},
-                                time: this.stageTimes[stageId] || null,
-                                timestamp: timestamp
+                                detailedRating: this.detailedRatings[stageId] || null,
+                                time: this.stageTimes[stageId] || null
                             };
                             
-                            // Toujours sauvegarder en mode admin pour synchroniser les suppressions
-                            allStageData[stageId] = stageData;
-                            this.lastUpdateTimestamp[stageId] = timestamp;
-                        }
-
-                        // Sauvegarde batch Firebase
-                        console.log('🔄 Tentative de sauvegarde Firebase avec', Object.keys(allStageData).length, 'étapes');
-                        const success = await this.firebaseSync.saveAllUserData(allStageData);
-                        if (success) {
-                            console.log('✅ Synchronisation admin Firebase réussie - ' + Object.keys(allStageData).length + ' étapes');
-                        } else {
-                            console.error('❌ Échec synchronisation Firebase - vérifiez les logs Firebase ci-dessus');
+                            console.log(`💾 Sauvegarde Supabase étape ${stageId}:`, stageData);
+                            const success = await this.firebaseSync.saveProgress(stageId, stageData);
+                            
+                            if (success) {
+                                console.log(`✅ Étape ${stageId} sauvegardée dans Supabase`);
+                            } else {
+                                console.error(`❌ Échec sauvegarde étape ${stageId} dans Supabase`);
+                            }
                         }
                         
                     } catch (error) {
-                        console.error('❌ Erreur sync Firebase:', error);
+                        console.error('❌ Erreur sync Supabase:', error);
                     }
                 } else if (!this.isAdminMode) {
-                    console.log('⚠️ Mode admin requis pour synchronisation Firebase');
+                    console.log('⚠️ Mode admin requis pour synchronisation Supabase');
                 } else if (!this.firebaseSync) {
-                    console.log('⚠️ Firebase non disponible');
+                    console.log('⚠️ Supabase non disponible');
                 }
             }
 
