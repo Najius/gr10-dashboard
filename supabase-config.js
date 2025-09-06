@@ -1,15 +1,21 @@
 // Configuration Supabase pour GR10 Dashboard
 // Alternative à Firebase - Plus simple et gratuit
 
-// Import Supabase client depuis CDN officiel
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+// Import Supabase client depuis CDN officiel - Version compatible
+// import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+// Alternative: Charger Supabase via script global
+const { createClient } = window.supabase || (() => {
+    console.warn('⚠️ Supabase non disponible, mode fallback activé');
+    return { createClient: () => null };
+})();
 
 // Configuration Supabase - Clés du projet GR10
 const supabaseUrl = 'https://nuspizxrmuoosobkllvo.supabase.co'
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im51c3BpenhybXVvb3NvYmtsbHZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxNjk4NDksImV4cCI6MjA3Mjc0NTg0OX0.HZGDnlspgnL0zP1yklqpnriCNqSwjjXIwojwKY_0Wlw'
 
-// Initialiser Supabase
-const supabase = createClient(supabaseUrl, supabaseKey)
+// Initialiser Supabase avec vérification
+const supabase = createClient ? createClient(supabaseUrl, supabaseKey) : null
 
 // Classe de gestion Supabase
 class SupabaseSync {
@@ -21,6 +27,10 @@ class SupabaseSync {
 
     async testConnection() {
         try {
+            if (!this.supabase) {
+                throw new Error('Client Supabase non initialisé');
+            }
+            
             // Test de connexion avec la table gr10_progress existante
             const { data, error } = await this.supabase.from('gr10_progress').select('*').limit(1);
             if (error && error.code !== 'PGRST116') { // PGRST116 = aucune donnée (OK)
@@ -31,12 +41,17 @@ class SupabaseSync {
         } catch (error) {
             this.isOnline = false;
             console.error('❌ Supabase connexion échouée:', error.message);
-            console.warn('⚠️ Mode hors ligne activé');
+            console.warn('⚠️ Mode hors ligne activé - utilisation localStorage uniquement');
         }
     }
 
     // Méthode pour sauvegarder le progrès d'une étape
     async saveProgress(stageId, data) {
+        if (!this.isOnline || !this.supabase) {
+            console.warn(`⚠️ Supabase hors ligne - sauvegarde étape ${stageId} ignorée`);
+            return false;
+        }
+        
         try {
             console.log(`💾 Sauvegarde étape ${stageId}:`, data);
             
@@ -117,31 +132,47 @@ class SupabaseSync {
         }
     }
 
-    // Récupérer le progrès d'une étape
+    // Méthode pour récupérer le progrès d'une étape
     async getProgress(stageId) {
-        if (!this.isOnline) return null;
+        if (!this.isOnline || !this.supabase) {
+            console.warn(`⚠️ Supabase hors ligne - récupération étape ${stageId} ignorée`);
+            return null;
+        }
 
         try {
-            const { data, error } = await supabase
+            const { data, error } = await this.supabase
                 .from('gr10_progress')
                 .select('*')
-                .eq('stage_id', stageId.toString())
-                .eq('user_id', 'anonymous')
+                .eq('stage_id', stageId)
+                .eq('user_id', 'default_user')
                 .single();
 
-            if (error && error.code !== 'PGRST116') throw error;
-            return data;
+            if (error && error.code !== 'PGRST116') {
+                console.error(`❌ Erreur récupération étape ${stageId}:`, error);
+                return null;
+            }
+
+            return data ? {
+                completed: data.completed,
+                notes: data.notes,
+                photos: data.photos || [],
+                comments: data.comments || [],
+                rating: data.rating,
+                detailedRating: data.detailed_rating,
+                featuredPhoto: data.featured_photo,
+                time: data.time
+            } : null;
         } catch (error) {
-            console.error('Erreur récupération Supabase:', error);
+            console.error(`❌ Erreur getProgress étape ${stageId}:`, error);
             return null;
         }
     }
 
     // Écouter les changements en temps réel
     listenToProgress(stageId, callback) {
-        if (!this.isOnline) return;
+        if (!this.isOnline || !this.supabase) return;
 
-        return supabase
+        return this.supabase
             .channel(`progress-${stageId}`)
             .on('postgres_changes', {
                 event: '*',
