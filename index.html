@@ -3771,6 +3771,15 @@ Suggestions :
                 this.initPhotoUpload();
             }
 
+            getDefaultGR10Data() {
+                // Données par défaut si aucune autre source n'est disponible
+                return [
+                    { etape: 1, date: "2025-09-08", depart: "Hendaye", arrivee: "Ibardin", distance: 15.0, denivele_positif: 850, denivele_negatif: 450, duree: "6h", difficulte: "Moyenne", terrain: "forêt/colline", hebergement: "Venta Elizalde", bivouacA: "Col d'Ibardin – vue sur océan et Pyrénées", bivouacB: "replat boisé avant col", eau: "Fontaine Ibardin", ravitaillement: "commerce Ibardin", altitude: 317, exposition: "variable", reseau: "variable", telephone: "05 59 20 79 20" },
+                    { etape: 2, date: "2025-09-09", depart: "Ibardin", arrivee: "Sare", distance: 16.5, denivele_positif: 700, denivele_negatif: 1000, duree: "6.5h", difficulte: "Difficile", terrain: "forêt ombragée", hebergement: "Gîte La Petite Rhune", bivouacA: "Sommet de la Rhune – panorama exceptionnel", bivouacB: "clairière avant Sare", eau: "Fontaine Sare", ravitaillement: "épicerie/boulangerie", altitude: 700, exposition: "variable", reseau: "bon", telephone: "05 59 54 20 14" },
+                    { etape: 3, date: "2025-09-10", depart: "Sare", arrivee: "Col des Veaux", distance: 16.0, denivele_positif: 600, denivele_negatif: 200, duree: "5.7h", difficulte: "Simple", terrain: "crête herbeuse", hebergement: "Maison Bordacharia", bivouacA: "Col des Veaux – vue sur vallées basques", bivouacB: "replat côté ouest", eau: "Source de crête", ravitaillement: "—", altitude: 493, exposition: "vent/soleil", reseau: "variable", telephone: "05 59 54 31 12" }
+                ];
+            }
+
             getGR10Coordinates() {
                 // Coordonnées GPS réelles du GR10 avec tracé naturel
                 return [
@@ -4088,6 +4097,10 @@ Suggestions :
                     console.log('📄 Données chargées depuis le fichier JS');
                     return gr10Data;
                 }
+                
+                // Fallback 3: Données par défaut (pour éviter un tableau vide)
+                console.log('🔄 Utilisation des données par défaut intégrées');
+                return this.getDefaultGR10Data();
                 
                 // Fallback final
                 console.error('❌ Aucune source de données disponible');
