@@ -14,7 +14,9 @@ let supabase = null;
 // Fonction d'initialisation différée
 function initSupabase() {
     if (window.supabase && window.supabase.createClient) {
-        supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        supabase = window.supabase.createClient(supabaseUrl, supabaseKey, {
+            auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+        });
         console.log('✅ Client Supabase initialisé avec succès');
         return true;
     }
@@ -137,7 +139,8 @@ class SupabaseSync {
                 .from('gr10_progress')
                 .select('*')
                 .eq('stage_id', stageId.toString())
-                .eq('user_id', 'anonymous');
+                .eq('user_id', 'anonymous')
+                .limit(1);
 
             console.log(`🔍 Réponse Supabase pour étape ${stageId}:`, { data, error });
 
@@ -195,7 +198,7 @@ class SupabaseSync {
     listenToAllProgress(callback) {
         if (!this.isOnline) return;
 
-        return supabase
+        return this.supabase
             .channel('all-progress')
             .on('postgres_changes', {
                 event: '*',
