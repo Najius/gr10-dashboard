@@ -3752,15 +3752,26 @@ Suggestions :
 
             waitForFirebase() {
                 return new Promise((resolve) => {
-                    const checkFirebase = () => {
-                        if (window.firebaseSync) {
-                            this.firebaseSync = window.firebaseSync;
+                    let attempts = 0;
+                    const maxAttempts = 50; // 5 secondes maximum
+                    
+                    const checkSupabase = () => {
+                        attempts++;
+                        
+                        if (window.dashboard?.firebaseSync) {
+                            this.firebaseSync = window.dashboard.firebaseSync;
+                            resolve();
+                        } else if (window.SupabaseSync) {
+                            this.firebaseSync = new window.SupabaseSync();
+                            resolve();
+                        } else if (attempts >= maxAttempts) {
+                            console.warn('⚠️ Timeout: SupabaseSync non trouvé après 5s, continuation sans sync');
                             resolve();
                         } else {
-                            setTimeout(checkFirebase, 100);
+                            setTimeout(checkSupabase, 100);
                         }
                     };
-                    checkFirebase();
+                    checkSupabase();
                 });
             }
 
