@@ -45,13 +45,27 @@ class FirebaseSync {
         if (!this.isOnline) return;
 
         try {
+            // Convertir les photos en base64 si nécessaire pour Firebase
+            let processedData = { ...progressData };
+            if (progressData.photos && Array.isArray(progressData.photos)) {
+                processedData.photos = progressData.photos.map(photo => {
+                    if (typeof photo === 'object' && photo.data) {
+                        return {
+                            ...photo,
+                            data: photo.data // Garder les données base64
+                        };
+                    }
+                    return photo;
+                });
+            }
+
             await setDoc(doc(db, 'gr10-progress', stageId.toString()), {
-                ...progressData,
+                ...processedData,
                 lastUpdated: new Date(),
                 userId: 'anonymous'
             }, { merge: true });
             
-            console.log(`Étape ${stageId} sauvegardée dans Firebase`);
+            console.log(`📤 Étape ${stageId} sauvegardée dans Firebase avec ${progressData.photos?.length || 0} photos`);
         } catch (error) {
             console.error('Erreur sauvegarde Firebase:', error);
         }
