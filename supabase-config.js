@@ -57,8 +57,8 @@ class SupabaseSync {
             
             // Forcer la création d'un nouvel enregistrement ou mise à jour complète
             const saveData = {
-                stage_id: stageId,
-                user_id: 'default_user',
+                stage_id: stageId.toString(), // Forcer en string pour éviter operator_gt
+                user_id: 'anonymous',
                 completed: data.completed || false,
                 notes: data.notes || null,
                 photos: data.photos || [],
@@ -67,15 +67,16 @@ class SupabaseSync {
                 detailed_rating: data.detailedRating || null,
                 featured_photo: data.featuredPhoto || null,
                 time: data.time || null,
-                updated_at: new Date().toISOString()
+                timestamp: Date.now(),
+                last_updated: new Date().toISOString()
             };
             
             // D'abord supprimer l'enregistrement existant s'il y en a un
             await this.supabase
                 .from('gr10_progress')
                 .delete()
-                .eq('stage_id', stageId)
-                .eq('user_id', 'default_user');
+                .eq('stage_id', stageId.toString()) // Forcer en string
+                .eq('user_id', 'anonymous');
             
             // Puis insérer le nouvel enregistrement
             const { error } = await this.supabase
@@ -121,8 +122,8 @@ class SupabaseSync {
             const { data, error } = await this.supabase
                 .from('gr10_progress')
                 .select('*')
-                .eq('stage_id', stageId)
-                .eq('user_id', 'default_user')
+                .eq('stage_id', stageId.toString()) // Forcer en string
+                .eq('user_id', 'anonymous')
                 .single();
 
             if (error && error.code !== 'PGRST116') {
