@@ -4267,13 +4267,9 @@ Suggestions :
                                 timestamp: timestamp
                             };
                             
-                            // Ne sauvegarder que si il y a des données
-                            if (stageData.completed || stageData.notes || stageData.photos.length > 0 || 
-                                stageData.comments.length > 0 || stageData.rating || 
-                                Object.keys(stageData.detailedRating).length > 0 || stageData.time) {
-                                allStageData[stageId] = stageData;
-                                this.lastUpdateTimestamp[stageId] = timestamp;
-                            }
+                            // Toujours sauvegarder en mode admin pour synchroniser les suppressions
+                            allStageData[stageId] = stageData;
+                            this.lastUpdateTimestamp[stageId] = timestamp;
                         }
 
                         // Sauvegarde batch Firebase

@@ -81,19 +81,15 @@ class FirebaseSync {
         try {
             const batch = writeBatch(db);
             
-            // Sauvegarder chaque étape avec des données
+            // Sauvegarder toutes les étapes (y compris celles avec completed: false pour les suppressions)
             for (const [stageId, stageData] of Object.entries(allData)) {
-                if (stageData && (stageData.completed || stageData.photos?.length > 0 || 
-                    stageData.notes || stageData.comments?.length > 0)) {
-                    
-                    const docRef = doc(db, 'gr10-progress', stageId.toString());
-                    batch.set(docRef, {
-                        ...stageData,
-                        lastUpdated: new Date(),
-                        timestamp: Date.now(),
-                        userId: 'anonymous'
-                    }, { merge: true });
-                }
+                const docRef = doc(db, 'gr10-progress', stageId.toString());
+                batch.set(docRef, {
+                    ...stageData,
+                    lastUpdated: new Date(),
+                    timestamp: Date.now(),
+                    userId: 'anonymous'
+                }, { merge: true });
             }
             
             await batch.commit();
