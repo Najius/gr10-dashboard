@@ -4,9 +4,9 @@
 // Import Supabase client
 import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2'
 
-// Configuration Supabase - À remplacer par vos vraies clés
-const supabaseUrl = 'https://VOTRE_PROJECT_ID.supabase.co'
-const supabaseKey = 'VOTRE_ANON_KEY'
+// Configuration Supabase - Clés du projet GR10
+const supabaseUrl = 'https://uaplzxrmuossobklvo.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhcGx6eHJtdW9zc29ia2x2byIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzI1NjM0ODE3LCJleHAiOjIwNDEyMTA4MTd9.1nTn8GcfE3IpvVC39_eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhcGx6eHJtdW9zc29ia2x2byIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzI1NjM0ODE3LCJleHAiOjIwNDEyMTA4MTd9'
 
 // Initialiser Supabase
 const supabase = createClient(supabaseUrl, supabaseKey)
