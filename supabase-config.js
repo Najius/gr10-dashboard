@@ -58,7 +58,19 @@ class SupabaseSync {
     }
 
     async initializeConnection() {
-        await this.testConnection();
+        // Forcer un timeout global pour éviter les blocages
+        const globalTimeout = setTimeout(() => {
+            if (!this.isOnline) {
+                console.log('🚨 Timeout global - forcer mode hors ligne');
+                this.isOnline = false;
+            }
+        }, 8000);
+        
+        try {
+            await this.testConnection();
+        } finally {
+            clearTimeout(globalTimeout);
+        }
     }
 
     async testConnection() {
@@ -74,13 +86,19 @@ class SupabaseSync {
             console.log('🔍 Tentative de requête vers gr10_progress avec timeout...');
             
             const timeoutPromise = new Promise((_, reject) => {
-                setTimeout(() => reject(new Error('Timeout de connexion Supabase (10s)')), 10000);
+                setTimeout(() => {
+                    console.log('⏰ Timeout déclenché après 5 secondes');
+                    reject(new Error('Timeout de connexion Supabase (5s)'));
+                }, 5000);
             });
             
             const requestPromise = this.supabase.from('gr10_progress').select('*').limit(1);
             
-            const { data, error } = await Promise.race([requestPromise, timeoutPromise]);
+            console.log('🔍 Démarrage Promise.race...');
+            const result = await Promise.race([requestPromise, timeoutPromise]);
+            console.log('🔍 Promise.race terminée:', result);
             
+            const { data, error } = result;
             console.log('🔍 Réponse Supabase:', { data, error });
             
             if (error && error.code !== 'PGRST116') { // PGRST116 = aucune donnée (OK)
