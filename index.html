@@ -36,30 +36,28 @@
             window.gr10DataGlobal = gr10Data; // Sauvegarder globalement aussi
         }
     </script>
-    <!-- Charger Supabase depuis CDN avec cache-bust -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase-config.js?v=20250906-1810"></script>
+    <!-- CDN Supabase (global window.supabase) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    
+    <!-- Configuration Supabase -->
+    <script src="supabase-config.js?v=20250906-1835" defer></script>
+    
     <script>
-        // Initialiser Supabase au chargement de la page
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Attendre que window.dashboard soit disponible
+        document.addEventListener('DOMContentLoaded', () => {
             let attempts = 0;
-            const maxAttempts = 50;
+            const max = 100;
             
-            const initSupabase = () => {
-                attempts++;
+            (function wait() {
                 if (window.SupabaseSync && window.dashboard) {
                     window.dashboard.firebaseSync = new window.SupabaseSync();
                     console.log('🚀 Supabase activé pour synchronisation GR10');
                     console.log('✅ firebaseSync initialisé:', typeof window.dashboard.firebaseSync.getProgress);
-                } else if (attempts < maxAttempts) {
-                    setTimeout(initSupabase, 100);
+                } else if (attempts++ < max) {
+                    setTimeout(wait, 100);
                 } else {
-                    console.error('❌ Timeout: Impossible d\'initialiser Supabase');
+                    console.error('❌ Timeout init Supabase après', max * 100, 'ms');
                 }
-            };
-            
-            initSupabase();
+            })();
         });
     </script>
     <!-- Firebase scripts désactivés - remplacés par Supabase -->

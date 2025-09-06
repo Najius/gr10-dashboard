@@ -69,40 +69,38 @@ class SupabaseSync {
         try {
             console.log(`💾 Sauvegarde étape ${stageId}:`, data);
             
-            // Forcer la création d'un nouvel enregistrement ou mise à jour complète
+            // Utiliser upsert avec .select() comme conseillé par ChatGPT
             const saveData = {
                 stage_id: stageId.toString(), // Forcer en string pour éviter operator_gt
                 user_id: 'anonymous',
                 completed: data.completed || false,
-                notes: data.notes || null,
-                photos: data.photos || [],
-                comments: data.comments || [],
+                completed_at: data.completed ? new Date().toISOString() : null,
+                notes: data.notes || '',
                 rating: data.rating || null,
-                detailed_rating: data.detailedRating || null,
+                photos: data.photos || [],
                 featured_photo: data.featuredPhoto || null,
+                comments: data.comments || [],
+                detailed_rating: data.detailedRating || {},
                 time: data.time || null,
                 timestamp: Date.now(),
                 last_updated: new Date().toISOString()
             };
             
-            // D'abord supprimer l'enregistrement existant s'il y en a un
-            await this.supabase
+            // Utiliser upsert avec .select() pour récupérer les données après insertion
+            const { data: result, error } = await this.supabase
                 .from('gr10_progress')
-                .delete()
-                .eq('stage_id', stageId.toString()) // Forcer en string
-                .eq('user_id', 'anonymous');
-            
-            // Puis insérer le nouvel enregistrement
-            const { error } = await this.supabase
-                .from('gr10_progress')
-                .insert(saveData);
+                .upsert(saveData, { 
+                    onConflict: 'stage_id,user_id',
+                    ignoreDuplicates: false 
+                })
+                .select();
 
             if (error) {
                 console.error('❌ Erreur sauvegarde Supabase:', error);
                 return false;
             }
             
-            console.log(`✅ Étape ${stageId} sauvegardée avec succès (force refresh)`);
+            console.log(`✅ Étape ${stageId} sauvegardée avec succès:`, result);
             return true;
         } catch (error) {
             console.error('❌ Erreur sauvegarde:', error);
@@ -188,7 +186,7 @@ class SupabaseSync {
                 event: '*',
                 schema: 'public',
                 table: 'gr10_progress',
-                filter: `stage_id=eq.${stageId}`
+                filter: `stage_id=eq.${JSON.stringify(stageId.toString())}`
             }, callback)
             .subscribe();
     }
