@@ -4,9 +4,9 @@
 // Import Supabase client depuis CDN officiel - Version compatible
 // import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
 
-// Configuration Supabase - Clés du projet GR10
-const supabaseUrl = 'https://nuspizxrmuoosobkllvo.supabase.co'
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im51c3BpenhybXVvb3NvYmtsbHZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxNjk4NDksImV4cCI6MjA3Mjc0NTg0OX0.HZGDnlspgnL0zP1yklqpnriCNqSwjjXIwojwKY_0Wlw'
+// Configuration Supabase - Clés du projet GR10 (corrigées)
+const supabaseUrl = 'https://uaplzxrmuossobklvo.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhcGx6eHJtdW9zc29ia2x2byIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzI1NjM0NzQ5LCJleHAiOjIwNDEyMTA3NDl9.Eo7nwGNEWJaLHdLkHCGzJBdHFgRXfCqJKOhGqOjZWqw'
 
 // Attendre que Supabase soit chargé depuis le CDN
 let supabase = null;
@@ -70,9 +70,16 @@ class SupabaseSync {
                 throw new Error('Client Supabase non initialisé');
             }
             
-            // Test de connexion avec la table gr10_progress existante
-            console.log('🔍 Tentative de requête vers gr10_progress...');
-            const { data, error } = await this.supabase.from('gr10_progress').select('*').limit(1);
+            // Test de connexion avec timeout pour éviter les blocages
+            console.log('🔍 Tentative de requête vers gr10_progress avec timeout...');
+            
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('Timeout de connexion Supabase (10s)')), 10000);
+            });
+            
+            const requestPromise = this.supabase.from('gr10_progress').select('*').limit(1);
+            
+            const { data, error } = await Promise.race([requestPromise, timeoutPromise]);
             
             console.log('🔍 Réponse Supabase:', { data, error });
             
