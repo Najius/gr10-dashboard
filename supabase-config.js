@@ -116,7 +116,7 @@ class SupabaseSync {
                 last_updated: new Date().toISOString()
             }));
 
-            const { data, error } = await supabase
+            const { data, error } = await this.supabase
                 .from('gr10_progress')
                 .upsert(records, {
                     onConflict: 'stage_id,user_id'
