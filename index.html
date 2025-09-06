@@ -3624,18 +3624,28 @@ Suggestions :
             }
 
             async initializeData() {
-                // Attendre que Firebase soit disponible
+                console.log('🔍 === DÉBUT initializeData() ===');
+                
+                // Attendre que Supabase soit disponible
                 await this.waitForFirebase();
+                console.log('🔍 Après waitForFirebase()');
+                
                 // Charger les données d'étapes
+                console.log('🔍 Avant loadGR10Data()');
                 this.itineraryData = await this.loadGR10Data();
+                console.log('🔍 Après loadGR10Data(), itineraryData.length:', this.itineraryData?.length);
+                
                 // Charger le progrès utilisateur
                 await this.loadProgress();
+                
                 // Recharger l'interface avec les nouvelles données
+                console.log('🔍 Avant renderStages()');
                 this.renderStages();
                 this.updateProgress();
                 
-                // Écouter les changements Firebase en temps réel
+                // Écouter les changements Supabase en temps réel
                 this.setupRealtimeSync();
+                console.log('🔍 === FIN initializeData() ===');
             }
 
             setupRealtimeSync() {
