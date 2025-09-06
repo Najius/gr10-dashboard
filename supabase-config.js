@@ -56,8 +56,17 @@ class SupabaseSync {
         // Tester la connexion de manière asynchrone
         this.initializeConnection();
     }
+    
+    // Méthode statique pour créer une instance avec connexion initialisée
+    static async create() {
+        const instance = new SupabaseSync();
+        await instance.initializeConnection();
+        return instance;
+    }
 
     async initializeConnection() {
+        console.log('🔍 === DÉBUT initializeConnection() ===');
+        
         // Forcer un timeout global pour éviter les blocages
         const globalTimeout = setTimeout(() => {
             if (!this.isOnline) {
@@ -67,10 +76,14 @@ class SupabaseSync {
         }, 8000);
         
         try {
+            console.log('🔍 Attente de testConnection()...');
             await this.testConnection();
+            console.log('🔍 testConnection() terminé - isOnline:', this.isOnline);
         } finally {
             clearTimeout(globalTimeout);
         }
+        
+        console.log('🔍 === FIN initializeConnection() ===');
     }
 
     async testConnection() {

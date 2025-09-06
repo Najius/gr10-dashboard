@@ -102,9 +102,9 @@
             let attempts = 0;
             const max = 100;
             
-            (function wait() {
+            (async function wait() {
                 if (window.SupabaseSync && window.dashboard) {
-                    window.dashboard.firebaseSync = new window.SupabaseSync();
+                    window.dashboard.firebaseSync = await window.SupabaseSync.create();
                     console.log('🚀 Supabase activé pour synchronisation GR10');
                     console.log('✅ firebaseSync initialisé:', typeof window.dashboard.firebaseSync);
                     
@@ -3842,14 +3842,14 @@ Suggestions :
                     let attempts = 0;
                     const maxAttempts = 50; // 5 secondes maximum
                     
-                    const checkSupabase = () => {
+                    const checkSupabase = async () => {
                         attempts++;
                         
                         if (window.dashboard?.firebaseSync) {
                             this.firebaseSync = window.dashboard.firebaseSync;
                             resolve();
                         } else if (window.SupabaseSync) {
-                            this.firebaseSync = new window.SupabaseSync();
+                            this.firebaseSync = await window.SupabaseSync.create();
                             resolve();
                         } else if (attempts >= maxAttempts) {
                             console.warn('⚠️ Timeout: SupabaseSync non trouvé après 5s, continuation sans sync');
