@@ -4036,10 +4036,22 @@ Suggestions :
                             }
                         }
                         
-                        // Utiliser les données Firebase si disponibles
-                        if (completedStages.size > 0 || Object.keys(stagePhotos).length > 0 || 
-                            Object.keys(stageNotes).length > 0 || Object.keys(stageComments).length > 0) {
+                        // Toujours utiliser les données Firebase (même vides) et fusionner avec local
+                        const localData = localStorage.getItem('gr10-progress');
+                        if (localData) {
+                            const local = JSON.parse(localData);
                             
+                            // Fusionner Firebase + Local (local en priorité pour éviter les pertes)
+                            this.completedStages = new Set([...completedStages, ...(local.completedStages || [])]);
+                            this.stageNotes = { ...stageNotes, ...(local.stageNotes || {}) };
+                            this.stageRatings = { ...stageRatings, ...(local.stageRatings || {}) };
+                            this.stagePhotos = { ...stagePhotos, ...(local.stagePhotos || {}) };
+                            this.stageFeaturedPhotos = { ...stageFeaturedPhotos, ...(local.stageFeaturedPhotos || {}) };
+                            this.stageComments = { ...stageComments, ...(local.stageComments || {}) };
+                            this.detailedRatings = { ...detailedRatings, ...(local.detailedRatings || {}) };
+                            this.stageTimes = { ...stageTimes, ...(local.stageTimes || {}) };
+                        } else {
+                            // Utiliser seulement Firebase si pas de cache local
                             this.completedStages = completedStages;
                             this.stageNotes = stageNotes;
                             this.stageRatings = stageRatings;
@@ -4048,16 +4060,14 @@ Suggestions :
                             this.stageComments = stageComments;
                             this.detailedRatings = detailedRatings;
                             this.stageTimes = stageTimes;
-                            
-                            console.log('📥 Données Firebase chargées:', {
-                                completedStages: this.completedStages.size,
-                                notes: Object.keys(this.stageNotes).length,
-                                ratings: Object.keys(this.stageRatings).length,
-                                photos: Object.keys(this.stagePhotos).length
-                            });
-                        } else {
-                            console.log('⚠️ Aucune donnée Firebase trouvée, utilisation cache local');
                         }
+                        
+                        console.log('📥 Données fusionnées Firebase + Local:', {
+                            completedStages: this.completedStages.size,
+                            notes: Object.keys(this.stageNotes).length,
+                            ratings: Object.keys(this.stageRatings).length,
+                            photos: Object.keys(this.stagePhotos).length
+                        });
                         
                         // Sauvegarder les données fusionnées en cache local
                         const cacheData = {
@@ -5292,7 +5302,21 @@ Suggestions :
                             this.stagePhotos[this.currentStageId].push(photoData);
                             console.log(`📸 Photo ajoutée pour étape ${this.currentStageId}:`, photoData.name);
                             
-                            // Forcer la sauvegarde immédiate dans Firebase
+                            // Sauvegarder immédiatement dans localStorage d'abord
+                            const localData = {
+                                completedStages: Array.from(this.completedStages),
+                                stageNotes: this.stageNotes,
+                                stageRatings: this.stageRatings,
+                                stagePhotos: this.stagePhotos,
+                                stageFeaturedPhotos: this.stageFeaturedPhotos,
+                                stageComments: this.stageComments,
+                                detailedRatings: this.detailedRatings,
+                                stageTimes: this.stageTimes
+                            };
+                            localStorage.setItem('gr10-progress', JSON.stringify(localData));
+                            console.log(`💾 Photo sauvegardée localement pour étape ${this.currentStageId}`);
+                            
+                            // Ensuite tenter Firebase
                             if (this.firebaseSync) {
                                 try {
                                     await this.firebaseSync.saveProgress(this.currentStageId, {
@@ -5306,7 +5330,7 @@ Suggestions :
                                     });
                                     console.log(`✅ Photo sauvegardée dans Firebase pour étape ${this.currentStageId}`);
                                 } catch (error) {
-                                    console.error('❌ Erreur sauvegarde photo Firebase:', error);
+                                    console.error('❌ Erreur sauvegarde photo Firebase (mais sauvegardée localement):', error);
                                 }
                             }
                             
