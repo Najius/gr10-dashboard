@@ -39,43 +39,15 @@
             }
         });
     </script>
-    <script src="firebase-integration.js"></script>
-    <script src="firebase-data-migration-fixed.js"></script>
-    <script src="check-firebase-data.js"></script>
+    <!-- Firebase scripts désactivés - remplacés par Supabase -->
+    <!-- <script src="firebase-integration.js"></script> -->
+    <!-- <script src="firebase-data-migration-fixed.js"></script> -->
+    <!-- <script src="check-firebase-data.js"></script> -->
     <script>
-        // Vérification Firebase immédiate au chargement
+        // Logo chargé - Firebase remplacé par Supabase
         window.addEventListener('load', () => {
-            // Le logo remplace maintenant le titre animé
             console.log('🏔️ Logo EN GR 10 chargé');
-
-            setTimeout(() => {
-                if (window.firebaseSync) {
-                    console.log('🔍 Vérification Firebase automatique...');
-                    window.firebaseSync.getStages().then(stages => {
-                        if (stages && stages.length > 0) {
-                            console.log(`✅ ${stages.length} étapes trouvées dans Firebase`);
-                            console.log('🎉 Migration Firebase confirmée !');
-                            
-                            // Vérifier les cabanes
-                            const cabaneStages = [13, 15, 17, 18, 21, 24];
-                            let cabaneCount = 0;
-                            cabaneStages.forEach(num => {
-                                const stage = stages.find(s => s.etape === num);
-                                if (stage && stage.bivouacA && stage.bivouacA.includes('Cabane')) {
-                                    cabaneCount++;
-                                }
-                            });
-                            console.log(`🏠 ${cabaneCount} étapes avec cabanes détectées`);
-                        } else {
-                            console.log('❌ Aucune donnée Firebase trouvée');
-                        }
-                    }).catch(error => {
-                        console.log('⚠️ Erreur Firebase:', error);
-                    });
-                } else {
-                    console.log('⏳ Firebase non encore initialisé...');
-                }
-            }, 3000);
+            console.log('🚀 Dashboard utilise maintenant Supabase au lieu de Firebase');
         });
     </script>
     <style>
