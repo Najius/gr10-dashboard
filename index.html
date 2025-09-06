@@ -2951,6 +2951,13 @@
             <i class="fas fa-user-shield"></i>
             <span id="admin-toggle-text">Admin</span>
         </button>
+        <button id="export-data" class="btn btn-secondary" style="margin-left: 0.5rem; display: none;">
+            <i class="fas fa-download"></i> Export
+        </button>
+        <button id="import-data" class="btn btn-secondary" style="margin-left: 0.5rem; display: none;">
+            <i class="fas fa-upload"></i> Import
+        </button>
+        <input type="file" id="import-file" accept=".json" style="display: none;">
     </div>
 
     <!-- Éléments globaux en arrière-plan -->
@@ -3553,8 +3560,8 @@ Suggestions :
                             <div class="comment-form">
                                 <input type="text" id="comment-author" placeholder="Votre nom" maxlength="50">
                                 <textarea id="comment-text" placeholder="Votre commentaire sur cette étape..." maxlength="500" rows="3"></textarea>
-                                <button id="add-comment-btn" class="btn-primary">
-                                    <i class="fas fa-paper-plane"></i> Publier
+                                <button id="add-comment" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> Ajouter commentaire
                                 </button>
                             </div>
                         </div>
@@ -6476,34 +6483,82 @@ Suggestions :
                     // Vérifier si déjà en mode admin (déconnexion)
                     if (document.body.classList.contains('admin-mode')) {
                         // Déconnexion
-                        document.body.classList.remove('admin-mode');
-                        adminBtn.classList.remove('active');
-                        document.getElementById('admin-toggle-text').textContent = 'Admin';
-                        dashboard.isAdminMode = false;
-                        localStorage.setItem('gr10-admin-mode', 'false');
-                        console.log('🚪 Déconnexion admin');
-                    } else {
-                        // Connexion avec modal personnalisée pour Mac
-                        console.log('🔑 Tentative de connexion admin');
-                        showPasswordModal((pwd) => {
-                            if (pwd === '7253') {
-                                document.body.classList.add('admin-mode');
-                                adminBtn.classList.add('active');
-                                document.getElementById('admin-toggle-text').textContent = 'Déconnexion';
-                                dashboard.isAdminMode = true;
-                                localStorage.setItem('gr10-admin-mode', 'true');
-                                console.log('✅ Connexion admin réussie');
-                            } else if (pwd && pwd !== '') {
-                                console.log('❌ Mot de passe incorrect');
-                                alert('Mot de passe incorrect');
-                            }
-                        });
+                        if (adminBtn.classList.contains('active')) {
+                            // Déconnexion
+                            adminBtn.classList.remove('active');
+                            document.getElementById('admin-toggle-text').textContent = 'Admin';
+                            document.getElementById('export-data').style.display = 'none';
+                            document.getElementById('import-data').style.display = 'none';
+                            dashboard.isAdminMode = false;
+                            localStorage.setItem('gr10-admin-mode', 'false');
+                            console.log('🚪 Déconnexion admin');
+                        } else {
+                            // Connexion avec modal personnalisée pour Mac
+                            console.log('🔑 Tentative de connexion admin');
+                            showPasswordModal((pwd) => {
+                                if (pwd === '7253') {
+                                    document.body.classList.add('admin-mode');
+                                    adminBtn.classList.add('active');
+                                    document.getElementById('admin-toggle-text').textContent = 'Déconnexion';
+                                    document.getElementById('export-data').style.display = 'inline-block';
+                                    document.getElementById('import-data').style.display = 'inline-block';
+                                    dashboard.isAdminMode = true;
+                                    localStorage.setItem('gr10-admin-mode', 'true');
+                                    console.log('✅ Connexion admin réussie');
+                                } else if (pwd && pwd !== '') {
+                                    console.log('❌ Mot de passe incorrect');
+                                    alert('Mot de passe incorrect');
+                                }
+                            });
+                        }
                     }
                 });
             } else {
                 console.error('❌ Bouton admin non trouvé');
             }
             
+            // Event listeners pour export/import
+            document.getElementById('export-data').addEventListener('click', function() {
+                const data = localStorage.getItem('gr10-progress');
+                if (data) {
+                    const blob = new Blob([data], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `gr10-data-${new Date().toISOString().split('T')[0]}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    console.log('📤 Données exportées');
+                } else {
+                    alert('Aucune donnée à exporter');
+                }
+            });
+
+            document.getElementById('import-data').addEventListener('click', function() {
+                document.getElementById('import-file').click();
+            });
+
+            document.getElementById('import-file').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const importedData = JSON.parse(e.target.result);
+                            localStorage.setItem('gr10-progress', JSON.stringify(importedData));
+                            console.log('📥 Données importées');
+                            alert('Données importées avec succès! Rechargez la page.');
+                        } catch (error) {
+                            console.error('Erreur import:', error);
+                            alert('Erreur lors de l\'import du fichier');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            });
+
             // Initialiser le dashboard global
             const dashboard = new GR10Dashboard();
             window.dashboard = dashboard; // Rendre accessible globalement
